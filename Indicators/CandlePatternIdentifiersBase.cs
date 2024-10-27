@@ -1,26 +1,32 @@
 ﻿using cAlgo.API;
 using cAlgo.API.Internals;
-using System.Drawing;
 
-namespace cAlgo
+namespace PikUpStix.cTraderExtenstions.Indicators
 {
     /// <summary>
     ///     CandleIds - CandleStick Patterns Identifier
     /// </summary>
     /// <remarks>
-    ///     Indicator for identifying candlestick patterns in financial trading. The class 
+    ///     Indicator for identifying engulfing candlestick patterns in financial trading. Each 
+    ///     engulfing candle stick is highlighted on the chart.  The class 
     ///     inherits from cAlgo.API.Indicator class
     /// </remarks>
     [Indicator(IsOverlay = true, TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
-    public class CandleIds : Indicator
+    public class CandlePatternIdentifiersBase : Indicator
     {
-        [Parameter("Highlight Engulfing Pattern", Group = "CandleStick Patterns", DefaultValue = true)]
+        //[Parameter("Source")]
+        //public DataSeries Source { get; set; }
+        [Parameter("Enable", Group = "Highlight Engulfing Pattern", DefaultValue = true)]
         public bool EngulfingPatterns { get; set; }
+        [Parameter("SignalYAdjust", Group = "Highlight Engulfing Pattern", DefaultValue = 150)]
+        public int SignalYAdjust { get; set; }
+
+        //public bool IsBearEngulfingPattern = false;
+        //public bool IsBullEngulfingPattern = false;
 
         public override void Calculate(int index)
         {
             HighlightEngulfingPatterns(index);
-
         }
 
         private void HighlightEngulfingPatterns(int value)
@@ -30,9 +36,15 @@ namespace cAlgo
                 if (EngulfingPatterns & i > 0)
                 {
                     if (IsBullishEngulfingPattern(i))
-                        HighlightEngulfing("Bullish Engulfing", i, Bars.HighPrices[i] + (Symbol.TickSize * 20), Color.Green, ChartIconType.UpArrow);
+                    {
+                        //IsBullEngulfingPattern = true;
+                        HighlightEngulfing("Bullish Engulfing", i, Bars.HighPrices[i] + (Symbol.TickSize * SignalYAdjust), Color.Green, ChartIconType.UpArrow);
+                    }
                     if (IsBearishEngulfingPattern(i))
-                        HighlightEngulfing("Bearish Engulfing", i, Bars.ClosePrices[i] - (Symbol.TickSize * 20), Color.Red, ChartIconType.DownArrow);
+                    {
+                        //IsBearEngulfingPattern = true;
+                        HighlightEngulfing("Bearish Engulfing", i, Bars.LowPrices[i] - (Symbol.TickSize * SignalYAdjust), Color.Red, ChartIconType.DownArrow);
+                    }
                 }
             }
         }
@@ -44,13 +56,13 @@ namespace cAlgo
             Chart.DrawIcon(string.Format("BE_Id_{0,1}", barIndex, text), arrowDirection, barIndex, yAxisPosition, color);
         }
 
-        private bool IsBullishEngulfingPattern(int i)
+        public bool IsBullishEngulfingPattern(int i)
         {
             return Bars.OpenPrices[i - 1] > Bars.ClosePrices[i - 1]
                 && Bars.OpenPrices[i] < Bars.ClosePrices[i - 1]
                 && Bars.ClosePrices[i] > Bars.OpenPrices[i - 1];
         }
-        private bool IsBearishEngulfingPattern(int i)
+        public bool IsBearishEngulfingPattern(int i)
         {
             return Bars.ClosePrices[i - 1] > Bars.OpenPrices[i - 1]
                && Bars.OpenPrices[i] > Bars.ClosePrices[i - 1]
