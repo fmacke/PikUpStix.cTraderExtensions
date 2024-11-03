@@ -1,8 +1,8 @@
 ﻿using System.Data;
-using PikUpStix.cTraderExtenstions.Indicators;
 using cAlgo.API;
 using cAlgo.API.Indicators;
 using cAlgo.API.Internals;
+using PikUpStix.cTraderExtenstions.Indicators;
 
 namespace Robots
 {
