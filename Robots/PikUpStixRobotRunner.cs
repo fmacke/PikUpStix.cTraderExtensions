@@ -8,14 +8,11 @@ namespace Robots
     /// All strategy injections should derive from this class.  Note this will log the test if inheritied from directly in cTrader.  However, a 
     /// IFxProStrategyWrapper object needs to be inserted into the OnBar method of a derived class in order for a trading strategy to actually run.
     /// </summary>
-    [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.FullAccess)]
+    /// 
+
+    [Robot(AccessRights = AccessRights.FullAccess, AddIndicators = true)]
     public abstract class PikUpStixRobotRunner : RobotTestWrapper
     {
-        protected override void OnStart()
-        {
-            LogTestStart(this);
-        }
-
         public void ManagePositions(IFxProStrategyWrapper x)
         {
             foreach (var instruction in x.PositionInstructions)

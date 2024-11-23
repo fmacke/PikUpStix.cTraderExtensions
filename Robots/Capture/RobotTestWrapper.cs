@@ -7,10 +7,16 @@ namespace Robots.Capture
     {
         public bool IsTestRun { get; set; } = true;
 
-        public TestResultsCapture ResultsCapture { get; private set; }
-        protected void LogTestStart(object robot)
+        public TestResultsCapture? ResultsCapture { get; private set; } = null;
+
+        protected override void OnStart()
         {
-            if (IsTestRun)
+            if(IsTestRun)
+                LogTestStart(this);
+        }
+        protected void LogTestStart(object robot)
+        {            
+            if(IsTestRun)
                 ResultsCapture = new TestResultsCapture("test begun at " + DateTime.Now.ToString(), robot);
         }
         public string LogTestEnd(History history)

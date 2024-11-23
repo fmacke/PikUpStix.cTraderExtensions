@@ -1,6 +1,8 @@
 ﻿using cAlgo.API;
 using Domain.Entities;
 using Infrastructure.Contexts;
+using System.Data.SqlClient;
+
 
 namespace Robots.Capture
 {
@@ -9,10 +11,16 @@ namespace Robots.Capture
         public int TestId { get; private set; }
         public List<Test_Parameters> TestParams { get; }
 
-        private TraderDBContextDerived db = new TraderDBContextDerived();
-
+        private ApplicationDbContext db;
         public TestResultsCapture(string description, object robot)
         {
+            string connString = @"Server=localhost;Database=TradingBE;User Id=sa;Password=Gogogo123!;Encrypt=True;TrustServerCertificate=True;";
+
+            using (SqlConnection connection = new SqlConnection(connString))
+            {
+                connection.Open(); // Your code here }
+            }
+            db = new ApplicationDbContext();
             var rob = (Robot)robot;
             //DbConfiguration.SetConfiguration(new CustomDbConfig());
             //string e = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;  // For getting new app.config path when fxPro updates and requires new connectionstring entry
@@ -29,7 +37,7 @@ namespace Robots.Capture
 
             db.Tests.Add(testResult);
             db.SaveChanges();
-            TestId = testResult.TestId;
+            TestId = testResult.Id;
 
             TestParams = RobotProperties.GetRobotProperties(robot, TestId);
 
@@ -71,7 +79,7 @@ namespace Robots.Capture
                 db.Test_Trades.AddRange(tts);
                 db.SaveChanges();
 
-                var testResult = db.Tests.First(x => x.TestId == TestId);
+                var testResult = db.Tests.First(x => x.Id == TestId);
                 testResult.FromDate = tts.Min(x => x.Created).AddDays(-1);
                 testResult.ToDate = Convert.ToDateTime(tts.Max(x => x.ClosedAt)).AddDays(1);
                 testResult.EndingCapital = tts.Sum(x => x.Margin) + testResult.StartingCapital;

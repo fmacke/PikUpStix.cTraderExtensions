@@ -1,10 +1,11 @@
+using Domain.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities
 {
-    public partial class Test
+    public partial class Test : BaseEntity
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Test()
         {
             Test_AnnualReturns = new HashSet<Test_AnnualReturns>();
@@ -12,8 +13,7 @@ namespace Domain.Entities
             Test_Parameters = new HashSet<Test_Parameters>();
         }
 
-        public int TestId { get; set; }
-
+        
         [Column(TypeName = "smalldatetime")]
         public DateTime FromDate { get; set; }
 

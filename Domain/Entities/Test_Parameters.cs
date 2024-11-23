@@ -9,12 +9,12 @@ namespace Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int TestId { get; set; }
 
-        [Key]
+
         [Column(Order = 1)]
         [StringLength(200)]
         public string Name { get; set; }
 
-        [Key]
+
         [Column(Order = 2)]
         [StringLength(200)]
         public string Value { get; set; }

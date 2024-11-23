@@ -1,13 +1,13 @@
 ﻿using System.Data;
-using PikUpStix.cTraderExtenstions.Indicators;
 using cAlgo.API;
 using cAlgo.API.Indicators;
 using cAlgo.API.Internals;
+using PikUpStix.cTraderExtenstions.Indicators;
+using Robots.Capture;
 
 namespace Robots
 {
-    [Robot(AccessRights = AccessRights.FullAccess, AddIndicators = true)]
-    public class EngulfingTestRobot : Robot
+    public class EngulfingTestRobot : RobotTestWrapper
     {
         private double _volumeInUnits;
         // Common settings

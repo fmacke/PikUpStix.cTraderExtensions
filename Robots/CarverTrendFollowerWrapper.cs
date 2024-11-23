@@ -1,7 +1,6 @@
-﻿using Application;
-using Application.BackTest;
-using Application.Forecasts.CarverTrendFollower;
-using Application.Portfolio;
+﻿using Application.Business;
+using Application.Business.Portfolio;
+using Application.Business.Forecasts.CarverTrendFollower;
 using Application.RiskControl;
 using cAlgo.API;
 using Domain.Entities;
@@ -18,18 +17,20 @@ namespace Robots
         public decimal TrailStopAtPips { get; private set; }
         public decimal TrailStopSizeInPips { get; private set; }
         public double TakeProfitInPips { get; private set; }
+        public List<Test_Parameters> TestParameters { get; private set; }
 
-        public CarverTrendFollowerWrapper(decimal currentCapital, Bars bars, Positions positions, string symbolName, string dataSource, double askingPrice, double biddingPrice,
-            List<Test_Parameters> testParameters)
+    public CarverTrendFollowerWrapper(decimal currentCapital, Bars bars, Positions positions, string symbolName, string dataSource, double askingPrice, double biddingPrice,
+            List<Test_Parameters>? testParameters)
         {
             var barDat = new BarConvert();
             var barData = new List<List<HistoricalData>>()
             {
                 barDat.GetHistoData(bars)
             };
+        
             LoadTestParameters(testParameters);
             var cursorDate = bars.OpenTimes.Last();
-            var logger = new Logger(false);
+            //var logger = new Logger(false);
             var carverTrendFollower = new CarverTrendFollowerForecast();
             var forecasts = carverTrendFollower.GetForecasts(barData, cursorDate, askingPrice, biddingPrice, testParameters);
             var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1M, TargetVolatility, barData, currentCapital);
@@ -94,32 +95,43 @@ namespace Robots
             return Convert.ToDouble(wp.StopLossAt);
         }
 
-        private void LoadTestParameters(List<Test_Parameters> testParameters)
+        private void LoadTestParameters(List<Test_Parameters>? testParameters)
         {
-            PropertyChecker.CheckExists("MaxStopLoss[Double]", testParameters);
-            PropertyChecker.CheckExists("TargetVelocity[Double]", testParameters);
-            PropertyChecker.CheckExists("MinimumOpeningForecast[Double]", testParameters);
-            PropertyChecker.CheckExists("TrailStopAtPips[Double]", testParameters);
-            PropertyChecker.CheckExists("TrailStopSizeInPips[Double]", testParameters);
-            PropertyChecker.CheckExists("TakeProfitInPips[Double]", testParameters);
-            PropertyChecker.CheckExists("ShortScalar[Double]", testParameters);
-            PropertyChecker.CheckExists("MediumScalar[Double]", testParameters);
-            PropertyChecker.CheckExists("LongScalar[Double]", testParameters);
-
-            foreach (var param in testParameters)
+            if (testParameters != null)
             {
-                if (param.Name.Equals("MaxStopLoss[Double]"))
-                    StopLossMax = Convert.ToDecimal(param.Value);
-                if (param.Name.Equals("TargetVelocity[Double]"))
-                    TargetVolatility = Convert.ToDecimal(param.Value);
-                if (param.Name.Equals("MinimumOpeningForecast[Double]"))
-                    MinimumOpeningForecast = Convert.ToDecimal(param.Value);
-                if (param.Name.Equals("TrailStopAtPips[Double]"))
-                    TrailStopAtPips = Convert.ToDecimal(param.Value);
-                if (param.Name.Equals("TrailStopSizeInPips[Double]"))
-                    TrailStopSizeInPips = Convert.ToDecimal(param.Value);
-                if (param.Name.Equals("TakeProfitInPips[Double]"))
-                    TakeProfitInPips = Convert.ToDouble(param.Value);
+                PropertyChecker.CheckExists("MaxStopLoss[Double]", testParameters);
+                PropertyChecker.CheckExists("TargetVelocity[Double]", testParameters);
+                PropertyChecker.CheckExists("MinimumOpeningForecast[Double]", testParameters);
+                PropertyChecker.CheckExists("TrailStopAtPips[Double]", testParameters);
+                PropertyChecker.CheckExists("TrailStopSizeInPips[Double]", testParameters);
+                PropertyChecker.CheckExists("TakeProfitInPips[Double]", testParameters);
+                PropertyChecker.CheckExists("ShortScalar[Double]", testParameters);
+                PropertyChecker.CheckExists("MediumScalar[Double]", testParameters);
+                PropertyChecker.CheckExists("LongScalar[Double]", testParameters);
+
+                foreach (var param in testParameters)
+                {
+                    if (param.Name.Equals("MaxStopLoss[Double]"))
+                        StopLossMax = Convert.ToDecimal(param.Value);
+                    if (param.Name.Equals("TargetVelocity[Double]"))
+                        TargetVolatility = Convert.ToDecimal(param.Value);
+                    if (param.Name.Equals("MinimumOpeningForecast[Double]"))
+                        MinimumOpeningForecast = Convert.ToDecimal(param.Value);
+                    if (param.Name.Equals("TrailStopAtPips[Double]"))
+                        TrailStopAtPips = Convert.ToDecimal(param.Value);
+                    if (param.Name.Equals("TrailStopSizeInPips[Double]"))
+                        TrailStopSizeInPips = Convert.ToDecimal(param.Value);
+                    if (param.Name.Equals("TakeProfitInPips[Double]"))
+                        TakeProfitInPips = Convert.ToDouble(param.Value);
+                }
+            }
+            else
+            {
+                /// TODO : GET RID OF THIS ONCE REFACTORING COMPLETE
+                StopLossMax = 50;
+                TargetVolatility = Convert.ToDecimal(0.2);
+                MinimumOpeningForecast = Convert.ToDecimal(0.2);
+                TrailStopAtPips = Convert.ToDecimal(50);
             }
         }
 
@@ -142,7 +154,7 @@ namespace Robots
         {
             if (wp.ProposedWeightedPosition > 0 && p.TradeType.Equals(TradeType.Buy))
                 return true;
-            if (wp.ProposedWeightedPosition < 0 && p.TradeType.Equals(  TradeType.Sell))
+            if (wp.ProposedWeightedPosition < 0 && p.TradeType.Equals(TradeType.Sell))
                 return true;
             return false;
         }

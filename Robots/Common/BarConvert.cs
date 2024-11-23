@@ -5,6 +5,13 @@ using Infrastructure.Contexts;
 namespace Robots.Common
 {
     public class BarConvert
+    /// <summary>
+    /// Converts cAlgo.API historical bar data into a list of PikUpStix.Domain.Entities.HistoricalData objects.
+    /// It provides methods to retrieve historical data either by directly passing an Instrument or by fetching 
+    /// the Instrument details based on the symbol name.
+    /// Where instrument data is not provided, a database context is used to fetch Instrument details and processes 
+    /// the bar data to create HistoricalData objects.
+    /// </summary>
     {
         public Instrument Instrument { get; set; }
         public List<HistoricalData> GetHistoData(Bars historicalData, Instrument instrument)
@@ -40,7 +47,7 @@ namespace Robots.Common
         {
             try
             {
-                Instrument = new TraderDBContextDerived().Instruments.First(x => x.DataName == symbolName && x.DataSource == "FXPRO");
+                Instrument = new ApplicationDbContext().Instruments.First(x => x.DataName == symbolName && x.DataSource == "FXPRO");
                 return Instrument;
             }
             catch (Exception ex)
