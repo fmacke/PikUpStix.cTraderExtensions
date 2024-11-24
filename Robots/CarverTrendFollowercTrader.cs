@@ -1,9 +1,7 @@
-﻿using cAlgo.API;
-using cAlgo.API.Internals;
+﻿using cAlgo.API.Internals;
 
 namespace Robots
 {
-    [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.FullAccess)]
     public abstract class CarverInjectTrendFollowercTrader : PikUpStixRobotRunner
     {
         /// <summary>
@@ -16,15 +14,15 @@ namespace Robots
             {
                 Print("Debugger launch failed");
             }
-            IsTestRun = false;
+           // IsTestRun = false;
             base.OnStart();
         }
         protected override void OnBar()
         {
-            var testParams = IsTestRun ? ResultsCapture?.TestParams : null;
+            //var testParams = IsTestRun ? ResultsCapture?.TestParams : null;
 
             /// Inject the required IFxProStrategyWrapper here
-            var x = new CarverTrendFollowerWrapper(Convert.ToDecimal(Account.Equity), Bars, Positions, SymbolName, "FXPRO", Symbol.Ask, Symbol.Bid, testParams);
+            var x = new CarverTrendFollowerWrapper(Convert.ToDecimal(Account.Equity), Bars, Positions, SymbolName, "FXPRO", Symbol.Ask, Symbol.Bid);//, testParams);
             ManagePositions(x);
             base.OnBar();
         }

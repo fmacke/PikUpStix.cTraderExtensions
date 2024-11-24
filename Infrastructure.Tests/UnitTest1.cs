@@ -12,9 +12,9 @@ namespace Infrastructure.Tests
 {
 
     [TestClass]
-    public class CVRControllerTests
+    public class InstrumentControllerTests
     {
-        public CVRControllerTests()
+        public InstrumentControllerTests()
         {
             ConfigureServices();
         }
@@ -34,10 +34,10 @@ namespace Infrastructure.Tests
         public void ConfigureServices()
         {
             // Register MediatR
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(CVRControllerTests).Assembly));
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(InstrumentControllerTests).Assembly));
 
             // Register AutoMapper
-            services.AddAutoMapper(typeof(CVRControllerTests));
+            services.AddAutoMapper(typeof(InstrumentControllerTests));
 
             // Register your cache repository
             services.AddScoped<ITestCacheRepository, TestCacheRepository>();
@@ -59,7 +59,7 @@ namespace Infrastructure.Tests
             // Assert
             //var okResult = result as OkObjectResult;
             Assert.IsNotNull(result);
-            //Assert.IsInstanceOfType(result.Value, typeof(Result<List<GetAllCVRCachedResponse>>));
+            //Assert.IsInstanceOfType(result.Value, typeof(Result<List<GetAllInstrumentCachedResponse>>));
         }
     }
 }

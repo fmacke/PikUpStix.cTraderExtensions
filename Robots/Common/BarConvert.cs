@@ -1,6 +1,8 @@
-﻿using cAlgo.API;
+﻿using AutoMapper;
+using cAlgo.API;
+using DataServices;
 using Domain.Entities;
-using Infrastructure.Contexts;
+using Application.Mappings;
 
 namespace Robots.Common
 {
@@ -37,7 +39,7 @@ namespace Robots.Common
                     LowPrice = Convert.ToDecimal(historicalData.LowPrices[x]),
                     Instrument = instrument,
                     Date = historicalData.OpenTimes[x],
-                    InstrumentId = instrument.InstrumentId
+                    InstrumentId = instrument.Id
                 });
             }
             return histoData;
@@ -47,7 +49,12 @@ namespace Robots.Common
         {
             try
             {
-                Instrument = new ApplicationDbContext().Instruments.First(x => x.DataName == symbolName && x.DataSource == "FXPRO");
+                var config = new MapperConfiguration(cfg => cfg.AddProfile<InstrumentProfile>()); 
+                var mapper = config.CreateMapper();
+                var dataService = new DataService();
+                var DD = new DataService().Instruments.GetAllInstrumentsCachedAsync();
+                var single = DD.First(x => x.DataName == symbolName && x.DataSource == "FXPRO");
+                Instrument = mapper.Map<Instrument>(single); ;
                 return Instrument;
             }
             catch (Exception ex)

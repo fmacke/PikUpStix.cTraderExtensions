@@ -11,7 +11,7 @@ namespace Robots
     /// 
 
     [Robot(AccessRights = AccessRights.FullAccess, AddIndicators = true)]
-    public abstract class PikUpStixRobotRunner : RobotTestWrapper
+    public abstract class PikUpStixRobotRunner : Robot
     {
         public void ManagePositions(IFxProStrategyWrapper x)
         {
@@ -45,8 +45,8 @@ namespace Robots
         }
         protected override void OnStop()
         {
-            if (IsTestRun)
-                LogTestEnd(History);
+            //if (IsTestRun)
+            //    LogTestEnd(History);
         }
     }
 }

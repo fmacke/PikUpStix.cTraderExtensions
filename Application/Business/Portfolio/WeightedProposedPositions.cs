@@ -14,7 +14,7 @@ namespace Application.Business.Portfolio
 
                 foreach (var historicalDataSet in historicalDataSets)
                 {
-                    if (historicalDataSet.Any(x => x.InstrumentId == forecast.Instrument.InstrumentId))
+                    if (historicalDataSet.Any(x => x.InstrumentId == forecast.Instrument.Id))
                     {
                         list = historicalDataSet;
                     }

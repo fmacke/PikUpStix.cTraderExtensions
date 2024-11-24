@@ -70,7 +70,7 @@ namespace Robots.Capture
                         // STOPLOSS - not possible to get this from HistoricalTrade item.  I presume this is because SL it can change over the lifetime of a position
                         ClosedAt = tr.ClosingTime,
                         ClosePrice = Convert.ToDecimal(tr.ClosingPrice),
-                        InstrumentId = db.Instruments.First(x => x.InstrumentName.Equals(tr.SymbolName) && x.DataSource == "FXPRO").InstrumentId,
+                        InstrumentId = db.Instruments.First(x => x.InstrumentName.Equals(tr.SymbolName) && x.DataSource == "FXPRO").Id,
                         InstrumentWeight = "NONE",
                         Status = "HISTORICALTRADE",
                         Margin = Convert.ToDecimal(tr.NetProfit)

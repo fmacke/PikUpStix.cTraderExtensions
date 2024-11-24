@@ -21,12 +21,12 @@
             public const string Delete = "Permissions.Dashboard.Delete";
         }
 
-        public static class CVRs
+        public static class Instruments
         {
-            public const string View = "Permissions.CVRs.View";
-            public const string Create = "Permissions.CVRs.Create";
-            public const string Edit = "Permissions.CVRs.Edit";
-            public const string Delete = "Permissions.CVRs.Delete";
+            public const string View = "Permissions.Instruments.View";
+            public const string Create = "Permissions.Instruments.Create";
+            public const string Edit = "Permissions.Instruments.Edit";
+            public const string Delete = "Permissions.Instruments.Delete";
         }
 
         public static class Users

@@ -79,13 +79,13 @@ namespace Application.Business.Portfolio
         private decimal CalculateWeightedPosition(IForecastValue ewmacForecast, decimal position)
         {
             decimal forecastDiversicationMultiplier = GetForecastDiversificationMultiplier();
-            decimal instrumentWeight = GetInstrumentWeight(ewmacForecast.Instrument.InstrumentId);
+            decimal instrumentWeight = GetInstrumentWeight(ewmacForecast.Instrument.Id);
             return position * forecastDiversicationMultiplier * instrumentWeight;
         }
 
         private decimal CalculateUnweightedPosition(IForecastValue foreCast)
         {
-            PriceVolatility instrumentPriceVolatility = CalculateInstrumentPriceVolatility(foreCast.Instrument.InstrumentId,
+            PriceVolatility instrumentPriceVolatility = CalculateInstrumentPriceVolatility(foreCast.Instrument.Id,
                 foreCast.DateTime);
             var subSystemPosition = new SubSystemPosition(
                 foreCast.Forecast, AvailableTradingCapital, TargetVolatility,
