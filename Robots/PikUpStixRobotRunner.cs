@@ -11,7 +11,7 @@ namespace Robots
     /// 
 
     [Robot(AccessRights = AccessRights.FullAccess, AddIndicators = true)]
-    public abstract class PikUpStixRobotRunner : Robot
+    public abstract class PikUpStixRobotRunner : RobotTestWrapper
     {
         public void ManagePositions(IFxProStrategyWrapper x)
         {

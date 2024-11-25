@@ -1,4 +1,6 @@
-﻿using cAlgo.API;
+﻿using Application.Features.Tests.Commands.Create;
+using cAlgo.API;
+using DataServices;
 using Domain.Entities;
 using Infrastructure.Contexts;
 using System.Data.SqlClient;
@@ -14,17 +16,9 @@ namespace Robots.Capture
         private ApplicationDbContext db;
         public TestResultsCapture(string description, object robot)
         {
-            string connString = @"Server=localhost;Database=TradingBE;User Id=sa;Password=Gogogo123!;Encrypt=True;TrustServerCertificate=True;";
-
-            using (SqlConnection connection = new SqlConnection(connString))
-            {
-                connection.Open(); // Your code here }
-            }
-            db = new ApplicationDbContext();
+            var dataService = new DataService();
             var rob = (Robot)robot;
-            //DbConfiguration.SetConfiguration(new CustomDbConfig());
-            //string e = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;  // For getting new app.config path when fxPro updates and requires new connectionstring entry
-            var testResult = new Test()
+            var TestId = dataService.Tests.AddTest(new CreateTestCommand()
             {
                 FromDate = new DateTime(1900, 1, 1),
                 ToDate = new DateTime(1900, 1, 1),
@@ -33,13 +27,9 @@ namespace Robots.Capture
                 Description = description,
                 TestEndAt = DateTime.Now,
                 TestRunAt = DateTime.Now
-            };
+            });
+           STOPPED HERE -need to add TestParams TO ADDTEST METHOD ABOVE AS A CHILD LIST
 
-            db.Tests.Add(testResult);
-            db.SaveChanges();
-            TestId = testResult.Id;
-
-            TestParams = RobotProperties.GetRobotProperties(robot, TestId);
 
             db.Test_Parameters.AddRange(TestParams);
             db.SaveChanges();

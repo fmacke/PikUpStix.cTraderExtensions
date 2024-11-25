@@ -1,4 +1,5 @@
 ﻿using Application.Common.Results;
+using Application.Features.Tests.Commands.Create;
 using Application.Features.Tests.Queries.GetAllCached;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,10 +20,16 @@ namespace DataServices.Calls
             var result = serviceProvider.GetRequiredService<ITestService>().GetAllTestsCachedAsync();
             return result.Result.Data;
         }
+        public int AddTest(CreateTestCommand model)
+        {
+            var id = serviceProvider.GetRequiredService<ITestService>().AddTest(model).Result.Data;
+            return id;
+        }
     }
     public interface ITestService
     {
         Task<Result<List<GetAllTestsCachedResponse>>> GetAllTestsCachedAsync();
+        Task<Result<int>> AddTest(CreateTestCommand model);
     }
     public class TestService : ITestService
     {
@@ -37,6 +44,11 @@ namespace DataServices.Calls
         {
             var query = new GetAllTestsCachedQuery();
             return await _mediator.Send(query);
+        }
+        public async Task<Result<int>> AddTest(CreateTestCommand model)
+        {
+            var result = await _mediator.Send(model);
+            return result;
         }
     }
 }

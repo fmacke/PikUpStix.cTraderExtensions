@@ -15,7 +15,7 @@ namespace Application.Business.Forecasts
             //var insId = dbx.Instruments.First(x => x.InstrumentId == id).InstrumentId;
             //Instrument = dbx.Instruments.First(x => x.InstrumentId == insId);
             //DateTime = date;
-            //PriceData = historicalData;
+            PriceData = historicalData;
             //AskingPrice = askingPrice;
             //BiddingPrice = biddingPrice;
             //InstrumentBlock = Instrument.ContractUnit;

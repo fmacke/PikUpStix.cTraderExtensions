@@ -19,10 +19,11 @@ namespace Robots
         }
         protected override void OnBar()
         {
-            //var testParams = IsTestRun ? ResultsCapture?.TestParams : null;
+            var testParams = IsTestRun ? ResultsCapture?.TestParams : null;
 
             /// Inject the required IFxProStrategyWrapper here
-            var x = new CarverTrendFollowerWrapper(Convert.ToDecimal(Account.Equity), Bars, Positions, SymbolName, "FXPRO", Symbol.Ask, Symbol.Bid);//, testParams);
+            var x = new CarverTrendFollowerWrapper(Convert.ToDecimal(Account.Equity), Bars, Positions, 
+                SymbolName, "FXPRO", Symbol.Ask, Symbol.Bid, testParams);
             ManagePositions(x);
             base.OnBar();
         }

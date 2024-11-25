@@ -6,6 +6,7 @@ using Infrastructure.CacheRepositories;
 using Infrastructure.Contexts;
 using Infrastructure.Extensions;
 using Infrastructure.Repositories;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataServices
