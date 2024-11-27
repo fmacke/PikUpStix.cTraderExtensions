@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Shared;
 using Application.Interfaces.CacheRepositories;
 using Application.Services;
 using DataServices.Calls;
@@ -22,6 +23,7 @@ namespace DataServices
             serviceCollection.AddTransient<ITestCacheRepository, TestCacheRepository>();
             serviceCollection.AddTransient<ITestService, TestService>();
             serviceCollection.AddTransient<IInstrumentService, InstrumentService>();
+            serviceCollection.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
             serviceCollection.AddPersistenceContexts();
             serviceCollection.AddRepositories();
             serviceCollection.AddTransient<IUnitOfWork, UnitOfWork>();
@@ -30,5 +32,16 @@ namespace DataServices
             Tests = new Tests(serviceCollection.BuildServiceProvider());
             Instruments = new Instruments(serviceCollection.BuildServiceProvider());
         }        
+    }
+
+    internal class AuthenticatedUserService : IAuthenticatedUserService
+    {
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        public AuthenticatedUserService()
+        {
+            UserId = "1";
+            Username = "admin";
+        }
     }
 }

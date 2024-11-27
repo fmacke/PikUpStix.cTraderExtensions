@@ -19,8 +19,8 @@ namespace Robots
         public double TakeProfitInPips { get; private set; }
         public List<Test_Parameters> TestParameters { get; private set; }
 
-    public CarverTrendFollowerWrapper(decimal currentCapital, Bars bars, Positions positions, string symbolName, string dataSource, double askingPrice, double biddingPrice)//,
-            //List<Test_Parameters>? testParameters)
+    public CarverTrendFollowerWrapper(decimal currentCapital, Bars bars, Positions positions, string symbolName, 
+        string dataSource, double askingPrice, double biddingPrice, List<Test_Parameters>? testParameters)
         {
             var barDat = new BarConvert();
             var barData = new List<List<HistoricalData>>()
@@ -28,11 +28,11 @@ namespace Robots
                 barDat.GetHistoData(bars)
             };
         
-            //LoadTestParameters(testParameters);
+            LoadTestParameters(testParameters);
             var cursorDate = bars.OpenTimes.Last();
             //var logger = new Logger(false);
             var carverTrendFollower = new CarverTrendFollowerForecast();
-            var forecasts = carverTrendFollower.GetForecasts(barData, cursorDate, askingPrice, biddingPrice);//, testParameters);
+            var forecasts = carverTrendFollower.GetForecasts(barData, cursorDate, askingPrice, biddingPrice, testParameters);
             var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1M, TargetVolatility, barData, currentCapital);
             //foreach (var pos in weightedPositions)
             //    PikUpStix.Trading.Common.FileWriter.WriteToTextFile(new string[] { cursorDate.ToString() + pos.ProposedWeightedPosition.ToString() }, @"C:\Users\Finn\Desktop\text.txt");

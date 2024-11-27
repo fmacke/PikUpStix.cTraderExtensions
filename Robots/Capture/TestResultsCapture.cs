@@ -14,25 +14,23 @@ namespace Robots.Capture
         public List<Test_Parameters> TestParams { get; }
 
         private ApplicationDbContext db;
-        public TestResultsCapture(string description, object robot)
+        public TestResultsCapture(string description, decimal accountBalance)
         {
             var dataService = new DataService();
-            var rob = (Robot)robot;
+          
             var TestId = dataService.Tests.AddTest(new CreateTestCommand()
-            {
-                FromDate = new DateTime(1900, 1, 1),
-                ToDate = new DateTime(1900, 1, 1),
-                StartingCapital = Convert.ToDecimal(rob.Account.Balance),
-                EndingCapital = 0,
-                Description = description,
-                TestEndAt = DateTime.Now,
-                TestRunAt = DateTime.Now
+                {
+                    FromDate = new DateTime(1900, 1, 1),
+                    ToDate = new DateTime(1900, 1, 1),
+                    StartingCapital = accountBalance,
+                    EndingCapital = 0,
+                    Description = description,
+                    TestEndAt = DateTime.Now,
+                    TestRunAt = DateTime.Now,
+                    Test_Parameters = TestParams,
+                Test_AnnualReturns = new List<Test_AnnualReturns>(),
+                Test_Trades = new List<Test_Trades>()
             });
-           STOPPED HERE -need to add TestParams TO ADDTEST METHOD ABOVE AS A CHILD LIST
-
-
-            db.Test_Parameters.AddRange(TestParams);
-            db.SaveChanges();
         }
         public string Capture(string method, List<HistoricalTrade> trades)
         {

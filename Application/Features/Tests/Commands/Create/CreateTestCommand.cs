@@ -85,7 +85,9 @@ namespace Application.Features.Tests.Commands.Create
         public decimal AverageLossLong { get; set; }
         [Column(TypeName = "money")]
         public decimal AverageLossShort { get; set; }
-
+        public virtual ICollection<Test_AnnualReturns> Test_AnnualReturns { get; set; }
+        public virtual ICollection<Test_Trades> Test_Trades { get; set; }
+        public virtual ICollection<Test_Parameters> Test_Parameters { get; set; }
     }
     public class CreateTestCommandHandler : IRequestHandler<CreateTestCommand, Result<int>>
     {

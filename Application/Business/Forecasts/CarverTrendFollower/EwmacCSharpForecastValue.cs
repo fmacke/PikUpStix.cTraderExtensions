@@ -8,11 +8,11 @@ namespace Application.Business.Forecasts.CarverTrendFollower
     {
         private readonly ForecastScaling _forecastScaling;
 
-        public EwmacForecastValue(DateTime cursorDate, List<HistoricalData> priceData, double askingPrice, double biddingPrice)//, List<Test_Parameters> testParameters)
+        public EwmacForecastValue(DateTime cursorDate, List<HistoricalData> priceData, double askingPrice, double biddingPrice, List<Test_Parameters> testParameters)
             : base(cursorDate, priceData, askingPrice, biddingPrice)
         {
             _forecastScaling = new ForecastScaling();
-            //LoadScalars(testParameters);
+            LoadScalars(testParameters);
         }
 
         private void LoadScalars(List<Test_Parameters> testParameters)

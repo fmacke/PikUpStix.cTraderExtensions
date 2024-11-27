@@ -12,13 +12,13 @@ namespace Application.Business.Forecasts.CarverTrendFollower
         /// <param name="historicalDataSets"></param>
         /// <param name="cursorDate"></param>
         /// <returns></returns>
-        public List<IForecastValue> GetForecasts(IEnumerable<List<HistoricalData>> historicalDataSets, DateTime cursorDate, double askingPrice, double biddingPrice)//,
-           //List<Test_Parameters> testParameters)
+        public List<IForecastValue> GetForecasts(IEnumerable<List<HistoricalData>> historicalDataSets, DateTime cursorDate, double askingPrice, double biddingPrice,
+           List<Test_Parameters> testParameters)
         {
             var forecasts = new List<IForecastValue>();
             foreach (var forecast in from historicalDataSet in historicalDataSets
                                      where historicalDataSet.Count > 0
-                                     select new EwmacForecastValue(cursorDate, historicalDataSet, askingPrice, biddingPrice))//, testParameters))
+                                     select new EwmacForecastValue(cursorDate, historicalDataSet, askingPrice, biddingPrice, testParameters))
             {
                 forecast.CalculateForecast();
                 forecasts.Add(forecast);

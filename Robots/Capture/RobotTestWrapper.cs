@@ -14,10 +14,11 @@ namespace Robots.Capture
             if(IsTestRun)
                 LogTestStart(this);
         }
-        protected void LogTestStart(object robot)
+        protected void LogTestStart(Robot robot)
         {            
-            if(IsTestRun)
-                ResultsCapture = new TestResultsCapture("test begun at " + DateTime.Now.ToString(), robot);
+            var startBalance = Convert.ToDecimal(robot.Account.Balance);
+            if (IsTestRun)
+                ResultsCapture = new TestResultsCapture("test begun at " + DateTime.Now.ToString(), startBalance );
         }
         public string LogTestEnd(History history)
         {

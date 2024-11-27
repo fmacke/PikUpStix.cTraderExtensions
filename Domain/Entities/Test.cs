@@ -13,7 +13,7 @@ namespace Domain.Entities
             Test_Parameters = new HashSet<Test_Parameters>();
         }
 
-        
+
         [Column(TypeName = "smalldatetime")]
         public DateTime FromDate { get; set; }
 
@@ -132,13 +132,8 @@ namespace Domain.Entities
         [Column(TypeName = "money")]
         public decimal AverageLossShort { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Test_AnnualReturns> Test_AnnualReturns { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Test_Trades> Test_Trades { get; set; }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Test_Parameters> Test_Parameters { get; set; }
     }
 }
