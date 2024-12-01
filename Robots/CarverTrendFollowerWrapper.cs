@@ -2,9 +2,10 @@
 using Application.Business.Portfolio;
 using Application.Business.Forecasts.CarverTrendFollower;
 using Application.RiskControl;
-using cAlgo.API;
 using Domain.Entities;
 using Robots.Common;
+using Application.BackTest;
+using Domain.Enums;
 
 namespace Robots
 {
@@ -19,21 +20,16 @@ namespace Robots
         public double TakeProfitInPips { get; private set; }
         public List<Test_Parameters> TestParameters { get; private set; }
 
-    public CarverTrendFollowerWrapper(decimal currentCapital, Bars bars, Positions positions, string symbolName, 
+    public CarverTrendFollowerWrapper(decimal currentCapital, List<List<HistoricalData>> bars, Positions positions, string symbolName, 
         string dataSource, double askingPrice, double biddingPrice, List<Test_Parameters>? testParameters)
         {
-            var barDat = new BarConvert();
-            var barData = new List<List<HistoricalData>>()
-            {
-                barDat.GetHistoData(bars)
-            };
-        
+                  
             LoadTestParameters(testParameters);
-            var cursorDate = bars.OpenTimes.Last();
-            //var logger = new Logger(false);
+            var cursorDate = Convert.ToDateTime(bars.First().Last().Date);
+            var logger = new Logger(false);
             var carverTrendFollower = new CarverTrendFollowerForecast();
-            var forecasts = carverTrendFollower.GetForecasts(barData, cursorDate, askingPrice, biddingPrice, testParameters);
-            var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1M, TargetVolatility, barData, currentCapital);
+            var forecasts = carverTrendFollower.GetForecasts(bars, cursorDate, logger, askingPrice, biddingPrice, testParameters);
+            var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1M, TargetVolatility, bars, currentCapital);
             //foreach (var pos in weightedPositions)
             //    PikUpStix.Trading.Common.FileWriter.WriteToTextFile(new string[] { cursorDate.ToString() + pos.ProposedWeightedPosition.ToString() }, @"C:\Users\Finn\Desktop\text.txt");
 
@@ -54,7 +50,9 @@ namespace Robots
                 {
                     if (AreSameDirection(wp, p))
                     {
-                        PositionInstructions.Add(new PositionUpdate(p, CalculateStopLoss(askingPrice, biddingPrice, wp, p, barDat.Instrument), 200, InstructionType.Modify, GetVolume(wp), Convert.ToDouble(wp.ProposedWeightedPosition)));
+                        PositionInstructions.Add(
+                            new PositionUpdate(p, CalculateStopLoss(askingPrice, biddingPrice, wp, p, 
+                            wp.Instrument), 200, InstructionType.Modify, GetVolume(wp), Convert.ToDouble(wp.ProposedWeightedPosition)));
                     }
                     else
                     {
@@ -87,10 +85,10 @@ namespace Robots
         {
             var trailingStopAt = Convert.ToDouble(instrument.MinimumPriceFluctuation * TrailStopAtPips);
             var trailingStopSize = Convert.ToDouble(instrument.MinimumPriceFluctuation * TrailStopSizeInPips);
-            var trailingStop = new TrailingStop(GetTradeType(wp), p.EntryPrice, Convert.ToDouble(wp.StopLossAt), biddingPrice, askingPrice, trailingStopAt, trailingStopSize);
+            var trailingStop = new TrailingStop(GetTradeType(wp), Convert.ToDouble(p.EntryPrice), Convert.ToDouble(wp.StopLossAt), biddingPrice, askingPrice, trailingStopAt, trailingStopSize);
             if (trailingStop.TrailingStopUpdated)
                 return trailingStop.TrailingStopAt;
-            if (p.StopLoss >= trailingStop.TrailingStopAt && Convert.ToDouble(wp.StopLossAt) < trailingStop.TrailingStopAt)
+            if (p.StopLoss >= Convert.ToDecimal(trailingStop.TrailingStopAt) && Convert.ToDouble(wp.StopLossAt) < trailingStop.TrailingStopAt)
                 return trailingStop.TrailingStopAt;
             return Convert.ToDouble(wp.StopLossAt);
         }
@@ -152,9 +150,9 @@ namespace Robots
 
         private bool AreSameDirection(PositionValue wp, Position p)
         {
-            if (wp.ProposedWeightedPosition > 0 && p.TradeType.Equals(TradeType.Buy))
+            if (wp.ProposedWeightedPosition > 0 && p.TradeType == TradeType.Buy)
                 return true;
-            if (wp.ProposedWeightedPosition < 0 && p.TradeType.Equals(TradeType.Sell))
+            if (wp.ProposedWeightedPosition < 0 && p.TradeType == TradeType.Sell)
                 return true;
             return false;
         }

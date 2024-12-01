@@ -5,11 +5,11 @@ using Application.Interfaces.Repositories;
 
 namespace Application.Features.Tests.Commands.Delete
 {
-    public class DeleteTestCommand : IRequest<Result<int>>
+    public class DeleteTestParametersCommand : IRequest<Result<int>>
     {
         public int Id { get; set; }
 
-        public class DeleteDynamicTestCommandHandler : IRequestHandler<DeleteTestCommand, Result<int>>
+        public class DeleteDynamicTestCommandHandler : IRequestHandler<DeleteTestParametersCommand, Result<int>>
         {
             private readonly ITestRepository _testRepository;
             private readonly IUnitOfWork _unitOfWork;
@@ -20,7 +20,7 @@ namespace Application.Features.Tests.Commands.Delete
                 _unitOfWork = unitOfWork;
             }
 
-            public async Task<Result<int>> Handle(DeleteTestCommand command, CancellationToken cancellationToken)
+            public async Task<Result<int>> Handle(DeleteTestParametersCommand command, CancellationToken cancellationToken)
             {
                 var test = await _testRepository.GetByIdAsync(command.Id);                
                 await _testRepository.DeleteAsync(test);

@@ -1,4 +1,5 @@
-﻿using Application.Features.Tests.Commands.Create;
+﻿using Application.Features.TestParameters.Commands.Create;
+using Application.Features.Tests.Commands.Create;
 using cAlgo.API;
 using DataServices;
 using Domain.Entities;
@@ -14,8 +15,9 @@ namespace Robots.Capture
         public List<Test_Parameters> TestParams { get; }
 
         private ApplicationDbContext db;
-        public TestResultsCapture(string description, decimal accountBalance)
+        public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties)
         {
+            
             var dataService = new DataService();
           
             var TestId = dataService.Tests.AddTest(new CreateTestCommand()
@@ -26,11 +28,17 @@ namespace Robots.Capture
                     EndingCapital = 0,
                     Description = description,
                     TestEndAt = DateTime.Now,
-                    TestRunAt = DateTime.Now,
-                    Test_Parameters = TestParams,
-                Test_AnnualReturns = new List<Test_AnnualReturns>(),
-                Test_Trades = new List<Test_Trades>()
+                    TestRunAt = DateTime.Now
             });
+            foreach (var prop in robotProperties)
+            {
+                dataService.TestParameters.AddTestParameters(new CreateTestParametersCommand()
+                {
+                    Name = prop.Key,
+                    Value = prop.Value,
+                    TestId = TestId
+                });
+            }
         }
         public string Capture(string method, List<HistoricalTrade> trades)
         {

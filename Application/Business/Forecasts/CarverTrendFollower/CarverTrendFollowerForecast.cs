@@ -1,4 +1,5 @@
-﻿using Application.Business.Forecasts;
+﻿using Application.BackTest;
+using Application.Business.Forecasts;
 using Application.Business.Forecasts.CarverTrendFollower;
 using Domain.Entities;
 
@@ -12,7 +13,7 @@ namespace Application.Business.Forecasts.CarverTrendFollower
         /// <param name="historicalDataSets"></param>
         /// <param name="cursorDate"></param>
         /// <returns></returns>
-        public List<IForecastValue> GetForecasts(IEnumerable<List<HistoricalData>> historicalDataSets, DateTime cursorDate, double askingPrice, double biddingPrice,
+        public List<IForecastValue> GetForecasts(IEnumerable<List<HistoricalData>> historicalDataSets, DateTime cursorDate, Logger logger, double askingPrice, double biddingPrice,
            List<Test_Parameters> testParameters)
         {
             var forecasts = new List<IForecastValue>();

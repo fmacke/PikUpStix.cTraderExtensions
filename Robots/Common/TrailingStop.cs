@@ -1,4 +1,4 @@
-﻿using cAlgo.API;
+﻿using Domain.Enums;
 
 namespace Application.RiskControl
 {

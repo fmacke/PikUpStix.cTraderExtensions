@@ -15,6 +15,7 @@ namespace DataServices
     public class DataService
     {
         public Tests Tests { get; private set; }
+        public TestParameters TestParameters { get; private set; }
         public Instruments Instruments { get; private set; }
         public DataService()
         {
@@ -31,6 +32,7 @@ namespace DataServices
             serviceCollection.AddDbContext<ApplicationDbContext>();
             Tests = new Tests(serviceCollection.BuildServiceProvider());
             Instruments = new Instruments(serviceCollection.BuildServiceProvider());
+            TestParameters = new TestParameters(serviceCollection.BuildServiceProvider());
         }        
     }
 
