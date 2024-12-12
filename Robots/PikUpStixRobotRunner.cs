@@ -3,7 +3,7 @@ using Robots.Common;
 
 namespace Robots
 {
-    public abstract class PikUpStixRobotRunner : RobotTestWrapper, IPikUpStixRobotRunner
+    public class PikUpStixRobotRunner : RobotTestWrapper, IPikUpStixRobotRunner
     {
         protected override void OnStart()
         {

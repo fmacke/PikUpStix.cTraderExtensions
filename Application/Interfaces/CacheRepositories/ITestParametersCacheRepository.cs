@@ -4,7 +4,7 @@ namespace Application.Interfaces.CacheRepositories
 {
     public interface ITestParametersCacheRepository
     {
-        Task<List<Test_Parameters>> GetCachedListAsync();
-        Task<Test_Parameters> GetByIdAsync(int id);
+        Task<List<Test_Parameter>> GetCachedListAsync();
+        Task<Test_Parameter> GetByIdAsync(int id);
     }
 }

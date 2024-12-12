@@ -4,7 +4,7 @@ namespace Application.Business
 {
     public static class PropertyChecker
     {
-        public static bool CheckExists(string parameterName, List<Test_Parameters> testParameters)
+        public static bool CheckExists(string parameterName, List<Test_Parameter> testParameters)
         {
             foreach (var testParam in testParameters)
                 if (testParam.Name.Equals(parameterName))

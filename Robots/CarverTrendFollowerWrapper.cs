@@ -18,10 +18,10 @@ namespace Robots
         public decimal TrailStopAtPips { get; private set; }
         public decimal TrailStopSizeInPips { get; private set; }
         public double TakeProfitInPips { get; private set; }
-        public List<Test_Parameters> TestParameters { get; private set; }
+        public List<Test_Parameter> TestParameters { get; private set; }
 
     public CarverTrendFollowerWrapper(decimal currentCapital, List<List<HistoricalData>> bars, Positions positions, string symbolName, 
-        string dataSource, double askingPrice, double biddingPrice, List<Test_Parameters>? testParameters)
+        string dataSource, double askingPrice, double biddingPrice, List<Test_Parameter>? testParameters)
         {
                   
             LoadTestParameters(testParameters);
@@ -93,7 +93,7 @@ namespace Robots
             return Convert.ToDouble(wp.StopLossAt);
         }
 
-        private void LoadTestParameters(List<Test_Parameters>? testParameters)
+        private void LoadTestParameters(List<Test_Parameter>? testParameters)
         {
             if (testParameters != null)
             {

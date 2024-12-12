@@ -30,7 +30,7 @@ namespace Application.Features.TestParameters.Queries.GetAllPaged
 
         public async Task<PaginatedResult<GetAllTestParametersResponse>> Handle(GetAllTestParametersQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<Test_Parameters, GetAllTestParametersResponse>> expression = e => new GetAllTestParametersResponse
+            Expression<Func<Test_Parameter, GetAllTestParametersResponse>> expression = e => new GetAllTestParametersResponse
             {
                 Id = e.Id
                 /// todo: add other properties

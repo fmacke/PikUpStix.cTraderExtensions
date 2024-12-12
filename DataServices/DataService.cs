@@ -1,18 +1,18 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Interfaces.Shared;
 using Application.Interfaces.CacheRepositories;
+using Application.Interfaces.Repositories;
 using Application.Services;
 using DataServices.Calls;
 using Infrastructure.CacheRepositories;
 using Infrastructure.Contexts;
 using Infrastructure.Extensions;
 using Infrastructure.Repositories;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataServices
 {
-    public class DataService
+    public class DataService : IDataService
     {
         public Tests Tests { get; private set; }
         public TestParameters TestParameters { get; private set; }
@@ -24,6 +24,7 @@ namespace DataServices
             serviceCollection.AddTransient<ITestCacheRepository, TestCacheRepository>();
             serviceCollection.AddTransient<ITestService, TestService>();
             serviceCollection.AddTransient<IInstrumentService, InstrumentService>();
+            serviceCollection.AddTransient<ITestParametersService, TestParametersService>();
             serviceCollection.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
             serviceCollection.AddPersistenceContexts();
             serviceCollection.AddRepositories();
@@ -33,7 +34,7 @@ namespace DataServices
             Tests = new Tests(serviceCollection.BuildServiceProvider());
             Instruments = new Instruments(serviceCollection.BuildServiceProvider());
             TestParameters = new TestParameters(serviceCollection.BuildServiceProvider());
-        }        
+        }
     }
 
     internal class AuthenticatedUserService : IAuthenticatedUserService

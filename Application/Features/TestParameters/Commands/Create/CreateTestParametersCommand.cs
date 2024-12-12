@@ -33,7 +33,7 @@ namespace Application.Features.TestParameters.Commands.Create
 
         public async Task<Result<int>> Handle(CreateTestParametersCommand request, CancellationToken cancellationToken)
         {
-            var testParameters = _mapper.Map<Test_Parameters>(request);
+            var testParameters = _mapper.Map<Test_Parameter>(request);
             await _testParametersRepository.InsertAsync(testParameters);
             await _unitOfWork.Commit(cancellationToken);
             return Result<int>.Success(testParameters.Id);

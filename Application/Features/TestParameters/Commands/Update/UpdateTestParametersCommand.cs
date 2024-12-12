@@ -47,7 +47,7 @@ namespace Application.Features.TestParameters.Commands.Update
             }
         }
 
-        private void UpdateModifiedTestParameters(ref Test_Parameters testParameters, UpdateTestParametersCommand command)
+        private void UpdateModifiedTestParameters(ref Test_Parameter testParameters, UpdateTestParametersCommand command)
         {
             testParameters.Name = command.Name ?? testParameters.Name;
             testParameters.Value = command.Value ?? testParameters.Value;

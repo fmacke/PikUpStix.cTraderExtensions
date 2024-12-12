@@ -1,7 +1,7 @@
 using Domain.Abstractions;
 namespace Domain.Entities
 {
-    public partial class Test_Parameters : BaseEntity
+    public partial class Test_Parameter : BaseEntity
     {
         public string Name { get; set; }
         public string Value { get; set; }

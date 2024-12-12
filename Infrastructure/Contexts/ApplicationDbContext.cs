@@ -19,7 +19,7 @@ namespace Infrastructure.Contexts
         public virtual DbSet<Test_AnnualReturns> Test_AnnualReturns { get; set; }
         public virtual DbSet<Test_Trades> Test_Trades { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
-        public virtual DbSet<Test_Parameters> Test_Parameters { get; set; }
+        public virtual DbSet<Test_Parameter> Test_Parameters { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -335,11 +335,11 @@ namespace Infrastructure.Contexts
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
-            modelBuilder.Entity<Test_Parameters>()
+            modelBuilder.Entity<Test_Parameter>()
                 .Property(e => e.Name)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Test_Parameters>()
+            modelBuilder.Entity<Test_Parameter>()
                 .Property(e => e.Value)
                 .IsUnicode(false);
         }

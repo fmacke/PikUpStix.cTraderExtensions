@@ -14,7 +14,7 @@ namespace Application.Business.Forecasts.CarverTrendFollower
         /// <param name="cursorDate"></param>
         /// <returns></returns>
         public List<IForecastValue> GetForecasts(IEnumerable<List<HistoricalData>> historicalDataSets, DateTime cursorDate, Logger logger, double askingPrice, double biddingPrice,
-           List<Test_Parameters> testParameters)
+           List<Test_Parameter> testParameters)
         {
             var forecasts = new List<IForecastValue>();
             foreach (var forecast in from historicalDataSet in historicalDataSets

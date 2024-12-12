@@ -4,22 +4,18 @@ using cAlgo.API;
 using DataServices;
 using Domain.Entities;
 using Infrastructure.Contexts;
-using System.Data.SqlClient;
-
 
 namespace Robots.Capture
 {
     public class TestResultsCapture
     {
         public int TestId { get; private set; }
-        public List<Test_Parameters> TestParams { get; }
+        public List<Test_Parameter> TestParams { get; set; }
 
         private ApplicationDbContext db;
-        public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties)
-        {
-            
-            var dataService = new DataService();
-          
+        public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties, IDataService dataService)
+        {            
+            TestParams = new List<Test_Parameter>();
             var TestId = dataService.Tests.AddTest(new CreateTestCommand()
                 {
                     FromDate = new DateTime(1900, 1, 1),
@@ -32,6 +28,12 @@ namespace Robots.Capture
             });
             foreach (var prop in robotProperties)
             {
+                TestParams.Add(new Test_Parameter
+                {
+                    Name = prop.Key,
+                    Value = prop.Value,
+                    TestId = TestId
+                });
                 dataService.TestParameters.AddTestParameters(new CreateTestParametersCommand()
                 {
                     Name = prop.Key,
