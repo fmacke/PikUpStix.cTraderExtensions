@@ -15,6 +15,7 @@ namespace Application.Features.TestParameters.Commands.Update
         public string Name { get; set; }
         public string Value { get; set; }
         public int TestId { get; set; }
+        public virtual Test Test { get; set; }
     }
     
     public class UpdateTestParametersCommandHandler : IRequestHandler<UpdateTestParametersCommand, Result<int>>

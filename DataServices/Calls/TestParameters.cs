@@ -21,7 +21,7 @@ namespace DataServices.Calls
             var result = serviceProvider.GetRequiredService<ITestParametersService>().GetAllTestsParametersAsync();
             return result.Result.Data;
         }
-        public int AddTestParameters(CreateTestParametersCommand model)
+        public int AddTestParameters(CreateTestParameterCommand model)
         {
             var id = serviceProvider.GetRequiredService<ITestParametersService>().AddTestParameters(model).Result.Data;
             return id;
@@ -30,7 +30,7 @@ namespace DataServices.Calls
     public interface ITestParametersService
     {
         Task<Result<List<GetAllTestParametersCachedResponse>>> GetAllTestsParametersAsync();
-        Task<Result<int>> AddTestParameters(CreateTestParametersCommand model);
+        Task<Result<int>> AddTestParameters(CreateTestParameterCommand model);
     }
     public class TestParametersService : ITestParametersService
     {
@@ -46,7 +46,7 @@ namespace DataServices.Calls
             var query = new GetAllTestParametersCachedQuery();
             return await _mediator.Send(query);
         }
-        public async Task<Result<int>> AddTestParameters(CreateTestParametersCommand model)
+        public async Task<Result<int>> AddTestParameters(CreateTestParameterCommand model)
         {
             var result = await _mediator.Send(model);
             return result;

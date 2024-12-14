@@ -5,15 +5,7 @@ namespace Robots
 {
     public class PikUpStixRobotRunner : RobotTestWrapper, IPikUpStixRobotRunner
     {
-        protected override void OnStart()
-        {
-            var result = System.Diagnostics.Debugger.Launch();
-            if (!result)
-            {
-                Print("Debugger launch failed");
-            }
-            base.OnStart();
-        }
+        
         public void ManagePositions(IFxProStrategyWrapper x)
         {
             foreach (var instruction in x.PositionInstructions)

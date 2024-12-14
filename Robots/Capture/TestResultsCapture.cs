@@ -34,7 +34,7 @@ namespace Robots.Capture
                     Value = prop.Value,
                     TestId = TestId
                 });
-                dataService.TestParameters.AddTestParameters(new CreateTestParametersCommand()
+                dataService.TestParameters.AddTestParameters(new CreateTestParameterCommand()
                 {
                     Name = prop.Key,
                     Value = prop.Value,

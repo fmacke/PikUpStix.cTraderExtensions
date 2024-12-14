@@ -35,7 +35,7 @@ namespace Application.Features.TestParameters.Queries.GetAllPaged
                 Id = e.Id
                 /// todo: add other properties
             };
-            var paginatedList = await _repository.Test_Parameterss
+            var paginatedList = await _repository.Test_Parameters
                 .Select(expression)
                 .ToPaginatedListAsync(request.PageNumber, request.PageSize);
             return paginatedList;

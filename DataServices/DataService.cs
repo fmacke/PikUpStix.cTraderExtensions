@@ -27,6 +27,7 @@ namespace DataServices
             serviceCollection.AddTransient<ITestParametersService, TestParametersService>();
             serviceCollection.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
             serviceCollection.AddPersistenceContexts();
+            serviceCollection.AddApplicationLayer();
             serviceCollection.AddRepositories();
             serviceCollection.AddTransient<IUnitOfWork, UnitOfWork>();
             serviceCollection.AddDistributedMemoryCache();

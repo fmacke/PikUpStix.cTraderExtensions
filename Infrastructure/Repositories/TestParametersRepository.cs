@@ -5,12 +5,12 @@ using Domain.Entities;
 
 namespace Infrastructure.Repositories
 {
-    public class Test_ParametersRepository : ITestParametersRepository
+    public class TestParametersRepository : ITestParametersRepository
     {
         private readonly IRepositoryAsync<Test_Parameter> _repository;
         private readonly IDistributedCache _distributedCache;
 
-        public Test_ParametersRepository(IDistributedCache distributedCache, IRepositoryAsync<Test_Parameter> repository)
+        public TestParametersRepository(IDistributedCache distributedCache, IRepositoryAsync<Test_Parameter> repository)
         {
             _distributedCache = distributedCache;
             _repository = repository;
@@ -18,9 +18,7 @@ namespace Infrastructure.Repositories
 
         public IQueryable<Test_Parameter> Test_Parameters => _repository.Entities;
 
-        //public IQueryable<Test_Parameter> Test_Parameterss => throw new NotImplementedException();
-
-        public async Task DeleteAsync(Test_Parameter testParameter)
+       public async Task DeleteAsync(Test_Parameter testParameter)
         {
             await _repository.DeleteAsync(testParameter);
             await _distributedCache.RemoveAsync(CacheKeys.Test_ParameterCacheKeys.ListKey);
