@@ -7,9 +7,9 @@ using Robots.Common;
 using Application.BackTest;
 using Domain.Enums;
 
-namespace Robots
+namespace Robots.CarverTrendFollower
 {
-    public class CarverTrendFollowerWrapper : IFxProStrategyWrapper
+    public class CarverTrendFollowerStrategy : IFxProStrategyWrapper
     {
         public List<PositionUpdate> PositionInstructions { get; set; }
         public decimal MinimumOpeningForecast { get; private set; }
@@ -20,10 +20,10 @@ namespace Robots
         public double TakeProfitInPips { get; private set; }
         public List<Test_Parameter> TestParameters { get; private set; }
 
-    public CarverTrendFollowerWrapper(decimal currentCapital, List<List<HistoricalData>> bars, Positions positions, string symbolName, 
-        string dataSource, double askingPrice, double biddingPrice, List<Test_Parameter>? testParameters)
+        public CarverTrendFollowerStrategy(decimal currentCapital, List<List<HistoricalData>> bars, Positions positions, string symbolName,
+            string dataSource, double askingPrice, double biddingPrice, List<Test_Parameter>? testParameters)
         {
-                  
+
             LoadTestParameters(testParameters);
             var cursorDate = Convert.ToDateTime(bars.First().Last().Date);
             var logger = new Logger(false);
@@ -51,7 +51,7 @@ namespace Robots
                     if (AreSameDirection(wp, p))
                     {
                         PositionInstructions.Add(
-                            new PositionUpdate(p, CalculateStopLoss(askingPrice, biddingPrice, wp, p, 
+                            new PositionUpdate(p, CalculateStopLoss(askingPrice, biddingPrice, wp, p,
                             wp.Instrument), 200, InstructionType.Modify, GetVolume(wp), Convert.ToDouble(wp.ProposedWeightedPosition)));
                     }
                     else

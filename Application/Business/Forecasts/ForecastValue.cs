@@ -7,17 +7,16 @@ namespace Application.Business.Forecasts
         public ForecastValue()
         {
         }
-
         public ForecastValue(DateTime date, List<HistoricalData> historicalData, double askingPrice, double biddingPrice)
         {
             // TraderDBContextDerived dbx = new TraderDBContextDerived();
             //  var id = historicalData.First().InstrumentId;
             //var insId = dbx.Instruments.First(x => x.InstrumentId == id).InstrumentId;
             //Instrument = dbx.Instruments.First(x => x.InstrumentId == insId);
-            //DateTime = date;
+            DateTime = date;
             PriceData = historicalData;
-            //AskingPrice = askingPrice;
-            //BiddingPrice = biddingPrice;
+            AskingPrice = askingPrice;
+            BiddingPrice = biddingPrice;
             //InstrumentBlock = Instrument.ContractUnit;
             //MinimumPriceFluctuation = Instrument.MinimumPriceFluctuation;
         }

@@ -21,9 +21,6 @@ namespace PikUpStix.cTraderExtenstions.Indicators
         [Parameter("SignalYAdjust", Group = "Highlight Engulfing Pattern", DefaultValue = 150)]
         public int SignalYAdjust { get; set; }
 
-        //public bool IsBearEngulfingPattern = false;
-        //public bool IsBullEngulfingPattern = false;
-
         public override void Calculate(int index)
         {
             HighlightEngulfingPatterns(index);
@@ -37,12 +34,10 @@ namespace PikUpStix.cTraderExtenstions.Indicators
                 {
                     if (IsBullishEngulfingPattern(i))
                     {
-                        //IsBullEngulfingPattern = true;
                         HighlightEngulfing("Bullish Engulfing", i, Bars.HighPrices[i] + (Symbol.TickSize * SignalYAdjust), Color.Green, ChartIconType.UpArrow);
                     }
                     if (IsBearishEngulfingPattern(i))
                     {
-                        //IsBearEngulfingPattern = true;
                         HighlightEngulfing("Bearish Engulfing", i, Bars.LowPrices[i] - (Symbol.TickSize * SignalYAdjust), Color.Red, ChartIconType.DownArrow);
                     }
                 }
