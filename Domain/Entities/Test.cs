@@ -9,7 +9,7 @@ namespace Domain.Entities
         public Test()
         {
             Test_AnnualReturns = new HashSet<Test_AnnualReturns>();
-            Test_Trades = new HashSet<Test_Trades>();
+            Test_Trades = new HashSet<TestTrade>();
             Test_Parameters = new HashSet<Test_Parameter>();
         }
 
@@ -133,7 +133,7 @@ namespace Domain.Entities
         public decimal AverageLossShort { get; set; }
 
         public virtual ICollection<Test_AnnualReturns> Test_AnnualReturns { get; set; }
-        public virtual ICollection<Test_Trades> Test_Trades { get; set; }
+        public virtual ICollection<TestTrade> Test_Trades { get; set; }
         public virtual ICollection<Test_Parameter> Test_Parameters { get; set; }
     }
 }

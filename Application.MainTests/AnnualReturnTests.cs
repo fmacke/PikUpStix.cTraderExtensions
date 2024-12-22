@@ -15,12 +15,12 @@ namespace PikUpStix.Trading.NTests
             Assert.Equals(annualReturns.First(x => x.Year.Year == 1981).ReturnAsPercentofInvestmentCapital, Convert.ToDecimal(0.3636363636363636363636363636M));
         }
 
-        private List<Test_Trades> LoadTestAnnualReturnData()
+        private List<TestTrade> LoadTestAnnualReturnData()
         {
             var noOfDays = 730;
             var startDate = new DateTime(1980, 1, 1);
             var count = 0;
-            var results = new List<Test_Trades>();
+            var results = new List<TestTrade>();
             //var cumulativeMargin = 1000;
             while (count < noOfDays)
             {

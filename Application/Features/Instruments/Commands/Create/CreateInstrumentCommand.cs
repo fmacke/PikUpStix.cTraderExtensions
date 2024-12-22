@@ -25,7 +25,7 @@ namespace Application.Features.Instruments.Commands.Create
         public string Currency { get; set; }
         public virtual ICollection<HistoricalData> HistoricalDatas { get; set; }
         public virtual ICollection<PortfolioInstrument> PortfolioInstruments { get; set; }
-        public virtual ICollection<Test_Trades> Test_Trades { get; set; }
+        public virtual ICollection<TestTrade> Test_Trades { get; set; }
     }
 
     public class CreateInstrumentCommandHandler : IRequestHandler<CreateInstrumentCommand, Result<int>>

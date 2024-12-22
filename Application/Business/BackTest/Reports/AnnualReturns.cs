@@ -4,7 +4,7 @@ namespace Application.Business.BackTest.Reports
 {
     public class AnnualReturns : List<Test_AnnualReturns>
     {
-        public AnnualReturns(int testId, IEnumerable<Test_Trades> results)
+        public AnnualReturns(int testId, IEnumerable<TestTrade> results)
         {
             //var resultsToProcess = results.OrderBy(x => x.ClosedAt);
             ////get distinct list of years from results

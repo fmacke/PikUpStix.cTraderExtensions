@@ -16,7 +16,7 @@ namespace Application.MainTests
             var noOfContracts = 2.5;
             var exchangeRate = (decimal)0.77;
 
-            var trade = new Test_Trades();
+            var trade = new TestTrade();
             trade.EntryPrice = purchasePrice;
             trade.ClosePrice = closePrice;
             trade.Direction = PositionType.BUY.ToString();

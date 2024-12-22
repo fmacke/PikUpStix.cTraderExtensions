@@ -25,9 +25,9 @@ namespace Application.Business.BackTest.Position
         private int TestId;
         private decimal CurrentMargin;
         private IStopLossCreator StopLossCreator;
-        private List<Test_Trades> Trades;
+        private List<TestTrade> Trades;
 
-        public List<Test_Trades> GetUpdatedPositions(TradingSystemParams paramsa, int testId, List<Test_Trades> existingPositions, decimal currentMargin, DateTime cursorDate, WeightedProposedPositions weightedPositions,
+        public List<TestTrade> GetUpdatedPositions(TradingSystemParams paramsa, int testId, List<TestTrade> existingPositions, decimal currentMargin, DateTime cursorDate, WeightedProposedPositions weightedPositions,
             List<List<HistoricalData>> historicalDataSets, IStopLossCreator stopLossHandler)
         {
             StopLossCreator = stopLossHandler;
@@ -40,7 +40,7 @@ namespace Application.Business.BackTest.Position
             return Trades;
         }
 
-        public List<Test_Trades> GetAdjustedTrades()
+        public List<TestTrade> GetAdjustedTrades()
         {
             return Trades;
         }
@@ -75,7 +75,7 @@ namespace Application.Business.BackTest.Position
                 ? PositionType.SELL.ToString()
                 : PositionType.BUY.ToString();
 
-            var position = new Test_Trades
+            var position = new TestTrade
             {
                 TestId = TestId,
                 InstrumentId = weightedProposedPosition.Instrument.Id,
@@ -84,7 +84,6 @@ namespace Application.Business.BackTest.Position
                 EntryPrice = Convert.ToDecimal(weightedProposedPosition.AskingPrice),
                 Status = PositionStatus.POSITION.ToString(),
                 Volume = volume,
-                Instrument = weightedProposedPosition.Instrument,
                 TakeProfit = 0,
                 StopLoss = stopLoss,
                 Commission = 0,
@@ -101,10 +100,10 @@ namespace Application.Business.BackTest.Position
             Trades.Add(position);
         }
 
-        private void CloseTrade(Test_Trades trade, DateTime cursorDate, PositionValue weightedProposedPosition, decimal currentPrice)
+        private void CloseTrade(TestTrade trade, DateTime cursorDate, PositionValue weightedProposedPosition, decimal currentPrice)
         {
             foreach (
-                Test_Trades existingPosition in
+                TestTrade existingPosition in
                     Trades.Where(x => x == trade && x.Status == PositionStatus.POSITION.ToString()))
             {
                 existingPosition.ClosePrice = currentPrice;
@@ -113,8 +112,11 @@ namespace Application.Business.BackTest.Position
 
                 existingPosition.Status = PositionStatus.HISTORICALTRADE.ToString();
                 existingPosition.Comment = "Position closed due to volume change.  From existing volume of " + trade.Volume + " to new volume of " + weightedProposedPosition.ProposedWeightedPosition;
+                
+                
+                /// TODO: Make ContractUnit a property - NOT A HARD CODED ITEM!!!
                 existingPosition.Margin =
-                    Reports.Margin.Calculate(existingPosition.Instrument.ContractUnit, Parameters.ExchangeRate, trade,
+                    Reports.Margin.Calculate(0.0001M, Parameters.ExchangeRate, trade,
                         currentPrice, trade.Volume);
                 CurrentMargin += existingPosition.Margin;
                 existingPosition.CapitalAtClose = CurrentMargin + existingPosition.Margin;

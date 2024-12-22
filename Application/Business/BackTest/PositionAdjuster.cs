@@ -5,14 +5,14 @@ namespace PikUpStix.Trading.Forecast
 {
     public class PositionCalculator
     {        
-        public List<Test_Trades> RevisedPositions { get; set; }
+        public List<TestTrade> RevisedPositions { get; set; }
         public decimal RequiredAdjustmentToVolume { get; private set; }
         public decimal FinalPosition { get; private set; }
         public decimal ExistingPosition { get; private set; }
 
-        public PositionCalculator(decimal proposedPosition, List<Test_Trades> currentPositions)
+        public PositionCalculator(decimal proposedPosition, List<TestTrade> currentPositions)
         {
-            RevisedPositions = new List<Test_Trades>();
+            RevisedPositions = new List<TestTrade>();
             RequiredAdjustmentToVolume = 0;
             FinalPosition = 0M;
             ExistingPosition = 0M;
@@ -42,7 +42,7 @@ namespace PikUpStix.Trading.Forecast
 
         private void RemoveTradesTooBig(decimal proposedPosition)
         {
-            var removals = new List<Test_Trades>();
+            var removals = new List<TestTrade>();
             foreach (var position in RevisedPositions.Where(x => x.Volume * x.Volume > proposedPosition * proposedPosition))
                 removals.Add(position);
             foreach (var remove in removals)
@@ -53,7 +53,7 @@ namespace PikUpStix.Trading.Forecast
         {
             // Note this is pretty simple.  Just orders by volume ascending and should use matching combos instead
             var aggregatedPositionSum = 0M;
-            var removals = new List<Test_Trades>();
+            var removals = new List<TestTrade>();
             foreach (var position in RevisedPositions.OrderBy(x => x.Volume))
             {
                 if (Math.Pow(Convert.ToDouble(aggregatedPositionSum + position.Volume), 2) <= Math.Pow(Convert.ToDouble(proposedPosition),2))
@@ -76,7 +76,7 @@ namespace PikUpStix.Trading.Forecast
 
         private void RemovePositions(PositionType positionTypeToRemove)
         {
-            var removals = new List<Test_Trades>();
+            var removals = new List<TestTrade>();
             foreach (var position in RevisedPositions.Where(x => x.Direction == positionTypeToRemove.ToString()))
             {
                 removals.Add(position);
@@ -88,7 +88,7 @@ namespace PikUpStix.Trading.Forecast
         private void CloseAllExcept(decimal proposedPosition)
         {
             var singleAlreadyMatched = false;
-            var removals = new List<Test_Trades>();
+            var removals = new List<TestTrade>();
             foreach (var position in RevisedPositions)
             {
                 if (position.Volume != proposedPosition)

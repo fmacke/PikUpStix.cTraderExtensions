@@ -5,7 +5,7 @@ namespace Application.Business.BackTest.Reports
 {
     public static class Margin
     {
-        public static decimal Calculate(decimal contractUnit, decimal exchangeRate, Test_Trades trade,
+        public static decimal Calculate(decimal contractUnit, decimal exchangeRate, TestTrade trade,
             decimal currentPriceData, decimal volume)
         {
             var priceMovement = new decimal();

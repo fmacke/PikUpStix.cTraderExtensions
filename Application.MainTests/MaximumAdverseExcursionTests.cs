@@ -10,14 +10,14 @@ namespace Application.MainTests
         public void MaxDailyAdverseExcursionTest()
         {
             //todo: this needs updated since Test_Results table was made redundant
-            var results = new List<Test_Trades>()
+            var results = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Margin = 100,
                     //CumulativeMargin = 1100
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Margin = -200,
                     //CumulativeMargin = 1100

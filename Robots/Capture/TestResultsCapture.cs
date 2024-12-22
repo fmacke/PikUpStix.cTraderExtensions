@@ -1,9 +1,10 @@
 ﻿using Application.Features.TestParameters.Commands.Create;
 using Application.Features.Tests.Commands.Create;
+using Application.Features.Tests.Commands.Update;
+using Application.Features.TestTrades.Commands.Create;
 using cAlgo.API;
 using DataServices;
 using Domain.Entities;
-using Infrastructure.Contexts;
 
 namespace Robots.Capture
 {
@@ -12,7 +13,7 @@ namespace Robots.Capture
         public int TestId { get; private set; }
         public List<Test_Parameter> TestParams { get; set; }
 
-        private ApplicationDbContext db;
+     
         public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties, IDataService dataService)
         {            
             TestParams = new List<Test_Parameter>();
@@ -42,20 +43,17 @@ namespace Robots.Capture
                 });
             }
         }
-        public string Capture(string method, List<HistoricalTrade> trades)
+        public string Capture(string method, List<HistoricalTrade> trades, IDataService dataService)
         {
             try
             {
                 var historicalTrades = trades;
-
                 DateTime from = new DateTime(2005, 1, 1);
-
                 //var instruments = db.Instruments;
-
-                var tts = new List<Test_Trades>();
+                var tts = new CreateTestTradeRangeCommand();                
                 foreach (var tr in trades)
                 {
-                    tts.Add(new Test_Trades
+                    tts.Commands.Add(new CreateTestTradeCommand
                     {
                         TestId = TestId,
                         Comment = tr.ClosingDealId.ToString() + " || " + tr.Label,
@@ -74,15 +72,16 @@ namespace Robots.Capture
                         Margin = Convert.ToDecimal(tr.NetProfit)
                     });
                 }
-                
-                db.Test_Trades.AddRange(tts);
-                db.SaveChanges();
 
-                var testResult = db.Tests.First(x => x.Id == TestId);
-                testResult.FromDate = tts.Min(x => x.Created).AddDays(-1);
-                testResult.ToDate = Convert.ToDateTime(tts.Max(x => x.ClosedAt)).AddDays(1);
-                testResult.EndingCapital = tts.Sum(x => x.Margin) + testResult.StartingCapital;
-                db.SaveChanges();
+                dataService.TestTrades.AddTestTradeRange(tts);
+                var test = dataService.Tests.GetTest(TestId);
+                dataService.Tests.UpdateTest(new UpdateTestCommand()
+                {
+                    Id = TestId,
+                    FromDate = tts.Commands.Min(x => x.Created).AddDays(-1),
+                    ToDate = Convert.ToDateTime(tts.Commands.Max(x => x.ClosedAt)).AddDays(1),
+                    EndingCapital = tts.Commands.Sum(x => x.Margin) + test.StartingCapital
+                });
             }
             catch (Exception ex)
             {

@@ -17,7 +17,7 @@ namespace Infrastructure.Contexts
         public virtual DbSet<Porfolio> Portfolios { get; set; }
         public virtual DbSet<PortfolioInstrument> PortfolioInstruments { get; set; }
         public virtual DbSet<Test_AnnualReturns> Test_AnnualReturns { get; set; }
-        public virtual DbSet<Test_Trades> Test_Trades { get; set; }
+        public virtual DbSet<TestTrade> Test_Trades { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<Test_Parameter> Test_Parameters { get; set; }
         
@@ -124,12 +124,12 @@ namespace Infrastructure.Contexts
                 .HasForeignKey(h => h.InstrumentId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
-            modelBuilder.Entity<Instrument>()
-                .HasMany(e => e.Test_Trades)
-                .WithOne(e => e.Instrument)
-                .HasForeignKey(h => h.InstrumentId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
+            //modelBuilder.Entity<Instrument>()
+            //    .HasMany(e => e.Test_Trades)
+            //    .WithOne(e => e.Instrument)
+            //    .HasForeignKey(h => h.InstrumentId)
+            //    .OnDelete(DeleteBehavior.Restrict)
+            //    .IsRequired();
 
             modelBuilder.Entity<Porfolio>()
                 .Property(e => e.PortfolioName)
@@ -158,63 +158,63 @@ namespace Infrastructure.Contexts
                 .Property(e => e.ReturnAsPercentofInvestmentCapital)
                 .HasPrecision(19, 4);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.Volume)
                 .HasPrecision(20, 8);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.Direction)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.EntryPrice)
                 .HasPrecision(20, 8);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.TakeProfit)
                 .HasPrecision(20, 8);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.StopLoss)
                 .HasPrecision(20, 8);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.Commission)
                 .HasPrecision(19, 4);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.Comment)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.ClosePrice)
                 .HasPrecision(20, 8);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.Margin)
                 .HasPrecision(19, 4);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.InstrumentWeight)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.Status)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.CapitalAtEntry)
                 .HasPrecision(19, 4);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.CapitalAtClose)
                 .HasPrecision(19, 4);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.ForecastAtEntry)
                 .HasPrecision(20, 8);
 
-            modelBuilder.Entity<Test_Trades>()
+            modelBuilder.Entity<TestTrade>()
                 .Property(e => e.ForecastAtClose)
                 .HasPrecision(20, 8);
 
@@ -321,12 +321,12 @@ namespace Infrastructure.Contexts
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
-            modelBuilder.Entity<Test>()
-                .HasMany(e => e.Test_Trades)
-                .WithOne(e => e.Test)
-                .HasForeignKey(e => e.TestId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
+            //modelBuilder.Entity<Test>()
+            //    .HasMany(e => e.Test_Trades)
+            //    .WithOne(e => e.Test)
+            //    .HasForeignKey(e => e.TestId)
+            //    .OnDelete(DeleteBehavior.Restrict)
+            //    .IsRequired();
 
             modelBuilder.Entity<Test>()
                 .HasMany(e => e.Test_Parameters)

@@ -4,10 +4,10 @@ namespace Application.Business.BackTest.Reports
 {
     public class DailyExcursions
     {
-        public DailyExcursions(IReadOnlyCollection<Test_Trades> results)
+        public DailyExcursions(IReadOnlyCollection<TestTrade> results)
         {
             Excursions = new List<decimal>();
-            foreach (Test_Trades result in results)
+            foreach (TestTrade result in results)
             {
                 //todo: this needs updated since Test_Results table was made redundant
                 //Excursions.Add(Convert.ToDecimal(result.Margin / (result.CumulativeMargin - result.Margin)));

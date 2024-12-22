@@ -32,7 +32,7 @@ namespace Robots.Capture
         public string LogTestEnd(History history)
         {
             if (IsTestRun && ResultsCapture != null)
-                return ResultsCapture.Capture("onStop", history.ToList());
+                return ResultsCapture.Capture("onStop", history.ToList(), DataService);
             return "Not a test run.";
         }
     }

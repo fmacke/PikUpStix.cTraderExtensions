@@ -4,12 +4,12 @@ namespace Application.Business.BackTest.Reports
 {
     public class SharpeRatio
     {
-        public SharpeRatio(IReadOnlyCollection<Test_Trades> results)
+        public SharpeRatio(IReadOnlyCollection<TestTrade> results)
         {
             AveragePnL = Convert.ToDecimal(results.Average(x => x.Margin));
             var dailyPnL = new List<double>();
 
-            foreach (Test_Trades result in results)
+            foreach (TestTrade result in results)
             {
                 dailyPnL.Add(Convert.ToDouble(result.Margin));
             }

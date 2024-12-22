@@ -14,9 +14,10 @@ namespace DataServices
 {
     public class DataService : IDataService
     {
-        public Tests Tests { get; private set; }
-        public TestParameters TestParameters { get; private set; }
-        public Instruments Instruments { get; private set; }
+        public TestCalls Tests { get; private set; }
+        public TestParameterCalls TestParameters { get; private set; }
+        public InstrumentCalls Instruments { get; private set; }
+        public TestTradeCalls TestTrades { get; private set; }
         public DataService()
         {
             var serviceCollection = new ServiceCollection();
@@ -25,27 +26,29 @@ namespace DataServices
             serviceCollection.AddTransient<ITestService, TestService>();
             serviceCollection.AddTransient<IInstrumentService, InstrumentService>();
             serviceCollection.AddTransient<ITestParametersService, TestParametersService>();
-            serviceCollection.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
+            serviceCollection.AddTransient<ITestTradesService, TestTradesService>();
+            //serviceCollection.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
             serviceCollection.AddPersistenceContexts();
             serviceCollection.AddApplicationLayer();
             serviceCollection.AddRepositories();
             serviceCollection.AddTransient<IUnitOfWork, UnitOfWork>();
             serviceCollection.AddDistributedMemoryCache();
             serviceCollection.AddDbContext<ApplicationDbContext>();
-            Tests = new Tests(serviceCollection.BuildServiceProvider());
-            Instruments = new Instruments(serviceCollection.BuildServiceProvider());
-            TestParameters = new TestParameters(serviceCollection.BuildServiceProvider());
+            Tests = new TestCalls(serviceCollection.BuildServiceProvider());
+            Instruments = new InstrumentCalls(serviceCollection.BuildServiceProvider());
+            TestParameters = new TestParameterCalls(serviceCollection.BuildServiceProvider());
+            TestTrades = new TestTradeCalls(serviceCollection.BuildServiceProvider());
         }
     }
 
-    internal class AuthenticatedUserService : IAuthenticatedUserService
-    {
-        public string UserId { get; set; }
-        public string Username { get; set; }
-        public AuthenticatedUserService()
-        {
-            UserId = "1";
-            Username = "admin";
-        }
-    }
+    //internal class AuthenticatedUserService : IAuthenticatedUserService
+    //{
+    //    public string UserId { get; set; }
+    //    public string Username { get; set; }
+    //    public AuthenticatedUserService()
+    //    {
+    //        UserId = "1";
+    //        Username = "admin";
+    //    }
+    //}
 }

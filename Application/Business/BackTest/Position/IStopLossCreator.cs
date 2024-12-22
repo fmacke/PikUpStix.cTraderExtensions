@@ -8,7 +8,7 @@ namespace PikUpStix.Trading.Forecast
     public interface IStopLossCreator
     {
         decimal NewPositionStopLoss { get; set; }
-        List<Test_Trades> CalculateStops(List<Test_Trades> trades, decimal stopLossPercentage, decimal currentMargin, decimal volume, decimal exchangeRate, PositionValue weightedProposedPosition);
+        List<TestTrade> CalculateStops(List<TestTrade> trades, decimal stopLossPercentage, decimal currentMargin, decimal volume, decimal exchangeRate, PositionValue weightedProposedPosition);
     }
 
     public class SimpleStopLossCreator : IStopLossCreator
@@ -16,7 +16,7 @@ namespace PikUpStix.Trading.Forecast
         // Works out stop loss based on single percentage input and does not consider other position that may be on the same instrument
         public decimal NewPositionStopLoss { get; set; }
 
-        public List<Test_Trades> CalculateStops(List<Test_Trades> trades, decimal stopLossPercentage, decimal currentMargin, 
+        public List<TestTrade> CalculateStops(List<TestTrade> trades, decimal stopLossPercentage, decimal currentMargin, 
             decimal volume, decimal exchangeRate, PositionValue weightedProposedPosition)
         {
             var stopLoss = new StopLoss(currentMargin,
@@ -37,7 +37,7 @@ namespace PikUpStix.Trading.Forecast
         // Works out stop loss for all positions on a given instrument to create overall risk based on StopLossPercent
         public decimal NewPositionStopLoss { get; set; }
 
-        public List<Test_Trades> CalculateStops(List<Test_Trades> trades, decimal stopLossPercentage, decimal currentMargin,
+        public List<TestTrade> CalculateStops(List<TestTrade> trades, decimal stopLossPercentage, decimal currentMargin,
             decimal volume, decimal exchangeRate, PositionValue weightedProposedPosition)
         {
             var totalVolume = volume;

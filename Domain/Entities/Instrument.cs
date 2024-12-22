@@ -9,7 +9,7 @@ namespace Domain.Entities
         {
             HistoricalDatas = new HashSet<HistoricalData>();
             PortfolioInstruments = new HashSet<PortfolioInstrument>();
-            Test_Trades = new HashSet<Test_Trades>();
+            Test_Trades = new HashSet<TestTrade>();
         }
         [Required]
         [StringLength(200)]
@@ -43,6 +43,6 @@ namespace Domain.Entities
         public string Currency { get; set; }
         public virtual ICollection<HistoricalData> HistoricalDatas { get; set; }
         public virtual ICollection<PortfolioInstrument> PortfolioInstruments { get; set; }
-        public virtual ICollection<Test_Trades> Test_Trades { get; set; }
+        public virtual ICollection<TestTrade> Test_Trades { get; set; }
     }
 }

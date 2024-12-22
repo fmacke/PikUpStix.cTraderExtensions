@@ -5,11 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataServices.Calls
 {
-    public class Instruments
+    public class InstrumentCalls
     {
         private ServiceProvider serviceProvider;
 
-        public Instruments(ServiceProvider serviceProvider)
+        public InstrumentCalls(ServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
         }

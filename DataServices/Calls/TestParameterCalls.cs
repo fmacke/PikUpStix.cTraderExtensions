@@ -7,11 +7,11 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DataServices.Calls
 {
-    public class TestParameters
+    public class TestParameterCalls
     {
         private ServiceProvider serviceProvider;
 
-        public TestParameters(ServiceProvider serviceProvider)
+        public TestParameterCalls(ServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
         }

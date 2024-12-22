@@ -6,12 +6,12 @@ namespace Application.Business.BackTest.StopLoss
 {
     public class CloseOutStops : IStopLossHandler
     {
-        public List<Test_Trades> TradingPositions { get; private set; }
+        public List<TestTrade> TradingPositions { get; private set; }
 
-        public List<Test_Trades> CloseStoppedOutPositions(List<Test_Trades> existingPositions, DateTime cursorDate, List<List<HistoricalData>> historicalDataSets, decimal exchangeRate, decimal startingTradingCapital)
+        public List<TestTrade> CloseStoppedOutPositions(List<TestTrade> existingPositions, DateTime cursorDate, List<List<HistoricalData>> historicalDataSets, decimal exchangeRate, decimal startingTradingCapital)
         {
             TradingPositions = existingPositions;
-            foreach (Test_Trades existingPosition in TradingPositions.Where(x => x.Status == PositionStatus.POSITION.ToString()))
+            foreach (TestTrade existingPosition in TradingPositions.Where(x => x.Status == PositionStatus.POSITION.ToString()))
             {
                 if (existingPosition.StopLoss <= 0) continue;
                 var history = new RecentHistory(historicalDataSets, existingPosition.InstrumentId, cursorDate);
@@ -34,12 +34,12 @@ namespace Application.Business.BackTest.StopLoss
             return TradingPositions;
         }
 
-        private bool BuyStopLossHit(Test_Trades existingPosition, decimal? previousDayLow)
+        private bool BuyStopLossHit(TestTrade existingPosition, decimal? previousDayLow)
         {
             return existingPosition.Direction == PositionType.BUY.ToString() && previousDayLow <= existingPosition.StopLoss;
         }
 
-        private bool SellStopLossHit(Test_Trades existingPosition, decimal? previousDayHigh)
+        private bool SellStopLossHit(TestTrade existingPosition, decimal? previousDayHigh)
         {
             return existingPosition.Direction == PositionType.SELL.ToString() && previousDayHigh >= existingPosition.StopLoss;
         }

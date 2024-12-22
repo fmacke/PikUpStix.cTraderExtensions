@@ -21,7 +21,7 @@ namespace PikUpStix.Trading.NTests
 
         
 
-        private void TestPositionCorrect(decimal proposedPosition, decimal expectedAdditionalPositionSize, List<Test_Trades> existingPositions)
+        private void TestPositionCorrect(decimal proposedPosition, decimal expectedAdditionalPositionSize, List<TestTrade> existingPositions)
         {
             var positionAdjuster = new PositionCalculator(proposedPosition, existingPositions);
             Assert.AreEqual(proposedPosition, positionAdjuster.FinalPosition);
@@ -30,9 +30,9 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionEqualsSingleOldPosition()
         {
             var proposedPosition = 5;
-            var listOfExistingPositions = new List<Test_Trades>()
+            var listOfExistingPositions = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 5,
                     Direction = PositionType.BUY.ToString()
@@ -44,9 +44,9 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionLargerShort()
         {
             var proposedPosition = -6;
-            var listOfExistingPositions = new List<Test_Trades>()
+            var listOfExistingPositions = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = -5,
                     Direction = PositionType.SELL.ToString()
@@ -59,9 +59,9 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionLargerLong()
         {
             var proposedPosition = 6;
-            var listOfExistingPositions = new List<Test_Trades>()
+            var listOfExistingPositions = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 5,
                     Direction = PositionType.BUY.ToString()
@@ -73,24 +73,24 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewLongPositionAggregatesOldAndNew()
         {
             var proposedPosition = 20;
-            var listOfExistingPositions = new List<Test_Trades>()
+            var listOfExistingPositions = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 1,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 4,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 6,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 21,
                     Direction = PositionType.BUY.ToString()
@@ -103,24 +103,24 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewLongPositionAggregatesOldAndNewReOrdered()
         {
             var proposedPosition = 20;
-            var listOfExistingPositions = new List<Test_Trades>()
+            var listOfExistingPositions = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 1,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 4,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 21,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 6,
                     Direction = PositionType.BUY.ToString()
@@ -133,24 +133,24 @@ namespace PikUpStix.Trading.NTests
         private void WhereOnePositionMatchesRequirement()
         {
             var proposedPosition = 21;
-            var listOfExistingPositions = new List<Test_Trades>()
+            var listOfExistingPositions = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 1,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 4,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 6,
                     Direction = PositionType.BUY.ToString()
                 },
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 21,
                     Direction = PositionType.BUY.ToString()
@@ -163,9 +163,9 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionReverseToLong()
         {
             var proposedPosition = 6;
-            var listOfExistingPositions = new List<Test_Trades>()
+            var listOfExistingPositions = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = -5,
                     Direction = PositionType.SELL.ToString()
@@ -178,9 +178,9 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionReverseToShort()
         {
             var proposedPosition = -6;
-            var listOfExistingPositions = new List<Test_Trades>()
+            var listOfExistingPositions = new List<TestTrade>()
             {
-                new Test_Trades()
+                new TestTrade()
                 {
                     Volume = 5,
                     Direction = PositionType.BUY.ToString()
