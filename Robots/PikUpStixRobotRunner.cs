@@ -10,6 +10,13 @@ namespace Robots
         {
             foreach (var instruction in x.PositionInstructions)
             {
+                var tradeType = cAlgo.API.TradeType.Buy;
+                if (instruction.InstructionType == InstructionType.Open)
+                {
+                    
+                    if (instruction.TradeType == Domain.Enums.TradeType.Sell)
+                        tradeType = cAlgo.API.TradeType.Sell;
+                }
                 var position = Positions.FirstOrDefault(p => p.Id == instruction.Position.Id);
                 switch (instruction.InstructionType)
                 {
@@ -32,7 +39,7 @@ namespace Robots
                         break;
                     case InstructionType.Open:
                         var normalise = Symbol.NormalizeVolumeInUnits(instruction.Volume);
-                        var res1 = ExecuteMarketOrder(position.TradeType, SymbolName, normalise, x.GetType().Name, instruction.NewStopLoss, instruction.TakeProfit);
+                        var res1 = ExecuteMarketOrder(tradeType, SymbolName, normalise, x.GetType().Name, instruction.NewStopLoss, instruction.TakeProfit);
                         break;
                 }
             }

@@ -1,6 +1,4 @@
 ﻿using Application.BackTest;
-using Application.Business.Forecasts;
-using Application.Business.Forecasts.CarverTrendFollower;
 using Domain.Entities;
 
 namespace Application.Business.Forecasts.CarverTrendFollower

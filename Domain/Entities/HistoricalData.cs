@@ -8,7 +8,7 @@ namespace Domain.Entities
         [Key]
         public int DataId { get; set; }
 
-        public int InstrumentId { get; set; }
+        //public int InstrumentId { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? Date { get; set; }
@@ -27,6 +27,6 @@ namespace Domain.Entities
 
         public decimal? OpenInterest { get; set; }
 
-        public virtual Instrument Instrument { get; set; }
+        //public virtual Instrument Instrument { get; set; }
     }
 }

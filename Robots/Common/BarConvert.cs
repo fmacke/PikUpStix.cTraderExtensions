@@ -60,7 +60,7 @@ namespace Robots.Common
                     LowPrice = Convert.ToDecimal(historicalData.LowPrices[x]),
                     //Instrument = instrument,
                     Date = historicalData.OpenTimes[x],
-                    InstrumentId = instrumentId
+                    //InstrumentId = instrumentId
                 });
             }
             return histoData;

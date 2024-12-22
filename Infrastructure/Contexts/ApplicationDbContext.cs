@@ -112,11 +112,11 @@ namespace Infrastructure.Contexts
                 .IsUnicode(false);
 
             modelBuilder.Entity<Instrument>()
-                .HasMany(e => e.HistoricalDatas)
-                .WithOne(e => e.Instrument)
-                .HasForeignKey(h => h.InstrumentId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired(); 
+                .HasMany(e => e.HistoricalDatas);
+                //.WithOne(e => e.Instrument)
+                //.HasForeignKey(h => h.InstrumentId)
+                //.OnDelete(DeleteBehavior.Restrict)
+                //.IsRequired(); 
 
             modelBuilder.Entity<Instrument>()
                 .HasMany(e => e.PortfolioInstruments)

@@ -1,5 +1,4 @@
 using Domain.Abstractions;
-using Domain.Entities;
 using System.ComponentModel.DataAnnotations;
 namespace Domain.Entities
 {

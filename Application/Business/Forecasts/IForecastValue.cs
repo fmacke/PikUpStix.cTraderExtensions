@@ -13,7 +13,7 @@ namespace Application.Business.Forecasts
         decimal ShortForecast { get; }
         decimal LongForecast { get; }
         decimal MediumForecast { get; }
-        Instrument Instrument { get; set; }
+        //Instrument Instrument { get; set; }
         decimal CalculateForecast();
     }
 }

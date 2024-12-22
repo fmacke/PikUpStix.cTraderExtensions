@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using System.ComponentModel;
 
 namespace Application.Business.Forecasts
 {
@@ -12,13 +13,20 @@ namespace Application.Business.Forecasts
             // TraderDBContextDerived dbx = new TraderDBContextDerived();
             //  var id = historicalData.First().InstrumentId;
             //var insId = dbx.Instruments.First(x => x.InstrumentId == id).InstrumentId;
-            //Instrument = dbx.Instruments.First(x => x.InstrumentId == insId);
+            Instrument = new Instrument()
+            {
+                ContractUnit = 1,
+                InstrumentName = "EURUSD",
+                Id = 1,
+                Currency = "GBP",
+                MinimumPriceFluctuation = 0.0001M
+            };
             DateTime = date;
             PriceData = historicalData;
             AskingPrice = askingPrice;
             BiddingPrice = biddingPrice;
-            //InstrumentBlock = Instrument.ContractUnit;
-            //MinimumPriceFluctuation = Instrument.MinimumPriceFluctuation;
+            InstrumentBlock = 1;//Instrument.ContractUnit;
+            MinimumPriceFluctuation =Convert.ToDecimal(0.00010);//Instrument.MinimumPriceFluctuation;
         }
 
         public List<HistoricalData> PriceData { get; protected set; }

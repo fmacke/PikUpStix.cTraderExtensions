@@ -17,17 +17,6 @@ namespace Robots.Capture
             DataService = new DataService();
         }
 
-        //public Dictionary<string, string> GetProperties()
-        //{
-        //    var propertyNames = new Dictionary<string, string>();
-        //    PropertyInfo[] properties = this.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
-        //    foreach (PropertyInfo property in properties)
-        //    {
-        //        propertyNames.Add(property.Name, property.Name);
-        //    }
-        //    return propertyNames;
-        //}
-
         protected override void OnStart()
         {
             if(IsTestRun)

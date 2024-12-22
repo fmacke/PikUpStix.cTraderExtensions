@@ -7,9 +7,6 @@ using Robots.Common;
 
 namespace Robots.CarverTrendFollower
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class CarverTrendFollowercTrader : PikUpStixRobotRunner
     {
         [Parameter("Max Stop Loss", Group = "Risk Management", DefaultValue = 1, MinValue = 1, Step = 1)]
@@ -24,11 +21,11 @@ namespace Robots.CarverTrendFollower
         public double TrailStopSizeInPips { get; set; }
         [Parameter("Take Profit In Pips", Group = "Risk Management", DefaultValue = 0, MinValue = 0, Step = 0.01)]
         public double TakeProfitInPips { get; set; }
-        [Parameter("Short Scalar", Group = "Scalars", DefaultValue = 0, MinValue = 0.2, Step = 0.01)]
+        [Parameter("Short Scalar", Group = "Scalars", DefaultValue = 0.4, MinValue = 0.1, Step = 0.01)]
         public double ShortScalar { get; set; }
-        [Parameter("Medium Scalar", Group = "Scalars", DefaultValue = 0, MinValue = 0.4, Step = 0.01)]
+        [Parameter("Medium Scalar", Group = "Scalars", DefaultValue = 0.2, MinValue = 0.1, Step = 0.01)]
         public double MediumScalar { get; set; }
-        [Parameter("Long Scalar", Group = "Scalars", DefaultValue = 0, MinValue = 0.4, Step = 0.01)]
+        [Parameter("Long Scalar", Group = "Scalars", DefaultValue = 0.4, MinValue = 0.1, Step = 0.01)]
         public double LongScalar { get; set; }
 
         protected override void OnStart()
@@ -39,8 +36,6 @@ namespace Robots.CarverTrendFollower
                 Print("Debugger launch failed");
             }
             TestParams = RobotProperties.GetRobotProperties(this);
-            //var actualType = (CarverTrendFollowercTrader)this; 
-            //TestParams = RobotProperties.GetRobotProperties(actualType);
             base.OnStart();
         }
 

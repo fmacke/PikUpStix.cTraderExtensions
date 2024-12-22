@@ -25,7 +25,7 @@ namespace Robots.CarverTrendFollower
         {
 
             LoadTestParameters(testParameters);
-            var cursorDate = Convert.ToDateTime(bars.First().Last().Date);
+            var cursorDate = Convert.ToDateTime(bars.First().First().Date);
             var logger = new Logger(false);
             var carverTrendFollower = new CarverTrendFollowerForecast();
             var forecasts = carverTrendFollower.GetForecasts(bars, cursorDate, logger, askingPrice, biddingPrice, testParameters);
