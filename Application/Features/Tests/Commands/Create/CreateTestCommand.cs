@@ -85,6 +85,7 @@ namespace Application.Features.Tests.Commands.Create
         public decimal AverageLossLong { get; set; }
         [Column(TypeName = "money")]
         public decimal AverageLossShort { get; set; }
+        public virtual ICollection<Test_AnnualReturns> Test_AnnualReturns { get; set; }
         public virtual ICollection<TestTrade> Test_Trades { get; set; }
         public virtual ICollection<Test_Parameter> Test_Parameters { get; set; }
     }

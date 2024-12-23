@@ -16,6 +16,7 @@ namespace Infrastructure.Contexts
         public virtual DbSet<Instrument> Instruments { get; set; }
         public virtual DbSet<Porfolio> Portfolios { get; set; }
         public virtual DbSet<PortfolioInstrument> PortfolioInstruments { get; set; }
+        public virtual DbSet<Test_AnnualReturns> Test_AnnualReturns { get; set; }
         public virtual DbSet<TestTrade> Test_Trades { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<Test_Parameter> Test_Parameters { get; set; }
@@ -148,6 +149,14 @@ namespace Infrastructure.Contexts
             modelBuilder.Entity<PortfolioInstrument>()
                 .Property(e => e.InstrumentWeight)
                 .HasPrecision(2, 2);
+
+            modelBuilder.Entity<Test_AnnualReturns>()
+                .Property(e => e.ReturnInCash)
+                .HasPrecision(19, 4);
+
+            modelBuilder.Entity<Test_AnnualReturns>()
+                .Property(e => e.ReturnAsPercentofInvestmentCapital)
+                .HasPrecision(19, 4);
 
             modelBuilder.Entity<TestTrade>()
                 .Property(e => e.Volume)
@@ -304,6 +313,13 @@ namespace Infrastructure.Contexts
             modelBuilder.Entity<Test>()
                 .Property(e => e.AverageLossShort)
                 .HasPrecision(19, 4);
+
+            modelBuilder.Entity<Test>()
+                .HasMany(e => e.Test_AnnualReturns)
+                .WithOne(e => e.Test)
+                .HasForeignKey(e => e.TestId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
 
             //modelBuilder.Entity<Test>()
             //    .HasMany(e => e.Test_Trades)

@@ -42,6 +42,8 @@ namespace Infrastructure.Tests
             // Register your cache repository
             services.AddScoped<ITestCacheRepository, TestCacheRepository>();
             services.AddScoped<ITestService, TestService>();
+            // Register other services
+            //services.AddControllers();
         }
 
 

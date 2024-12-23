@@ -12,11 +12,11 @@ namespace Application.Mappings
     {
         public TestTradesProfile()
         {
-            CreateMap<CreateTestTradeCommand, TestTrade>().ReverseMap();
-            CreateMap<UpdateTestTradesCommand, TestTrade>().ReverseMap();            
-            CreateMap<GetTestTradeByIdResponse, TestTrade>().ReverseMap();            
-            CreateMap<GetAllTestTradesCachedResponse, TestTrade>().ReverseMap();
-            CreateMap<GetAllTestTradesResponse, TestTrade>().ReverseMap();
+            CreateMap<CreateTestTradeCommand, Test_Parameter>().ReverseMap();
+            CreateMap<UpdateTestTradesCommand, Test_Parameter>().ReverseMap();            
+            CreateMap<GetTestTradeByIdResponse, Test_Parameter>().ReverseMap();            
+            CreateMap<GetAllTestTradesCachedResponse, Test_Parameter>().ReverseMap();
+            CreateMap<GetAllTestTradesResponse, Test_Parameter>().ReverseMap();
         }
     }
 }

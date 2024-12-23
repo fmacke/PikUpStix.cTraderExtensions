@@ -1,6 +1,4 @@
-﻿using Robots.Common;
-
-namespace Robots.Interfaces
+﻿namespace Robots.Common
 {
     public interface IFxProStrategyWrapper
     {
