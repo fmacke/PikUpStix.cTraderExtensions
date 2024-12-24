@@ -1,4 +1,6 @@
-﻿namespace Robots.Interfaces
+﻿using Robots.Common;
+
+namespace Robots
 {
     public interface IPikUpStixRobotRunner
     {

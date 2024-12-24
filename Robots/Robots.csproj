@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="cTrader.Automate" Version="1.0.9" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.2" />
   </ItemGroup>
 

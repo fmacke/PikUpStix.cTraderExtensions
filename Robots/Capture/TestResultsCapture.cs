@@ -12,6 +12,7 @@ namespace Robots.Capture
     {
         public int TestId { get; private set; }
         public List<Test_Parameter> TestParams { get; set; }
+
      
         public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties, IDataService dataService)
         {            
