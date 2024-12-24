@@ -11,8 +11,9 @@ namespace PikUpStix.Trading.NTests
         {
             var results = LoadTestAnnualReturnData();
             var annualReturns = new AnnualReturns(1, results);
-            Assert.Equals(annualReturns.First(x => x.Year.Year == 1980).ReturnAsPercentofInvestmentCapital, Convert.ToDecimal(0.3656343656343656343656343656M));
-            Assert.Equals(annualReturns.First(x => x.Year.Year == 1981).ReturnAsPercentofInvestmentCapital, Convert.ToDecimal(0.3636363636363636363636363636M));
+            ;
+            Assert.Equals(annualReturns.First(x => x.Key == 1980), Convert.ToDecimal(0.3656343656343656343656343656M));
+            Assert.Equals(annualReturns.First(x => x.Key == 1981), Convert.ToDecimal(0.3636363636363636363636363636M));
         }
 
         private List<TestTrade> LoadTestAnnualReturnData()
@@ -27,7 +28,7 @@ namespace PikUpStix.Trading.NTests
                 //todo: this needs updated since Test_Results table was made redundant
                 //results.Add(new Test_Trades() { Margin = 1, CumulativeMargin = cumulativeMargin + 1, CurrentDate = startDate });
                 //startDate = startDate.AddDays(1);
-                //count++;
+                count++;
             }
             return results;
         }

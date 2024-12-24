@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace Robots.Capture
 {
+    /// <summary>
+    /// Robot Wrapper that deals with recording test results.
+    /// </summary>
     [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.FullAccess)]
     public class RobotTestWrapper : Robot
     {
@@ -11,20 +14,23 @@ namespace Robots.Capture
         public TestResultsCapture? ResultsCapture { get; set; }
         public DataService DataService { get; set; }
         public Dictionary<string, string> TestParams { get; set; }
-
         public RobotTestWrapper()
         {
             DataService = new DataService();
         }
-
         protected override void OnStart()
         {
             if(IsTestRun)
                 LogTestStart(this);
             //base.OnStart();
+        }        
+        protected override void OnStop()
+        {
+            if (IsTestRun)
+                LogTestEnd(History);
         }
         protected void LogTestStart(Robot robot)
-        {            
+        {
             var startBalance = Convert.ToDecimal(robot.Account.Balance);
             if (IsTestRun)
                 ResultsCapture = new TestResultsCapture("test begun at " + DateTime.Now.ToString(), startBalance, TestParams, DataService);

@@ -1,7 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Interfaces.Shared;
 using Application.Interfaces.CacheRepositories;
-using Application.Interfaces.Repositories;
 using Application.Services;
 using DataServices.Calls;
 using Infrastructure.CacheRepositories;
@@ -27,7 +26,7 @@ namespace DataServices
             serviceCollection.AddTransient<IInstrumentService, InstrumentService>();
             serviceCollection.AddTransient<ITestParametersService, TestParametersService>();
             serviceCollection.AddTransient<ITestTradesService, TestTradesService>();
-            //serviceCollection.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
+            serviceCollection.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
             serviceCollection.AddPersistenceContexts();
             serviceCollection.AddApplicationLayer();
             serviceCollection.AddRepositories();
@@ -41,14 +40,14 @@ namespace DataServices
         }
     }
 
-    //internal class AuthenticatedUserService : IAuthenticatedUserService
-    //{
-    //    public string UserId { get; set; }
-    //    public string Username { get; set; }
-    //    public AuthenticatedUserService()
-    //    {
-    //        UserId = "1";
-    //        Username = "admin";
-    //    }
-    //}
+    internal class AuthenticatedUserService : IAuthenticatedUserService
+    {
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        public AuthenticatedUserService()
+        {
+            UserId = "1";
+            Username = "admin";
+        }
+    }
 }

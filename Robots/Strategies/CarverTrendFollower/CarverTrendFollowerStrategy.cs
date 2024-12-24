@@ -6,8 +6,9 @@ using Domain.Entities;
 using Robots.Common;
 using Application.BackTest;
 using Domain.Enums;
+using Robots.Interfaces;
 
-namespace Robots.CarverTrendFollower
+namespace Robots.Strategies.CarverTrendFollower
 {
     public class CarverTrendFollowerStrategy : IFxProStrategyWrapper
     {
