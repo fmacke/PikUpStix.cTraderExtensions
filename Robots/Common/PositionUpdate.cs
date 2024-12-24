@@ -1,6 +1,5 @@
 ﻿using Application.Business;
 using Domain.Enums;
-using Robots.Interfaces;
 
 namespace Robots.Common
 {

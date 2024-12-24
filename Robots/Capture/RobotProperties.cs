@@ -1,13 +1,19 @@
-﻿using System.Reflection;
+﻿using Domain.Entities;
+using Robots.CarverTrendFollower;
+using System.CodeDom;
+using System.Reflection;
 
 namespace Robots.Capture
 {
     public static class RobotProperties
     {
-        public static Dictionary<string, string> GetRobotProperties(object robot)
+        public static Dictionary<string, string> GetRobotProperties(object robot)//, Type type)
         {
             var testParams = new Dictionary<string, string>();
-            var subclassType = robot.GetType();
+
+            // Get the type of the subclass
+            var subclassType = typeof(CarverTrendFollowercTrader);
+
             foreach (PropertyInfo info in subclassType.GetProperties()
                 .Where(x => x.DeclaringType == subclassType))
             {
@@ -16,5 +22,6 @@ namespace Robots.Capture
             }
             return testParams;
         }
+
     }
 }
