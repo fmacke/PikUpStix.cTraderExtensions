@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.36" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
   </ItemGroup>
 
@@ -15,12 +16,6 @@
     <ProjectReference Include="..\Application.Common\Application.Common.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Infrastructure">
-      <HintPath>..\Robots\bin\Debug\net6.0\Infrastructure.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

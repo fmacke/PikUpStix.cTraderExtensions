@@ -7,7 +7,7 @@ namespace FXProBridge.Capture
         public static Dictionary<string, string> GetRobotProperties(object robot)
         {
             var testParams = new Dictionary<string, string>();
-            var subclassType = robot.GetType();
+            var subclassType = robot.GetType().BaseType;
             foreach (PropertyInfo info in subclassType.GetProperties()
                 .Where(x => x.DeclaringType == subclassType))
             {

@@ -34,6 +34,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FXProBridge", "FXProBridge\FXProBridge.csproj", "{B6E2570E-ABE7-43D9-B223-ADF69EB7B763}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunRobot", "..\..\..\..\OneDrive\Documents\cAlgo\Sources\Robots\RunRobot\RunRobot\RunRobot.csproj", "{4CFDC8EA-B60E-4DD3-8F0F-E9B5D0A1590F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B6E2570E-ABE7-43D9-B223-ADF69EB7B763} = {B6E2570E-ABE7-43D9-B223-ADF69EB7B763}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

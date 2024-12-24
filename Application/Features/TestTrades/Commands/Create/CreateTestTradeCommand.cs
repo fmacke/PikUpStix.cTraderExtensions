@@ -33,7 +33,7 @@
             public decimal? ForecastAtEntry { get; set; }
             public decimal? ForecastAtClose { get; set; }
         }
-        public class CreateTestTradesCommandHandler : IRequestHandler<CreateTestParameterCommand, Result<int>>
+        public class CreateTestTradesCommandHandler : IRequestHandler<CreateTestTradeCommand, Result<int>>
         {
             private readonly ITestTradeRepository _TestTradesRepository;
             private readonly IMapper _mapper;
@@ -47,7 +47,7 @@
                 _mapper = mapper;
             }
 
-            public async Task<Result<int>> Handle(CreateTestParameterCommand request, CancellationToken cancellationToken)
+            public async Task<Result<int>> Handle(CreateTestTradeCommand request, CancellationToken cancellationToken)
             {
                 var testTrades = _mapper.Map<TestTrade>(request);
                 await _TestTradesRepository.InsertAsync(testTrades);

@@ -30,13 +30,6 @@
     <PackageReference Include="InteractiveBrokers.TwsClient" Version="1.0.755" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.36" />
-    <PackageReference Include="QuandlCS" Version="1.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Infrastructure">
-      <HintPath>..\Robots\bin\Debug\net6.0\Infrastructure.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>

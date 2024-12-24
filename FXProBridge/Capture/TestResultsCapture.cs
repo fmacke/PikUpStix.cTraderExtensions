@@ -12,7 +12,7 @@ namespace FXProBridge.Capture
     {
         public int TestId { get; private set; }
         public List<Test_Parameter> TestParams { get; set; }
-
+        stopped here, testID not making it to Capture method
         public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties, IDataService dataService)
         {
             TestParams = new List<Test_Parameter>();
@@ -65,7 +65,7 @@ namespace FXProBridge.Capture
                         // STOPLOSS - not possible to get this from HistoricalTrade item.  I presume this is because SL it can change over the lifetime of a position
                         ClosedAt = tr.ClosingTime,
                         ClosePrice = Convert.ToDecimal(tr.ClosingPrice),
-                        //InstrumentId = db.Instruments.First(x => x.InstrumentName.Equals(tr.SymbolName) && x.DataSource == "FXPRO").Id,
+                        InstrumentId = 1,//db.Instruments.First(x => x.InstrumentName.Equals(tr.SymbolName) && x.DataSource == "FXPRO").Id,
                         InstrumentWeight = "NONE",
                         Status = "HISTORICALTRADE",
                         Margin = Convert.ToDecimal(tr.NetProfit)

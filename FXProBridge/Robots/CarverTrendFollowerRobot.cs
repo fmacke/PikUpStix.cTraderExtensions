@@ -31,12 +31,7 @@ namespace FXProBridge.Robots
 
         protected override void OnStart()
         {
-            var result = System.Diagnostics.Debugger.Launch();
-            if (!result)
-            {
-                Print("Debugger launch failed");
-            }
-            TestParams = RobotProperties.GetRobotProperties(this);
+            TestParams = RobotProperties.GetRobotProperties((CarverTrendFollowerRobot)this);
             base.OnStart();
         }
 
@@ -46,9 +41,9 @@ namespace FXProBridge.Robots
             var positionDat = PositionConvert.ConvertPosition(Positions);
             var barData = new List<List<HistoricalData>>();
             barData.Add(BarConvert.GetHistoData(Bars));
-            var x = new CarverTrendFollowerStrategy(Convert.ToDecimal(Account.Equity), barData, positionDat,
+            var changeInstructions = new CarverTrendFollowerStrategy(Convert.ToDecimal(Account.Equity), barData, positionDat,
                 SymbolName, "FXPRO", Symbol.Ask, Symbol.Bid, testParams);
-            ManagePositions(x);
+            ManagePositions(changeInstructions);
             base.OnBar();
         }
     }

@@ -15,8 +15,7 @@ namespace FXProBridge.DataConversions
         }
         public static List<HistoricalData> GetHistoData(Bars historicalData)
         {
-            var instrument = GetInstrumentDetails(historicalData.SymbolName);
-            return MapBars(historicalData, instrument.Id);
+            return MapBars(historicalData, 1);  /// TODO: 1 is a placeholder for instrumentId
         }
 
         private static List<HistoricalData> MapBars(Bars historicalData, int instrumentId)
@@ -38,22 +37,5 @@ namespace FXProBridge.DataConversions
             return histoData;
         }
 
-        private static Instrument GetInstrumentDetails(string symbolName)
-        {
-            try
-            {
-                var config = new MapperConfiguration(cfg => cfg.AddProfile<InstrumentProfile>());
-                var mapper = config.CreateMapper();
-                var dataService = new DataService();
-                var DD = new DataService().Instruments.GetAllInstrumentsCachedAsync();
-                var single = DD.First(x => x.DataName == symbolName && x.DataSource == "FXPRO");
-                var instrument = mapper.Map<Instrument>(single); ;
-                return instrument;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Problem retrieving instrument data - it may not exist in sql server", ex);
-            }
-        }
     }
 }
