@@ -10,7 +10,7 @@ using Robots.Interfaces;
 
 namespace Robots.Strategies.CarverTrendFollower
 {
-    public class CarverTrendFollowerStrategy : IFxProStrategyWrapper
+    public class CarverTrendFollowerStrategy : IPositionInstructions
     {
         public List<PositionUpdate> PositionInstructions { get; set; }
         public decimal MinimumOpeningForecast { get; private set; }

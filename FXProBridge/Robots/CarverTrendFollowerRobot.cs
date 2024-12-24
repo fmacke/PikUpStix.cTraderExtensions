@@ -1,12 +1,14 @@
 ﻿using cAlgo.API;
 using cAlgo.API.Internals;
 using Domain.Entities;
-using Robots.Capture;
-using Robots.Common;
+using FXProBridge.Capture;
+using FXProBridge.Common;
+using FXProBridge.DataConversions;
+using Robots.Strategies.CarverTrendFollower;
 
-namespace Robots.Strategies.CarverTrendFollower
+namespace FXProBridge.Robots
 {
-    public class CarverTrendFollowercTrader : PikUpStixRobotRunner
+    public class CarverTrendFollowerRobot : PositionManager
     {
         [Parameter("Max Stop Loss", Group = "Risk Management", DefaultValue = 1, MinValue = 1, Step = 1)]
         public double MaxStopLoss { get; set; }

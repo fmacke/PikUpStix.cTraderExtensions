@@ -6,25 +6,25 @@ using cAlgo.API;
 using DataServices;
 using Domain.Entities;
 
-namespace Robots.Capture
+namespace FXProBridge.Capture
 {
     public class TestResultsCapture
     {
         public int TestId { get; private set; }
         public List<Test_Parameter> TestParams { get; set; }
-     
+
         public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties, IDataService dataService)
-        {            
+        {
             TestParams = new List<Test_Parameter>();
             var TestId = dataService.Tests.AddTest(new CreateTestCommand()
-                {
-                    FromDate = new DateTime(1900, 1, 1),
-                    ToDate = new DateTime(1900, 1, 1),
-                    StartingCapital = accountBalance,
-                    EndingCapital = 0,
-                    Description = description,
-                    TestEndAt = DateTime.Now,
-                    TestRunAt = DateTime.Now
+            {
+                FromDate = new DateTime(1900, 1, 1),
+                ToDate = new DateTime(1900, 1, 1),
+                StartingCapital = accountBalance,
+                EndingCapital = 0,
+                Description = description,
+                TestEndAt = DateTime.Now,
+                TestRunAt = DateTime.Now
             });
             foreach (var prop in robotProperties)
             {
@@ -49,7 +49,7 @@ namespace Robots.Capture
                 var historicalTrades = trades;
                 DateTime from = new DateTime(2005, 1, 1);
                 //var instruments = db.Instruments;
-                var tts = new CreateTestTradeRangeCommand();                
+                var tts = new CreateTestTradeRangeCommand();
                 foreach (var tr in trades)
                 {
                     tts.Commands.Add(new CreateTestTradeCommand

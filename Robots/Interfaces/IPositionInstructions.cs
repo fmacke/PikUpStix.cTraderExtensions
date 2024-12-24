@@ -2,7 +2,7 @@
 
 namespace Robots.Interfaces
 {
-    public interface IFxProStrategyWrapper
+    public interface IPositionInstructions
     {
         List<PositionUpdate> PositionInstructions { get; set; }
     }

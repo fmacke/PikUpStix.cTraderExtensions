@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Robots.Capture
+namespace FXProBridge.Capture
 {
     public static class RobotProperties
     {

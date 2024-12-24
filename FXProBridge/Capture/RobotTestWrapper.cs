@@ -2,7 +2,7 @@
 using DataServices;
 using System.Reflection;
 
-namespace Robots.Capture
+namespace FXProBridge.Capture
 {
     /// <summary>
     /// Robot Wrapper that deals with recording test results.
@@ -20,22 +20,22 @@ namespace Robots.Capture
         }
         protected override void OnStart()
         {
-            if(IsTestRun)
+            if (IsTestRun)
                 LogTestStart(this);
             //base.OnStart();
-        }        
+        }
         protected override void OnStop()
         {
             if (IsTestRun)
                 LogTestEnd(History);
         }
-        protected void LogTestStart(Robot robot)
+        private void LogTestStart(Robot robot)
         {
             var startBalance = Convert.ToDecimal(robot.Account.Balance);
             if (IsTestRun)
                 ResultsCapture = new TestResultsCapture("test begun at " + DateTime.Now.ToString(), startBalance, TestParams, DataService);
         }
-        public string LogTestEnd(History history)
+        private string LogTestEnd(History history)
         {
             if (IsTestRun && ResultsCapture != null)
                 return ResultsCapture.Capture("onStop", history.ToList(), DataService);
