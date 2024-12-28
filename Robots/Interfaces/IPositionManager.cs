@@ -2,6 +2,6 @@
 {
     public interface IPositionManager
     {
-        void ManagePositions(IPositionInstructions x);
+        void ManagePositions(IStrategy x);
     }
 }

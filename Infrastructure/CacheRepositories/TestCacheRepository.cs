@@ -10,49 +10,49 @@ namespace Infrastructure.CacheRepositories
     public class TestCacheRepository : ITestCacheRepository
     {
         private readonly IDistributedCache _distributedCache;
-        private readonly ITestRepository _cVRRepository;
+        private readonly ITestRepository _testRepository;
 
-        public TestCacheRepository(IDistributedCache distributedCache, ITestRepository cVRRepository)
+        public TestCacheRepository(IDistributedCache distributedCache, ITestRepository testRepository)
         {
             _distributedCache = distributedCache;
-            _cVRRepository = cVRRepository;
+            _testRepository = testRepository;
         }
 
-        public async Task<Test> GetByIdAsync(int cVRId)
+        public async Task<Test> GetByIdAsync(int testId)
         {
-            string cacheKey = TestCacheKeys.GetKey(cVRId);
-            var cVRBytes = await _distributedCache.GetAsync(cacheKey);
-            Test cVR = null;
-            if (cVRBytes != null)
+            string cacheKey = TestCacheKeys.GetKey(testId);
+            var testBytes = await _distributedCache.GetAsync(cacheKey);
+            Test test = null;
+            if (testBytes != null)
             {
-                cVR = System.Text.Json.JsonSerializer.Deserialize<Test>(cVRBytes);
+                test = System.Text.Json.JsonSerializer.Deserialize<Test>(testBytes);
             }
-            if (cVR == null)
+            if (test == null)
             {
-                cVR = await _cVRRepository.GetByIdAsync(cVRId);
-                Throw.Exception.IfNull(cVR, "Test", "No Test Found");
-                var cVRBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(cVR);
-                await _distributedCache.SetAsync(cacheKey, cVRBytesToCache, new DistributedCacheEntryOptions());
+                test = await _testRepository.GetByIdAsync(testId);
+                Throw.Exception.IfNull(test, "Test", "No Test Found");
+                var testBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(test);
+                await _distributedCache.SetAsync(cacheKey, testBytesToCache, new DistributedCacheEntryOptions());
             }
-            return cVR;
+            return test;
         }
 
         public async Task<List<Test>> GetCachedListAsync()
         {
             string cacheKey = TestCacheKeys.ListKey;
-            var cVRListBytes = await _distributedCache.GetAsync(cacheKey);
-            List<Test> cVRList = null;
-            if (cVRListBytes != null)
+            var testListBytes = await _distributedCache.GetAsync(cacheKey);
+            List<Test> testList = null;
+            if (testListBytes != null)
             {
-                cVRList = System.Text.Json.JsonSerializer.Deserialize<List<Test>>(cVRListBytes);
+                testList = System.Text.Json.JsonSerializer.Deserialize<List<Test>>(testListBytes);
             }
-            if (cVRList == null)
+            if (testList == null)
             {
-                cVRList = await _cVRRepository.GetListAsync();
-                var cVRListBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(cVRList);
-                await _distributedCache.SetAsync(cacheKey, cVRListBytesToCache, new DistributedCacheEntryOptions());
+                testList = await _testRepository.GetListAsync();
+                var testListBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(testList);
+                await _distributedCache.SetAsync(cacheKey, testListBytesToCache, new DistributedCacheEntryOptions());
             }
-            return cVRList;
+            return testList;
         }
     }
 }

@@ -11,12 +11,11 @@ namespace FXProBridge.Capture
     public class TestResultsCapture
     {
         public int TestId { get; private set; }
-        public List<Test_Parameter> TestParams { get; set; }
-        stopped here, testID not making it to Capture method
+        public List<Test_Parameter> TestParams { get; set; } = new List<Test_Parameter>();
+
         public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties, IDataService dataService)
         {
-            TestParams = new List<Test_Parameter>();
-            var TestId = dataService.Tests.AddTest(new CreateTestCommand()
+            TestId = dataService.TestCaller.AddTest(new CreateTestCommand()
             {
                 FromDate = new DateTime(1900, 1, 1),
                 ToDate = new DateTime(1900, 1, 1),
@@ -34,7 +33,7 @@ namespace FXProBridge.Capture
                     Value = prop.Value,
                     TestId = TestId
                 });
-                dataService.TestParameters.AddTestParameters(new CreateTestParameterCommand()
+                dataService.TestParameterCaller.AddTestParameters(new CreateTestParameterCommand()
                 {
                     Name = prop.Key,
                     Value = prop.Value,
@@ -52,7 +51,7 @@ namespace FXProBridge.Capture
                 var tts = new CreateTestTradeRangeCommand();
                 foreach (var tr in trades)
                 {
-                    tts.Commands.Add(new CreateTestTradeCommand
+                    tts.Add(new CreateTestTradeCommand
                     {
                         TestId = TestId,
                         Comment = tr.ClosingDealId.ToString() + " || " + tr.Label,
@@ -72,14 +71,14 @@ namespace FXProBridge.Capture
                     });
                 }
 
-                dataService.TestTrades.AddTestTradeRange(tts);
-                var test = dataService.Tests.GetTest(TestId);
-                dataService.Tests.UpdateTest(new UpdateTestCommand()
+                dataService.TestTradeCaller.AddTestTradeRange(tts);
+                var test = dataService.TestCaller.GetTest(TestId);
+                dataService.TestCaller.UpdateTest(new UpdateTestCommand()
                 {
                     Id = TestId,
-                    FromDate = tts.Commands.Min(x => x.Created).AddDays(-1),
-                    ToDate = Convert.ToDateTime(tts.Commands.Max(x => x.ClosedAt)).AddDays(1),
-                    EndingCapital = tts.Commands.Sum(x => x.Margin) + test.StartingCapital
+                    FromDate = tts.Min(x => x.Created).AddDays(-1),
+                    ToDate = Convert.ToDateTime(tts.Max(x => x.ClosedAt)).AddDays(1),
+                    EndingCapital = tts.Sum(x => x.Margin) + test.StartingCapital
                 });
             }
             catch (Exception ex)

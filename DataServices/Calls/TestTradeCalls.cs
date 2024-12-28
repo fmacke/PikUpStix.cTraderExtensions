@@ -13,9 +13,9 @@ namespace DataServices.Calls
         {
             this.serviceProvider = serviceProvider;
         }
-        public List<GetAllTestTradesCachedResponse> GetAllTestsParametersCachedAsync()
+        public List<GetAllTestTradesCachedResponse> GetAllTestsTradesCachedAsync()
         {
-            var result = serviceProvider.GetRequiredService<ITestTradesService>().GetAllTestsParametersAsync();
+            var result = serviceProvider.GetRequiredService<ITestTradesService>().GetAllTestsTradesAsync();
             return result.Result.Data;
         }
         public int AddTestTrade(CreateTestTradeCommand model)
@@ -31,7 +31,7 @@ namespace DataServices.Calls
     }
     public interface ITestTradesService
     {
-        Task<Result<List<GetAllTestTradesCachedResponse>>> GetAllTestsParametersAsync();
+        Task<Result<List<GetAllTestTradesCachedResponse>>> GetAllTestsTradesAsync();
         Task<Result<int>> AddTestTrade(CreateTestTradeCommand model);
         Task<Result<int>> AddTestTradeRange(CreateTestTradeRangeCommand models);
     }
@@ -42,8 +42,8 @@ namespace DataServices.Calls
         {
             _mediator = mediator;
         }
-        public async Task<Result<List<GetAllTestTradesCachedResponse>>> GetAllTestsParametersAsync()
-        {
+        public async Task<Result<List<GetAllTestTradesCachedResponse>>> GetAllTestsTradesAsync()
+        { 
             var query = new GetAllTestTradesCachedQuery();
             return await _mediator.Send(query);
         }

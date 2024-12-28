@@ -2,7 +2,7 @@
 
 namespace Robots.Interfaces
 {
-    public interface IPositionInstructions
+    public interface IStrategy
     {
         List<PositionUpdate> PositionInstructions { get; set; }
     }

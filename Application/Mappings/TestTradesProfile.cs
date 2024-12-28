@@ -6,7 +6,7 @@ using Application.Features.TestTrades.Queries.GetById;
 using AutoMapper;
 using Domain.Entities;
 
-namespace Application.Mappings
+namespace Application.Mappings 
 {
     internal class TestTradesProfile : Profile
     {

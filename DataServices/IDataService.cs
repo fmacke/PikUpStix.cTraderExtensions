@@ -4,9 +4,9 @@ namespace DataServices
 {
     public interface IDataService
     {
-        InstrumentCalls Instruments { get; }
-        TestParameterCalls TestParameters { get; }
-        TestCalls Tests { get; }
-        TestTradeCalls TestTrades { get; }
+        InstrumentCalls InstrumentCaller { get; }
+        TestParameterCalls TestParameterCaller { get; }
+        TestCalls TestCaller { get; }
+        TestTradeCalls TestTradeCaller { get; }
     }
 }

@@ -31,7 +31,7 @@ namespace Infrastructure.CacheRepositories
             if (testTrade == null)
             {
                 testTrade = await _testTradeRepository.GetByIdAsync(testTradeId);
-                Throw.Exception.IfNull(testTrade, "Test", "No Test Found");
+                Throw.Exception.IfNull(testTrade, "Test Trade", "No Test Trade Found");
                 var testTradeBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(testTrade);
                 await _distributedCache.SetAsync(cacheKey, testTradeBytesToCache, new DistributedCacheEntryOptions());
             }

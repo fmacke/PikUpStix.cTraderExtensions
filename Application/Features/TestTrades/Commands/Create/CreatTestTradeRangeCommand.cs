@@ -8,9 +8,8 @@
 
 namespace Application.Features.TestTrades.Commands.Create
 {
-    public partial class CreateTestTradeRangeCommand : IRequest<Result<int>>
+    public partial class CreateTestTradeRangeCommand : List<CreateTestTradeCommand>, IRequest<Result<int>>
     {
-        public List<CreateTestTradeCommand> Commands { get; set; }
     }
     public class CreateTestTradesRangeCommandHandler : IRequestHandler<CreateTestTradeRangeCommand, Result<int>>
     {

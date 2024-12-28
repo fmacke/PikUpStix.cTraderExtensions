@@ -5,11 +5,11 @@ namespace Domain.Entities
 {
     public partial class Test : BaseEntity
     {
-        public Test()
-        {
-            Test_Trades = new HashSet<TestTrade>();
-            Test_Parameters = new HashSet<Test_Parameter>();
-        }
+        //public Test()
+        //{
+        //    TestTrades 
+        //    Test_Parameters = new HashSet<Test_Parameter>();
+        //}
         public DateTime FromDate { get; set; }
         public DateTime ToDate { get; set; }
         public decimal StartingCapital { get; set; }
@@ -55,7 +55,7 @@ namespace Domain.Entities
         public decimal AverageLoss { get; set; }
         public decimal AverageLossLong { get; set; }
         public decimal AverageLossShort { get; set; }
-        public virtual ICollection<TestTrade> Test_Trades { get; set; }
-        public virtual ICollection<Test_Parameter> Test_Parameters { get; set; }
+        public virtual ICollection<TestTrade> TestTrades { get; set; } = new HashSet<TestTrade>();
+        public virtual ICollection<Test_Parameter> Test_Parameters { get; set; } = new HashSet<Test_Parameter>();
     }
 }

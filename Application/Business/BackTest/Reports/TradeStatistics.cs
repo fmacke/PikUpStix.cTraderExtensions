@@ -67,34 +67,34 @@ namespace Application.Business.BackTest.Reports
 
         private decimal AverageTrade()
         {
-            if (!test.Test_Trades.Any())
-                return 0;
-            return test.Test_Trades.Average(x => x.Margin);
+            //if (!test.TestTrades.Any())
+            //    return 0;
+            return 0;//test.TestTrades.Average(x => x.Margin);
         }
 
         private decimal LargestWinningTrade()
         {
-            if (!test.Test_Trades.Any())
-                return 0;
-            return test.LargestLosingTrades = test.Test_Trades.Max(x => x.Margin);
+            //if (!test.TestTrades.Any())
+            //    return 0;
+            return  0;//test.LargestLosingTrades = test.TestTrades.Max(x => x.Margin);
         }
 
         public decimal NetLongProfit()
         {
-            return test.Test_Trades.Where(x => x.Direction == "BUY").Sum(x => x.Margin);
+            return 0;// test.TestTrades.Where(x => x.Direction == "BUY").Sum(x => x.Margin);
         }
         public decimal GrossShortProfit()
         {
-            return test.Test_Trades.Where(x => x.Direction == "SELL" && x.Margin > 0).Sum(x => x.Margin);
+            return 0;// test.TestTrades.Where(x => x.Direction == "SELL" && x.Margin > 0).Sum(x => x.Margin);
         }
         public decimal GrossLongProfit()
         {
-            return test.Test_Trades.Where(x => x.Direction == "BUY" && x.Margin > 0).Sum(x => x.Margin);
+            return 0;// test.TestTrades.Where(x => x.Direction == "BUY" && x.Margin > 0).Sum(x => x.Margin);
         }
 
         public decimal GrossLongLoss()
         {
-            return test.Test_Trades.Where(x => x.Direction == "BUY" && x.Margin < 0).Sum(x => x.Margin);
+            return 0;// test.TestTrades.Where(x => x.Direction == "BUY" && x.Margin < 0).Sum(x => x.Margin);
         }
         public double ProfitFactorLongTrades()
         {
@@ -117,13 +117,13 @@ namespace Application.Business.BackTest.Reports
 
         private decimal GrossShortLoss()
         {
-            return test.Test_Trades.Where(x => x.Direction == "SELL" && x.Margin < 0).Sum(x => x.Margin);
+            return 0;//test.TestTrades.Where(x => x.Direction == "SELL" && x.Margin < 0).Sum(x => x.Margin);
         }
 
         public double ProfitableTradesRatio()
         {
-            var noOfTrades = test.Test_Trades.ToList().Count;
-            var winners = test.Test_Trades.Where(x => x.Margin > 0).ToList().Count;
+            var noOfTrades = 0;//test.TestTrades.ToList().Count;
+            var winners = 0;//test.TestTrades.Where(x => x.Margin > 0).ToList().Count;
             if (noOfTrades == 0)
                 return 0;
             double ratio = winners / noOfTrades;
@@ -131,72 +131,72 @@ namespace Application.Business.BackTest.Reports
         }
         public double LosingTradesRatio()
         {
-            var noOfTrades = test.Test_Trades.ToList().Count;
-            var losers = test.Test_Trades.Where(x => x.Margin < 0).ToList().Count;
+            var noOfTrades = 0;//test.TestTrades.ToList().Count;
+            var losers = 0;//test.TestTrades.Where(x => x.Margin < 0).ToList().Count;
             if (noOfTrades == 0)
                 return 0;
             return losers / noOfTrades;
         }
         public double ProfitableLongTradesRatio()
         {
-            var noOfTrades = test.Test_Trades.Where(x => x.Direction == "BUY").ToList().Count;
-            var winners = test.Test_Trades.Where(x => x.Margin > 0 && x.Direction == "BUY").ToList().Count;
+            var noOfTrades = 0;//test.TestTrades.Where(x => x.Direction == "BUY").ToList().Count;
+            var winners = 0;//test.TestTrades.Where(x => x.Margin > 0 && x.Direction == "BUY").ToList().Count;
             if (noOfTrades == 0)
                 return 0;
             return winners / noOfTrades;
         }
         public double ProfitableShortTradesRatio()
         {
-            var noOfTrades = test.Test_Trades.Where(x => x.Direction == "SELL").ToList().Count;
-            var winners = test.Test_Trades.Where(x => x.Margin > 0 && x.Direction == "SELL").ToList().Count;
+            var noOfTrades = 0;//test.TestTrades.Where(x => x.Direction == "SELL").ToList().Count;
+            var winners = 0;//test.TestTrades.Where(x => x.Margin > 0 && x.Direction == "SELL").ToList().Count;
             if (noOfTrades == 0)
                 return 0;
             return winners / noOfTrades;
         }
         public decimal AverageWin()
         {
-            var winningMargin = test.Test_Trades.Where(x => x.Margin > 0).Sum(x => x.Margin);
-            var tradesCount = test.Test_Trades.Where(x => x.Margin > 0).ToList().Count;
+            var winningMargin = 0;//test.TestTrades.Where(x => x.Margin > 0).Sum(x => x.Margin);
+            var tradesCount = 0;//test.TestTrades.Where(x => x.Margin > 0).ToList().Count;
             if (winningMargin > 0 && tradesCount > 0)
                 return winningMargin / tradesCount;
             return 0;
         }
         public decimal AverageWinLong()
         {
-            var winningLongs = test.Test_Trades.Where(x => x.Margin > 0 && x.Direction == "BUY").Sum(x => x.Margin);
-            var noOfWinningLongs = test.Test_Trades.Where(x => x.Margin > 0 && x.Direction == "BUY").ToList().Count;
+            var winningLongs = 0;//test.TestTrades.Where(x => x.Margin > 0 && x.Direction == "BUY").Sum(x => x.Margin);
+            var noOfWinningLongs = 0;// test.TestTrades.Where(x => x.Margin > 0 && x.Direction == "BUY").ToList().Count;
             if (winningLongs > 0 && noOfWinningLongs > 0)
                 return winningLongs / noOfWinningLongs;
             return 0;
         }
         public decimal AverageWinShort()
         {
-            var winningShorts = test.Test_Trades.Where(x => x.Margin > 0 && x.Direction == "SELL").Sum(x => x.Margin);
-            var noOfWinningShorts = test.Test_Trades.Where(x => x.Margin > 0 && x.Direction == "SELL").ToList().Count;
+            var winningShorts = 0;//test.TestTrades.Where(x => x.Margin > 0 && x.Direction == "SELL").Sum(x => x.Margin);
+            var noOfWinningShorts = 0;//test.TestTrades.Where(x => x.Margin > 0 && x.Direction == "SELL").ToList().Count;
             if (winningShorts > 0 && noOfWinningShorts > 0)
                 return winningShorts / noOfWinningShorts;
             return 0;
         }
         public decimal AverageLoss()
         {
-            var losingTrade = test.Test_Trades.Where(x => x.Margin < 0).Sum(x => x.Margin);
-            var noOfLosingTrades = test.Test_Trades.Where(x => x.Margin < 0).ToList().Count;
+            var losingTrade = 0;//test.TestTrades.Where(x => x.Margin < 0).Sum(x => x.Margin);
+            var noOfLosingTrades = 0;//test.TestTrades.Where(x => x.Margin < 0).ToList().Count;
             if (losingTrade < 0 && noOfLosingTrades > 0)
                 return losingTrade / noOfLosingTrades;
             return 0;
         }
         public decimal AverageLossLong()
         {
-            var sumOfLosses = test.Test_Trades.Where(x => x.Margin < 0 && x.Direction == "BUY").Sum(x => x.Margin);
-            var noOfLosingTrades = test.Test_Trades.Where(x => x.Margin < 0 && x.Direction == "BUY").ToList().Count;
+            var sumOfLosses = 0;//test.TestTrades.Where(x => x.Margin < 0 && x.Direction == "BUY").Sum(x => x.Margin);
+            var noOfLosingTrades = 0;// test.TestTrades.Where(x => x.Margin < 0 && x.Direction == "BUY").ToList().Count;
             if (noOfLosingTrades > 0)
                 return sumOfLosses / noOfLosingTrades;
             return 0;
         }
         public decimal AverageLossShort()
         {
-            var shortMarginSum = test.Test_Trades.Where(x => x.Margin < 0 && x.Direction == "SELL").Sum(x => x.Margin);
-            var shortLossSum = test.Test_Trades.Where(x => x.Margin < 0 && x.Direction == "SELL").ToList().Count;
+            var shortMarginSum = 0;//test.TestTrades.Where(x => x.Margin < 0 && x.Direction == "SELL").Sum(x => x.Margin);
+            var shortLossSum = 0;// test.TestTrades.Where(x => x.Margin < 0 && x.Direction == "SELL").ToList().Count;
             if (shortLossSum == 0)
                 return shortMarginSum;
             return shortMarginSum / shortLossSum;
@@ -205,16 +205,16 @@ namespace Application.Business.BackTest.Reports
         {
             var capitalAccrual = test.StartingCapital;
             var maxExcursion = 0M;
-            foreach (var trade in test.Test_Trades)
-            {
-                capitalAccrual += trade.Margin;
-                if (trade.Margin < 0)
-                {
-                    var tradeExcursion = trade.Margin / capitalAccrual * -1;
-                    if (tradeExcursion > maxExcursion)
-                        maxExcursion = tradeExcursion;
-                }
-            }
+            //foreach (var trade in test.TestTrades)
+            //{
+            //    capitalAccrual += trade.Margin;
+            //    if (trade.Margin < 0)
+            //    {
+            //        var tradeExcursion = trade.Margin / capitalAccrual * -1;
+            //        if (tradeExcursion > maxExcursion)
+            //            maxExcursion = tradeExcursion;
+            //    }
+            //}
             return Convert.ToDouble(maxExcursion);
         }
     }

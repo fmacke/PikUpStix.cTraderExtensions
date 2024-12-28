@@ -16,7 +16,7 @@ namespace Infrastructure.Contexts
         public virtual DbSet<Instrument> Instruments { get; set; }
         public virtual DbSet<Porfolio> Portfolios { get; set; }
         public virtual DbSet<PortfolioInstrument> PortfolioInstruments { get; set; }
-        public virtual DbSet<TestTrade> Test_Trades { get; set; }
+        public virtual DbSet<TestTrade> TestTrades { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<Test_Parameter> Test_Parameters { get; set; }
         
@@ -312,12 +312,12 @@ namespace Infrastructure.Contexts
             //    .OnDelete(DeleteBehavior.Restrict)
             //    .IsRequired();
 
-            modelBuilder.Entity<Test>()
-                .HasMany(e => e.Test_Parameters)
-                .WithOne(e => e.Test)
-                .HasForeignKey(e => e.TestId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .IsRequired();
+            //modelBuilder.Entity<Test>()
+            //    .HasMany(e => e.Test_Parameters)
+            //    .WithOne(e => e.Test)
+            //    .HasForeignKey(e => e.TestId)
+            //    .OnDelete(DeleteBehavior.Restrict)
+            //    .IsRequired();
 
             modelBuilder.Entity<Test_Parameter>()
                 .Property(e => e.Name)

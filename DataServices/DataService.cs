@@ -13,10 +13,10 @@ namespace DataServices
 {
     public class DataService : IDataService
     {
-        public TestCalls Tests { get; private set; }
-        public TestParameterCalls TestParameters { get; private set; }
-        public InstrumentCalls Instruments { get; private set; }
-        public TestTradeCalls TestTrades { get; private set; }
+        public TestCalls TestCaller { get; private set; }
+        public TestParameterCalls TestParameterCaller { get; private set; }
+        public InstrumentCalls InstrumentCaller { get; private set; }
+        public TestTradeCalls TestTradeCaller { get; private set; }
         public DataService()
         {
             var serviceCollection = new ServiceCollection();
@@ -33,10 +33,10 @@ namespace DataServices
             serviceCollection.AddTransient<IUnitOfWork, UnitOfWork>();
             serviceCollection.AddDistributedMemoryCache();
             serviceCollection.AddDbContext<ApplicationDbContext>();
-            Tests = new TestCalls(serviceCollection.BuildServiceProvider());
-            Instruments = new InstrumentCalls(serviceCollection.BuildServiceProvider());
-            TestParameters = new TestParameterCalls(serviceCollection.BuildServiceProvider());
-            TestTrades = new TestTradeCalls(serviceCollection.BuildServiceProvider());
+            TestCaller = new TestCalls(serviceCollection.BuildServiceProvider());
+            InstrumentCaller = new InstrumentCalls(serviceCollection.BuildServiceProvider());
+            TestParameterCaller = new TestParameterCalls(serviceCollection.BuildServiceProvider());
+            TestTradeCaller = new TestTradeCalls(serviceCollection.BuildServiceProvider());   
         }
     }
 

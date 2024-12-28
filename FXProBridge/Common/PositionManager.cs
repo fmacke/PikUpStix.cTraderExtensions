@@ -9,7 +9,7 @@ namespace FXProBridge.Common
     /// </summary>
     public abstract class PositionManager : RobotTestWrapper, IPositionManager
     {
-        public void ManagePositions(IPositionInstructions x)
+        public void ManagePositions(IStrategy x)
         {
             foreach (var instruction in x.PositionInstructions)
             {
