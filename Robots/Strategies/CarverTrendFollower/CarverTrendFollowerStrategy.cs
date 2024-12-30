@@ -89,7 +89,7 @@ namespace Robots.Strategies.CarverTrendFollower
             var trailingStop = new TrailingStop(GetTradeType(wp), Convert.ToDouble(p.EntryPrice), Convert.ToDouble(wp.StopLossAt), biddingPrice, askingPrice, trailingStopAt, trailingStopSize);
             if (trailingStop.TrailingStopUpdated)
                 return trailingStop.TrailingStopAt;
-            if (p.StopLoss >= Convert.ToDecimal(trailingStop.TrailingStopAt) && Convert.ToDouble(wp.StopLossAt) < trailingStop.TrailingStopAt)
+            if (p.StopLoss >= trailingStop.TrailingStopAt && Convert.ToDouble(wp.StopLossAt) < trailingStop.TrailingStopAt)
                 return trailingStop.TrailingStopAt;
             return Convert.ToDouble(wp.StopLossAt);
         }

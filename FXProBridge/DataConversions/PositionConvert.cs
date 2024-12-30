@@ -10,10 +10,10 @@
                 convertedPositions.Add(new Application.Business.Position()
                 {
                     SymbolName = position.SymbolName,
-                    Volume = Convert.ToDecimal(position.VolumeInUnits),
-                    StopLoss = Convert.ToDecimal(position.StopLoss),
-                    TakeProfit = Convert.ToDecimal(position.TakeProfit),
-                    EntryPrice = Convert.ToDecimal(position.EntryPrice),
+                    Volume = position.VolumeInUnits,
+                    StopLoss = position.StopLoss,
+                    TakeProfit = position.TakeProfit,
+                    EntryPrice = position.EntryPrice,
                     Id = position.Id,
                     TradeType = ConvertTradeType(position.TradeType),
                 });

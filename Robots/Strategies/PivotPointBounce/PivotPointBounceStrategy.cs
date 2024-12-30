@@ -1,20 +1,34 @@
-﻿namespace Robots.Strategies.PivotPointBounce
-{
-    public class PivotPointStrategy 
-    {
-        public decimal Pivot { get; private set; }
-        public decimal Support1 { get; private set; }
-        public decimal Resistance1 { get; private set; }
-        public decimal Support2 { get; private set; }
-        public decimal Resistance2 { get; private set; }
+﻿using Application.Business;
+using Domain.Enums;
+using Robots.Common;
+using Robots.Interfaces;
 
-        public PivotPointStrategy(decimal high, decimal low, decimal close)
+namespace Robots.Strategies.PivotPointBounce
+{
+    public class PivotPointStrategy : IStrategy
+    {
+        public double Pivot { get; private set; }
+        public double Support1 { get; private set; }
+        public double Resistance1 { get; private set; }
+        public double Support2 { get; private set; }
+        public double Resistance2 { get; private set; }
+        public double CurrentPrice { get; private set; }
+        public bool MarketTrending { get; private set; }
+        public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
+
+        public PivotPointStrategy(double high, double low, double close, double bid, double ask, Positions positions)
         {
-            CalculatePivotPoints(high, low, close);
+            CalculatePivotPoints(high, low, close, bid, ask);            
+            if (ConditionsForOrderMet(CurrentPrice) && positions.Count < 1)
+            {                
+                var position = CreateOrder();                 
+                PositionInstructions.Add(new PositionUpdate(position, position.StopLoss, position.TakeProfit, InstructionType.Open, 1, 1));
+            }
         }
 
-        private void CalculatePivotPoints(decimal high, decimal low, decimal close)
+        private void CalculatePivotPoints( double high, double low, double close, double bid, double ask)
         {
+            CurrentPrice = (bid + ask) / 2;
             Pivot = (high + low + close) / 3;
             Support1 = 2 * Pivot - high;
             Resistance1 = 2 * Pivot - low;
@@ -22,36 +36,57 @@
             Resistance2 = Pivot + (high - low);
         }
 
-        public string DetermineEntryPoint(decimal currentPrice)
+        private Position CreateOrder()
         {
-            if (currentPrice <= Support1)
-            {
-                return "Long Entry at Support1";
-            }
-            else if (currentPrice >= Resistance1)
-            {
-                return "Short Entry at Resistance1";
-            }
-            return "No Entry";
+            var position = DetermineEntryPoint(CurrentPrice);
+            return position;
         }
 
-        public string DetermineExitPoint(decimal entryPrice, bool isLong)
+        private Position DetermineEntryPoint(double currentPrice)
         {
-            if (isLong)
+            var position = new Position();
+            if (LongConditionMet())
             {
-                if (entryPrice <= Support1)
-                {
-                    return $"Take Profit at Pivot or Resistance1";
-                }
+                //Long Entry at Support1
+                position.CreatedAt = DateTime.UtcNow;
+                position.EntryPrice = Support1;
+                position.TradeType = TradeType.Buy;
+                position.StopLoss = Support2;
+                position.TakeProfit = Pivot;//Take Profit at Pivot or Resistance1
+                return position;
             }
-            else
+            if (ShortConditionMet())
             {
-                if (entryPrice >= Resistance1)
-                {
-                    return $"Take Profit at Pivot or Support1";
-                }
+                //Short Entry at Resistance1
+                position.CreatedAt = DateTime.UtcNow;
+                position.EntryPrice = Resistance1;
+                position.TradeType = TradeType.Sell;
+                position.StopLoss = Resistance2;
+                position.TakeProfit = Pivot;//Take Profit at Pivot or Support1
+                return position;
             }
-            return "No Exit";
+            throw new Exception("An attempt to place order was placed despite the preliminary conditions not being met.");
+        }
+
+        private bool ConditionsForOrderMet(double currentPrice)
+        {
+            if (LongConditionMet())
+                return true; 
+            if (ShortConditionMet())
+                return true;
+            return false;// "No Entry";
+        }
+
+        private bool LongConditionMet()
+        {
+            //"Long Entry at Support1";
+            return CurrentPrice <= Support1;
+        }
+
+        private bool ShortConditionMet()
+        {
+            // "Short Entry at Resistance1";
+            return CurrentPrice >= Resistance1;
         }
     }
 }

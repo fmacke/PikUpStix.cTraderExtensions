@@ -65,17 +65,17 @@ namespace Application.Business
     {
         public int Id { get; set; }
         public string SymbolName {get; set;}
-        public decimal StopLoss { get; set; } = 0;
-        public decimal TakeProfit { get; set; } = 0;
-        public decimal Volume { get; set; } = 0;
+        public double? StopLoss { get; set; } = 0;
+        public double? TakeProfit { get; set; } = 0;
+        public double Volume { get; set; } = 0;
         public PositionStatus Status { get; set; } = PositionStatus.POSITION;
         public TradeType TradeType { get; set; } 
-        public decimal EntryPrice { get; set; } = 0;
-        public decimal ClosePrice { get; set; } = 0;
-        public decimal Margin { get; set; } = 0;
-        public decimal TrailingStop { get; set; } = 0;
+        public double EntryPrice { get; set; } = 0;
+        public double ClosePrice { get; set; } = 0;
+        public double Margin { get; set; } = 0;
+        public double TrailingStop { get; set; } = 0;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-//public void ClosePosition(decimal exchangeRate, decimal closePrice, DateTime closeDateTime)
+//public void ClosePosition(double exchangeRate, double closePrice, DateTime closeDateTime)
         //{
         //    //Test_Trades trade = db.Test_Trades.First(x => x.TradeId == TradeId);
         //    ClosePrice = closePrice;
@@ -90,7 +90,7 @@ namespace Application.Business
         //    //db.SaveChanges();
         //}
 
-        //public void UpdateMargin(decimal exchangeRate, decimal latestPrice)
+        //public void UpdateMargin(double exchangeRate, double latestPrice)
         //{
         //    //Test_Trades trade = db.Test_Trades.First(x => x.TradeId == TradeId);
         //    Margin = BackTest.Reports.Margin.Calculate(Instrument.ContractUnit, exchangeRate, this, latestPrice);
@@ -99,7 +99,7 @@ namespace Application.Business
         //    //db.SaveChanges();
         //}
 
-        //public void UpdateStopLoss(decimal stopLoss)
+        //public void UpdateStopLoss(double stopLoss)
         //{
         //Test_Trades trade = db.Test_Trades.First(x => x.TradeId == TradeId);
         //StopLoss = stopLoss;

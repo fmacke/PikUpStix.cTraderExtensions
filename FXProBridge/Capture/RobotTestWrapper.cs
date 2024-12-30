@@ -13,7 +13,7 @@ namespace FXProBridge.Capture
         public bool IsTestRun { get; set; } = true;
         public TestResultsCapture? ResultsCapture { get; set; }
         public DataService DataService { get; set; }
-        public Dictionary<string, string> TestParams { get; set; }
+        public Dictionary<string, string> TestParams { get; set; } = new Dictionary<string, string>();
         public RobotTestWrapper()
         {
             DataService = new DataService();
