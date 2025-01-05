@@ -11,6 +11,8 @@ namespace Robots.Interfaces
         Open,
         Close,
         Modify,
-        Leave
+        Leave,
+        PlaceOrder,
+        CancelOrder
     }
 }

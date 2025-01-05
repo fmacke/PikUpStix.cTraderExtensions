@@ -1,4 +1,5 @@
 ﻿using Application.Business;
+using cAlgo.API;
 using FXProBridge.Capture;
 using Robots.Interfaces;
 
@@ -14,12 +15,8 @@ namespace FXProBridge.Common
             foreach (var instruction in x.PositionInstructions)
             {
                 var tradeType = cAlgo.API.TradeType.Buy;
-                if (instruction.InstructionType == InstructionType.Open)
-                {
-
-                    if (instruction.TradeType == Domain.Enums.TradeType.Sell)
-                        tradeType = cAlgo.API.TradeType.Sell;
-                }
+                if (instruction.Position.TradeType == Domain.Enums.TradeType.Sell)
+                    tradeType = cAlgo.API.TradeType.Sell;
                 var position = Positions.FirstOrDefault(p => p.Id == instruction.Position.Id);
                 switch (instruction.InstructionType)
                 {
@@ -29,21 +26,41 @@ namespace FXProBridge.Common
                             Print("error : {0}", result.Error);
                         break;
                     case InstructionType.Modify:
-                        var stop = instruction.NewStopLoss;// * Symbol.PipSize;*// these need changed to be actual stop loss and take profit prices...
-                        var tp = instruction.TakeProfit;// * Symbol.PipSize;
+                        var stop = instruction.Position.StopLoss;// * Symbol.PipSize;*// these need changed to be actual stop loss and take profit prices...
+                        var tp = instruction.Position.TakeProfit;// * Symbol.PipSize;
                         var res = ModifyPosition(position, stop, tp);
                         //var res = instruction.Position.ModifyStopLossPrice(stop);
 
                         var one = position.VolumeInUnits;
-                        var two = Symbol.NormalizeVolumeInUnits(instruction.Volume);
+                        var two = Symbol.NormalizeVolumeInUnits(instruction.Position.Volume);
                         if (!one.Equals(two))
-                            res = ModifyPosition(position, Symbol.NormalizeVolumeInUnits(instruction.Volume));
+                            res = ModifyPosition(position, Symbol.NormalizeVolumeInUnits(instruction.Position.Volume));
                         //res = instruction.Position.ModifyVolume(Symbol.NormalizeVolumeInUnits(instruction.Volume));
                         break;
                     case InstructionType.Open:
-                        var normalise = Symbol.NormalizeVolumeInUnits(instruction.Volume);
-                        var res1 = ExecuteMarketOrder(tradeType, SymbolName, normalise, x.GetType().Name, instruction.NewStopLoss, instruction.TakeProfit);
+                        var normalise = Symbol.NormalizeVolumeInUnits(instruction.Position.Volume);
+                        ExecuteMarketOrder(tradeType, SymbolName, normalise, x.GetType().Name, instruction.Position.StopLoss, 
+                            instruction.Position.TakeProfit);
                         break;
+                    case InstructionType.PlaceOrder:
+                        //var sl = (instruction.Position.EntryPrice - instruction.Position.StopLoss) * Symbol.PipSize;
+                        var placeOrderRes = PlaceLimitOrder(tradeType,
+                            instruction.Position.SymbolName,
+                            Symbol.NormalizeVolumeInUnits(instruction.Position.Volume),
+                            Convert.ToDouble(instruction.Position.EntryPrice),
+                            GetType().Name,
+                            Convert.ToDouble(instruction.Position.StopLoss),
+                            Convert.ToDouble(instruction.Position.TakeProfit),
+                            ProtectionType.Relative);
+                        break;
+                    case InstructionType.CancelOrder:
+                        foreach (var order in PendingOrders) 
+                        { 
+                            if(instruction.Position.Id == order.Id)
+                                CancelPendingOrder(order); 
+                        } 
+                        break;
+
                 }
             }
         }

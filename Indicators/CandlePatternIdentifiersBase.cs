@@ -1,7 +1,7 @@
 ﻿using cAlgo.API;
 using cAlgo.API.Internals;
 
-namespace PikUpStix.cTraderExtenstions.Indicators
+namespace Indicators
 {
     /// <summary>
     ///     CandleIds - CandleStick Patterns Identifier
@@ -12,7 +12,7 @@ namespace PikUpStix.cTraderExtenstions.Indicators
     ///     inherits from cAlgo.API.Indicator class
     /// </remarks>
     [Indicator(IsOverlay = true, TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
-    public class CandlePatternIdentifiersBase : Indicator
+    public abstract class CandlePatternIdentifiersBase : Indicator
     {
         //[Parameter("Source")]
         //public DataSeries Source { get; set; }

@@ -3,7 +3,7 @@ using cAlgo.API;
 using cAlgo.API.Indicators;
 using cAlgo.API.Internals;
 using FXProBridge.Capture;
-using PikUpStix.cTraderExtenstions.Indicators;
+using Indicators;
 
 namespace Robots
 {

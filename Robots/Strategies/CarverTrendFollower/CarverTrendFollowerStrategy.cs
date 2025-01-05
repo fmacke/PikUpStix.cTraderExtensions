@@ -41,7 +41,7 @@ namespace Robots.Strategies.CarverTrendFollower
                 if (!weightedPositions.Where(x => x.Instrument.InstrumentName == p.SymbolName).Any())
                 {
                     var weightedPos = weightedPositions.First(x => x.Instrument.InstrumentName == p.SymbolName);
-                    PositionInstructions.Add(new PositionUpdate(p, 0, 0, InstructionType.Close, Convert.ToDouble(weightedPos.ProposedWeightedPosition), Convert.ToDouble(weightedPos.ProposedWeightedPosition)));
+                    PositionInstructions.Add(new PositionUpdate(p, InstructionType.Close, Convert.ToDouble(weightedPos.ProposedWeightedPosition)));
                 }
 
             // Modify
@@ -51,18 +51,26 @@ namespace Robots.Strategies.CarverTrendFollower
                 {
                     if (AreSameDirection(wp, p))
                     {
+                        p.StopLoss = CalculateStopLoss(askingPrice, biddingPrice, wp, p, wp.Instrument);
+                        p.TakeProfit = 200;
+                        p.Volume = GetVolume(wp);
                         PositionInstructions.Add(
-                            new PositionUpdate(p, CalculateStopLoss(askingPrice, biddingPrice, wp, p,
-                            wp.Instrument), 200, InstructionType.Modify, GetVolume(wp), Convert.ToDouble(wp.ProposedWeightedPosition)));
+                            new PositionUpdate(p, InstructionType.Modify, Convert.ToDouble(wp.ProposedWeightedPosition)));
                     }
                     else
                     {
                         // Close Position
-                        PositionInstructions.Add(new PositionUpdate(p, 0, 0, InstructionType.Close, 0, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                        PositionInstructions.Add(new PositionUpdate(p, InstructionType.Close, Convert.ToDouble(wp.ProposedWeightedPosition)));
                         // Open new position in opposite direction
                         if (wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0)
                         {
-                            PositionInstructions.Add(new PositionUpdate(GetTradeType(wp), Convert.ToDouble(wp.StopLossInPips), TakeProfitInPips, InstructionType.Open, GetVolume(wp), Convert.ToDouble(wp.ProposedWeightedPosition)));
+                            var position = new Position();
+                            position.SymbolName = wp.Instrument.InstrumentName;
+                            position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
+                            position.TakeProfit = TakeProfitInPips;
+                            p.TradeType = p.TradeType == TradeType.Buy ? TradeType.Sell : TradeType.Buy;
+                            position.Volume = GetVolume(wp);
+                            PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
                         }
                     }
                 }
@@ -76,7 +84,15 @@ namespace Robots.Strategies.CarverTrendFollower
                     if (wp.ForecastValue.Forecast > MinimumOpeningForecast || wp.ForecastValue.Forecast < MinimumOpeningForecast * -1)
                     {
                         if (wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0)
-                            PositionInstructions.Add(new PositionUpdate(GetTradeType(wp), Convert.ToDouble(wp.StopLossInPips), TakeProfitInPips, InstructionType.Open, GetVolume(wp), Convert.ToDouble(wp.ProposedWeightedPosition)));
+                        {
+                            var position = new Position();
+                            position.SymbolName = wp.Instrument.InstrumentName;
+                            position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
+                            position.TakeProfit = TakeProfitInPips;
+                            position.Volume = GetVolume(wp);
+                            position.TradeType = GetTradeType(wp);
+                            PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                        }
                     }
                 }
             }
