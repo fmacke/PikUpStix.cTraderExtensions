@@ -32,7 +32,7 @@ namespace cAlgo.Indicators
         }
         public override void Calculate(int index)
         {
-            var yesterday = Bars.OpenTimes.LastValue.AddDays(-1);
+            var yesterday = Bars.OpenTimes.LastValue.AddDays(-2);
             var found = false;
             var count = 0;
             while (found == false)
@@ -51,6 +51,11 @@ namespace cAlgo.Indicators
         }
         private bool CalculatePivots(DateTime forDate, int index)
         {
+            if (forDate.DayOfWeek == DayOfWeek.Saturday)
+                forDate.AddDays(-1);
+            if (forDate.DayOfWeek == DayOfWeek.Sunday)
+                forDate.AddDays(-2);
+
             var found = false;
             if (index > 1)
             {                
