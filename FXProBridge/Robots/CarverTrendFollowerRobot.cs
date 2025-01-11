@@ -40,7 +40,7 @@ namespace FXProBridge.Robots
             var testParams = ResultsCapture.TestParams;
             var positionDat = PositionConvert.ConvertPosition(Positions);
             var barData = new List<List<HistoricalData>>();
-            barData.Add(BarConvert.GetHistoData(Bars));
+            barData.Add(BarConvert.ConvertBars(Bars));
             var changeInstructions = new CarverTrendFollowerStrategy(Convert.ToDecimal(Account.Equity), barData, positionDat,
                 SymbolName, "FXPRO", Symbol.Ask, Symbol.Bid, testParams);
             ManagePositions(changeInstructions);

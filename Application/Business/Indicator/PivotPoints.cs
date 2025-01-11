@@ -7,13 +7,24 @@
         public double Resistance1 { get; private set; }
         public double Support2 { get; private set; }
         public double Resistance2 { get; private set; }
-        public PivotPoints(double high, double low, double close)
+        public DateTime Date { get; private set; }
+        public PivotPoints(DateTime date, double high, double low, double close)
         {
+            Date = date;
             Pivot = (high + low + close) / 3;
-            Support1 = 2 * Pivot - high;
-            Resistance1 = 2 * Pivot - low;
+            Support1 = (2 * Pivot) - high;
+            Resistance1 = (2 * Pivot) - low;
             Support2 = Pivot - (high - low);
             Resistance2 = Pivot + (high - low);
+        }
+        public PivotPoints(DateTime date, double pivot, double support1, double resistance1, double support2, double resistance2)
+        {
+            Date = date;
+            Pivot = pivot;
+            Support1 = support1;
+            Resistance1 = resistance1;
+            Support2 = support2;
+            Resistance2 = resistance2;
         }
     }
 }

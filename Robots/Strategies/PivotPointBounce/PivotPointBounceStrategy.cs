@@ -13,12 +13,12 @@ namespace Robots.Strategies.PivotPointBounce
         public double CurrentPrice { get; private set; }
         public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
 
-        public PivotPointStrategy(string symbolName, double high, double low, double close, double bid, double ask, Positions positions,
+        public PivotPointStrategy(string symbolName, PivotPoints pivotPoints, double bid, double ask, Positions positions,
             List<PendingOrderCommon> orders)
         {
             CancelExpiredOrders(orders);
             CurrentPrice = (bid + ask) / 2;
-            PivotPoints = new PivotPoints(high, low, close);            
+            PivotPoints = pivotPoints;
             if (ConditionsForOrderMet(CurrentPrice) && positions.Count < 1)
             {                
                 var position = CreateOrder(symbolName);

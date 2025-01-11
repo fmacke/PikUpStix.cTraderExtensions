@@ -7,7 +7,7 @@ namespace cAlgo.Indicators
     [Indicator(IsOverlay = true, TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
     public class PivotPointIndicator : Indicator
     {
-        [Output("Pivot", LineColor = "Blue")]
+        [Output("Pivot", LineColor = "Blue", Thickness = 5)]
         public IndicatorDataSeries Pivot { get; set; }
 
         [Output("Support1", LineColor = "Green")]
@@ -22,35 +22,65 @@ namespace cAlgo.Indicators
         [Output("Resistance2", LineColor = "Red")]
         public IndicatorDataSeries Resistance2 { get; set; }
 
-        private Bars _dailyTimeFrame;
+        public Dictionary<int, DateTime> Dates{ get; set; } = new Dictionary<int, DateTime>();
 
-        public PivotPoints PivotPoints { get; private set; }
+        private Bars _dailyTimeFrame;
 
         protected override void Initialize()
         {
             _dailyTimeFrame = MarketData.GetBars(TimeFrame.Daily);
         }
-
         public override void Calculate(int index)
         {
-            var currentDate = Bars.OpenTimes.LastValue;
-            var yesterday = currentDate.AddDays(-1);
-
-            for (int i = 0; i < _dailyTimeFrame.ClosePrices.Count; i++)
+            var yesterday = Bars.OpenTimes.LastValue.AddDays(-1);
+            var found = false;
+            var count = 0;
+            while (found == false)
             {
-                if (yesterday.Year == _dailyTimeFrame.OpenTimes.Last(i).Year
-                    && yesterday.Month == _dailyTimeFrame.OpenTimes.Last(i).Month
-                    && yesterday.Day == _dailyTimeFrame.OpenTimes.Last(i).Day)
+                if (count > 4)
                 {
-                    PivotPoints = new PivotPoints(_dailyTimeFrame.HighPrices.Last(i), _dailyTimeFrame.LowPrices.Last(i), _dailyTimeFrame.ClosePrices.Last(i));
-
-                    Pivot[index] = PivotPoints.Pivot;
-                    Support1[index] = PivotPoints.Support1;
-                    Resistance1[index] = PivotPoints.Resistance1;
-                    Support2[index] = PivotPoints.Support2;
-                    Resistance2[index] = PivotPoints.Resistance2;
+                    break;
+                }
+                found = CalculatePivots(yesterday, index);
+                if (found == false)
+                {
+                    yesterday = yesterday.AddDays(-1);
+                    count++;
                 }
             }
+        }
+        private bool CalculatePivots(DateTime forDate, int index)
+        {
+            var found = false;
+            if (index > 1)
+            {                
+                for (int i = 0; i < _dailyTimeFrame.Count; i++)
+                {
+                    var currentBar = _dailyTimeFrame.OpenTimes[i];
+                    if (IsDateMatch(forDate, currentBar))
+                    {
+                        var high = _dailyTimeFrame.HighPrices[i];
+                        var low = _dailyTimeFrame.LowPrices[i];
+                        var close = _dailyTimeFrame.ClosePrices[i];
+                        var pivotPoints = new PivotPoints(forDate, high, low, close);
+                        Pivot[index] = pivotPoints.Pivot;
+                        Support1[index] = pivotPoints.Support1;
+                        Resistance1[index] = pivotPoints.Resistance1;
+                        Support2[index] = pivotPoints.Support2;
+                        Resistance2[index] = pivotPoints.Resistance2;
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            return found;
+        }
+
+        private static bool IsDateMatch(DateTime forDate, DateTime currentBar)
+        {
+            return currentBar.Year == forDate.Year
+                                && currentBar.Month == forDate.Month
+                                && currentBar.Day == forDate.Day;
         }
     }
 }

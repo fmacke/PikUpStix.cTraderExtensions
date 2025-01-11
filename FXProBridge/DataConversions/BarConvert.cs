@@ -55,12 +55,12 @@ namespace FXProBridge.DataConversions
     }
     public static class BarConvert
     {
-        public static List<HistoricalData> GetHistoData(Bars historicalData, Instrument instrument)
+        public static List<HistoricalData> ConvertBars(Bars historicalData, Instrument instrument)
         {
             var histoData = new List<HistoricalData>();
             return MapBars(historicalData, instrument.Id);
         }
-        public static List<HistoricalData> GetHistoData(Bars historicalData)
+        public static List<HistoricalData> ConvertBars(Bars historicalData)
         {
             return MapBars(historicalData, 1);  /// TODO: 1 is a placeholder for instrumentId
         }
