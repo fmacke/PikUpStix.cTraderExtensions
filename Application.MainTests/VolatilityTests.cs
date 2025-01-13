@@ -32,11 +32,11 @@ namespace PikUpStix.Trading.NTests
         {
             var dataSample = new List<HistoricalData>
             {
-                new HistoricalData() {ClosePrice = Convert.ToDecimal("-10")},
-                new HistoricalData() {ClosePrice =Convert.ToDecimal( "1")},
-                new HistoricalData() {ClosePrice = Convert.ToDecimal("10")},
-                new HistoricalData() {ClosePrice = Convert.ToDecimal("20")},
-                new HistoricalData() {ClosePrice = Convert.ToDecimal("30")}
+                new HistoricalData() {ClosePrice = -10},
+                new HistoricalData() {ClosePrice =1},
+                new HistoricalData() {ClosePrice = 10},
+                new HistoricalData() {ClosePrice = 20},
+                new HistoricalData() {ClosePrice = 30}
             };
             var priceVol = new PriceVolatility(dataSample, 5);
             var stdDev = priceVol.CalculateStdDev(new Double[5]{-10,0,10,20,30});

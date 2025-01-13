@@ -14,41 +14,37 @@ namespace Indicators
     [Indicator(IsOverlay = true, TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
     public abstract class CandlePatternIdentifiersBase : Indicator
     {
-        //[Parameter("Source")]
-        //public DataSeries Source { get; set; }
         [Parameter("Enable", Group = "Highlight Engulfing Pattern", DefaultValue = true)]
         public bool EngulfingPatterns { get; set; }
-        [Parameter("SignalYAdjust", Group = "Highlight Engulfing Pattern", DefaultValue = 150)]
-        public int SignalYAdjust { get; set; }
+        [Parameter("Bullish Color", DefaultValue = "Blue")]
+        public string BullishColor { get; set; }
+        [Parameter("Bearish Color", DefaultValue = "Red")]
+        public string BearishColor { get; set; }
+        public Dictionary<int, bool> BearishEngulfments { get; set; } = new Dictionary<int, bool>();
+        public Dictionary<int, bool> BullishEngulfments { get; set; } = new Dictionary<int, bool>();
 
         public override void Calculate(int index)
         {
             HighlightEngulfingPatterns(index);
         }
 
-        private void HighlightEngulfingPatterns(int value)
+        private void HighlightEngulfingPatterns(int index)
         {
-            for (int i = Chart.FirstVisibleBarIndex; i <= Chart.LastVisibleBarIndex; i++)
+            if (EngulfingPatterns & index > 0)
             {
-                if (EngulfingPatterns & i > 0)
+                if (IsBullishEngulfingPattern(index))
                 {
-                    if (IsBullishEngulfingPattern(i))
-                    {
-                        HighlightEngulfing("Bullish Engulfing", i, Bars.HighPrices[i] + (Symbol.TickSize * SignalYAdjust), Color.Green, ChartIconType.UpArrow);
-                    }
-                    if (IsBearishEngulfingPattern(i))
-                    {
-                        HighlightEngulfing("Bearish Engulfing", i, Bars.LowPrices[i] - (Symbol.TickSize * SignalYAdjust), Color.Red, ChartIconType.DownArrow);
-                    }
+                    Chart.DrawRectangle("bullish" + index, index - 1, Bars.LowPrices[index - 1], index, Bars.HighPrices[index], BullishColor, 3);
+                    BullishEngulfments.Add(index, true);
+                    BearishEngulfments.Add(index, false);
+                }
+                if (IsBearishEngulfingPattern(index))
+                {
+                    Chart.DrawRectangle("bearish" + index, index - 1, Bars.HighPrices[index - 1], index, Bars.LowPrices[index], BearishColor, 3);
+                    BullishEngulfments.Add(index, false);
+                    BearishEngulfments.Add(index, true);
                 }
             }
-        }
-
-        private void HighlightEngulfing(string text, int barIndex, double yAxisPosition, Color color, ChartIconType arrowDirection)
-        {
-            var textId = string.Format("TextId_{0,1}", barIndex, text);
-            Chart.DrawText(textId, text, barIndex, yAxisPosition, color);
-            Chart.DrawIcon(string.Format("BE_Id_{0,1}", barIndex, text), arrowDirection, barIndex, yAxisPosition, color);
         }
 
         public bool IsBullishEngulfingPattern(int i)
@@ -60,8 +56,8 @@ namespace Indicators
         public bool IsBearishEngulfingPattern(int i)
         {
             return Bars.ClosePrices[i - 1] > Bars.OpenPrices[i - 1]
-               && Bars.OpenPrices[i] > Bars.ClosePrices[i - 1]
-               && Bars.ClosePrices[i] < Bars.OpenPrices[i - 1];
+                && Bars.OpenPrices[i] > Bars.ClosePrices[i - 1]
+                && Bars.ClosePrices[i] < Bars.OpenPrices[i - 1];
         }
     }
 }

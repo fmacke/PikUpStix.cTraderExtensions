@@ -72,10 +72,10 @@ namespace FXProBridge.DataConversions
             {
                 histoData.Add(new HistoricalData()
                 {
-                    ClosePrice = Convert.ToDecimal(historicalData.ClosePrices[x]),
-                    OpenPrice = Convert.ToDecimal(historicalData.OpenPrices[x]),
-                    HighPrice = Convert.ToDecimal(historicalData.HighPrices[x]),
-                    LowPrice = Convert.ToDecimal(historicalData.LowPrices[x]),
+                    ClosePrice = historicalData.ClosePrices[x],
+                    OpenPrice = historicalData.OpenPrices[x],
+                    HighPrice = historicalData.HighPrices[x],
+                    LowPrice = historicalData.LowPrices[x],
                     //Instrument = instrument,
                     Date = historicalData.OpenTimes[x],
                     //InstrumentId = instrumentId

@@ -2,28 +2,21 @@
 using cAlgo.API;
 using cAlgo.API.Internals;
 
-namespace cAlgo.Indicators
+namespace Indicators
 {
     [Indicator(IsOverlay = true, TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
     public class PivotPointIndicator : Indicator
     {
         [Output("Pivot", LineColor = "Blue", Thickness = 5)]
         public IndicatorDataSeries Pivot { get; set; }
-
         [Output("Support1", LineColor = "Green")]
         public IndicatorDataSeries Support1 { get; set; }
-
         [Output("Resistance1", LineColor = "Red")]
         public IndicatorDataSeries Resistance1 { get; set; }
-
         [Output("Support2", LineColor = "Green")]
         public IndicatorDataSeries Support2 { get; set; }
-
         [Output("Resistance2", LineColor = "Red")]
         public IndicatorDataSeries Resistance2 { get; set; }
-
-        public Dictionary<int, DateTime> Dates{ get; set; } = new Dictionary<int, DateTime>();
-
         private Bars _dailyTimeFrame;
 
         protected override void Initialize()
@@ -33,8 +26,6 @@ namespace cAlgo.Indicators
         public override void Calculate(int index)
         {
             var yesterday = Bars.OpenTimes.LastValue.AddDays(-2);
-            //if (Bars.OpenTimes.LastValue.DayOfWeek == DayOfWeek.Monday)
-            //    yesterday = Bars.OpenTimes.LastValue.AddDays(-5);
             if (Bars.OpenTimes.LastValue.DayOfWeek == DayOfWeek.Sunday)
                 yesterday = Bars.OpenTimes.LastValue.AddDays(-4);
             if (Bars.OpenTimes.LastValue.DayOfWeek == DayOfWeek.Saturday)
@@ -44,9 +35,7 @@ namespace cAlgo.Indicators
             while (found == false)
             {
                 if (count > 4)
-                {
                     break;
-                }
                 found = CalculatePivots(yesterday, index);
                 if (found == false)
                 {

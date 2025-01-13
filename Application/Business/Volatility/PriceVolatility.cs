@@ -26,11 +26,7 @@ namespace Application.Business.Volatility
 
         private bool HasValidData(List<HistoricalData> prices)
         {
-            bool validData = false;
-            foreach (var historicalData in prices)
-                if (historicalData.ClosePrice.HasValue)
-                    validData = true;
-            return validData;
+            return prices.Any();           
         }
 
         public double StandardDeviation { get; private set; }
