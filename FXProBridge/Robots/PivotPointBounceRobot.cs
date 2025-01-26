@@ -5,6 +5,7 @@ using cAlgo.API;
 using cAlgo.API.Internals;
 using Indicators;
 using Application.Business.Indicator;
+using cAlgo.API.Indicators;
 
 namespace FXProBridge.Robots
 {
@@ -14,16 +15,18 @@ namespace FXProBridge.Robots
         public bool TakeProfitAtPivot { get; set; }
 
         private PivotPointIndicator _pivotPointIndicator;
+        private AverageDirectionalMovementIndexRating _adxIndicator;
         protected override void OnStart()
         {
             _pivotPointIndicator = Indicators.GetIndicator<PivotPointIndicator>();
+            _adxIndicator = Indicators.AverageDirectionalMovementIndexRating(14);
             base.OnStart();
         }
         protected override void OnBar()
         {
             var testParams = ResultsCapture.TestParams;
             var currentTime = Bars.OpenTimes.LastValue;
-            if (currentTime.Hour == 8)
+            if (currentTime.Hour >= 8 && currentTime.Hour < 13)
                 RunStrategy(currentTime);
             base.OnBar();
         }
@@ -36,11 +39,15 @@ namespace FXProBridge.Robots
                 _pivotPointIndicator.Support2.LastValue, 
                 _pivotPointIndicator.Resistance2.LastValue);
             if (pivotPoints == null)
-                return; 
+                return;
+            var adxValues = new AdxScores(_adxIndicator.ADX.LastValue, _adxIndicator.ADXR.LastValue, _adxIndicator.DIMinus.LastValue, _adxIndicator.DIPlus.LastValue);
+
+
             var positions = PositionConvert.ConvertPosition(Positions);
             var bars = BarConvert.ConvertBars(Bars);
             var orders = PendingOrderConvert.ConvertOrders(PendingOrders);
-            var changeInstructions = new PivotPointStrategy(SymbolName, TakeProfitAtPivot, pivotPoints, Symbol.Bid, Symbol.Ask, positions, orders, bars);
+            
+            var changeInstructions = new PivotPointStrategy(cursorDate, SymbolName, TakeProfitAtPivot, pivotPoints, adxValues, Symbol.Bid, Symbol.Ask, positions, orders, bars);
             ManagePositions(changeInstructions);
         }
 

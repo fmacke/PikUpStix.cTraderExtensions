@@ -51,7 +51,8 @@ namespace FXProBridge.Common
                             GetType().Name,
                             Convert.ToDouble(instruction.Position.StopLoss),
                             Convert.ToDouble(instruction.Position.TakeProfit),
-                            ProtectionType.Relative);
+                            ProtectionType.Relative, 
+                            instruction.Position.ExpirationDate);
                         break;
                     case InstructionType.CancelOrder:
                         foreach (var order in PendingOrders) 

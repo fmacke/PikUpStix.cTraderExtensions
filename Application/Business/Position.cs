@@ -75,38 +75,8 @@ namespace Application.Business
         public double Margin { get; set; } = 0;
         public double TrailingStop { get; set; } = 0;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-//public void ClosePosition(double exchangeRate, double closePrice, DateTime closeDateTime)
-        //{
-        //    //Test_Trades trade = db.Test_Trades.First(x => x.TradeId == TradeId);
-        //    ClosePrice = closePrice;
-        //    ClosedAt = closeDateTime;
-        //    Status = PositionStatus.HISTORICALTRADE.ToString();
-        //    Margin = BackTest.Reports.Margin.Calculate(Instrument.ContractUnit, exchangeRate, this, closePrice);
-        //    //trade.ClosePrice = closePrice;
-        //    //trade.ClosedAt = closeDateTime;
-        //    //trade.Status = Status;
-        //    //trade.Margin = Margin;
-        //    //db.Test_Trades.AddOrUpdate(trade);
-        //    //db.SaveChanges();
-        //}
-
-        //public void UpdateMargin(double exchangeRate, double latestPrice)
-        //{
-        //    //Test_Trades trade = db.Test_Trades.First(x => x.TradeId == TradeId);
-        //    Margin = BackTest.Reports.Margin.Calculate(Instrument.ContractUnit, exchangeRate, this, latestPrice);
-        //    //trade.Margin = Margin;
-        //    //db.Test_Trades.AddOrUpdate(trade);
-        //    //db.SaveChanges();
-        //}
-
-        //public void UpdateStopLoss(double stopLoss)
-        //{
-        //Test_Trades trade = db.Test_Trades.First(x => x.TradeId == TradeId);
-        //StopLoss = stopLoss;
-        //trade.StopLoss = StopLoss;
-        //db.Test_Trades.AddOrUpdate(trade);
-        //db.SaveChanges();
-        //}
+        public DateTime? ExpirationDate { get; set; }
+        
 
         public bool PositionHasStopLoss()
         {

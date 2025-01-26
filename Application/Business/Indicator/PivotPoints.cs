@@ -1,5 +1,20 @@
 ﻿namespace Application.Business.Indicator
 {
+    public class AdxScores
+    {
+        public double Adx { get; private set; }
+        public double Adxr { get; private set; }
+        public double DIMinus { get; private set; }
+        public double DIPlus{ get; private set; }
+
+        public AdxScores(double adx, double adxr, double diMinus, double diPlus)
+        {
+            Adx = adx;
+            Adxr = adxr;
+            DIMinus = diMinus;
+            DIPlus = diPlus;
+        }
+    }
     public class PivotPoints
     {
         public double Pivot { get; private set; }

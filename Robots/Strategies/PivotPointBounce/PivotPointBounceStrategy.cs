@@ -10,22 +10,29 @@ namespace Robots.Strategies.PivotPointBounce
     public class PivotPointStrategy : IStrategy
     {
         public PivotPoints PivotPoints { get; private set; }
+        public AdxScores AdxScores { get; private set; }
         public bool MarketTrending { get; private set; }
         public double CurrentPrice { get; private set; }
+        public DateTime CursorDate { get; private set; }
         public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
         public List<HistoricalData> Bars { get; set; } = new List<HistoricalData>();
 
-        public PivotPointStrategy(string symbolName, bool takeProfitAtPivot, PivotPoints pivotPoints, double bid, double ask, Positions positions,
+        public PivotPointStrategy(DateTime cursorDate, string symbolName, bool takeProfitAtPivot, PivotPoints pivotPoints, AdxScores adxValues, double bid, double ask, Positions positions,
             List<PendingOrderCommon> orders, List<HistoricalData> bars)
         {
-            CancelExpiredOrders(orders);
-            CurrentPrice = (bid + ask) / 2;
-            PivotPoints = pivotPoints;
-            Bars = bars;
-            if (ConditionsForOrderMet(CurrentPrice) && positions.Count < 1)
-            {                
-                var position = CreateOrder(symbolName, takeProfitAtPivot);
-                PositionInstructions.Add(new PositionUpdate(position, InstructionType.PlaceOrder, 1));
+            //CancelExpiredOrders(orders);
+            if (orders.Count < 1)
+            {
+                CursorDate = cursorDate;
+                CurrentPrice = (bid + ask) / 2;
+                PivotPoints = pivotPoints;
+                AdxScores = adxValues;
+                Bars = bars;
+                if (ConditionsForOrderMet(CurrentPrice) && positions.Count < 1)
+                {
+                    var position = CreateOrder(cursorDate, symbolName, takeProfitAtPivot);
+                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.PlaceOrder, 1));
+                }
             }
         }
 
@@ -35,11 +42,13 @@ namespace Robots.Strategies.PivotPointBounce
                 PositionInstructions.Add(new PositionUpdate(new Position(){Id = order.Id}, InstructionType.CancelOrder, 1));
         }
         
-        private Position CreateOrder(string symbolName, bool takeProfitAtPivot)
+        private Position CreateOrder(DateTime cursorDate, string symbolName, bool takeProfitAtPivot)
         {
             var position = DetermineEntryPoint(takeProfitAtPivot);
             position.SymbolName = symbolName;
             position.Volume = 5000;
+            position.CreatedAt = cursorDate;
+            position.ExpirationDate = new DateTime(cursorDate.Year, cursorDate.Month, cursorDate.Day, 23, 0, 0);
             return position;
         }
         private Position DetermineEntryPoint(bool takeProfitAtPivot)
@@ -88,14 +97,30 @@ namespace Robots.Strategies.PivotPointBounce
         }
         private bool LongConditionMet()
         {
+            var previousPreviousPrice = Bars[2].LowPrice;  
+            var previousPrice = Bars[1].LowPrice; 
+            var currentPrice = Bars[0].LowPrice; 
             //"Long Entry at Support1";
-            var noOfBarsToCheck = 5;
-            if (Bars.Count < noOfBarsToCheck)
-                return false;
-            Bars = Bars.TakeLast(noOfBarsToCheck).ToList();
-            if (BelowPivotPoint(PivotPoints.Pivot))
-                if (IsPivotPointBounce(2))
-                    if (IsAbovePivot(1)) { return true; }
+            if (previousPrice < PivotPoints.Support1 
+                && currentPrice > PivotPoints.Support1
+                && AdxScores.DIPlus > 20)
+            {
+                return true; // Long position should be placed }
+            }
+            return false;
+        }
+        private bool ShortConditionMet()
+        {
+            var previousPreviousPrice = Bars[2].HighPrice;
+            var previousPrice = Bars[1].HighPrice;
+            var currentPrice = Bars[0].HighPrice;
+            //"Short Entry at Support1";
+            if (previousPrice > PivotPoints.Resistance1
+                && currentPrice < PivotPoints.Resistance1
+                && AdxScores.DIMinus > 20)
+            {
+                return true; // Short position should be placed }
+            }
             return false;
         }
 
@@ -104,22 +129,22 @@ namespace Robots.Strategies.PivotPointBounce
             return CurrentPrice <= pivot ? true : false;
         }
 
-        private bool IsPivotPointBounce(int barBack)
+        private bool IsPivotPointBounce()
         {
-            return Bars[Bars.Count - barBack].LowPrice <= PivotPoints.Resistance1 && PivotPoints.Resistance1 <= Bars[Bars.Count - barBack].HighPrice;
+            return Bars[1].LowPrice <= PivotPoints.Resistance1;
         }
-        private bool IsAbovePivot(int barBack)
+        private bool IsCurrentPriceAbovePivot()
         {
-            return Bars[Bars.Count - barBack].ClosePrice >= PivotPoints.Resistance1;
+            return Bars[0].ClosePrice >= PivotPoints.Resistance1;
         }
 
-        private bool ShortConditionMet()
-        {
-            return false; // TESTING LONG ONLY RIGHT NOW
-            // "Short Entry at Resistance1";
-            return CurrentPrice >= PivotPoints.Resistance1;
-        }
-        //private bool LongConditionMet()
+        //private bool ShortConditionMet()
+        //{
+        //    return false; // TESTING LONG ONLY RIGHT NOW
+        //    // "Short Entry at Resistance1";
+        //    return CurrentPrice >= PivotPoints.Resistance1;
+        //}
+        ////private bool LongConditionMet()
         //{
         //    //"Long Entry at Support1";
         //    return CurrentPrice <= PivotPoints.Support1;
