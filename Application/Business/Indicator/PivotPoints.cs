@@ -31,6 +31,7 @@
             Resistance1 = (2 * Pivot) - low;
             Support2 = Pivot - (high - low);
             Resistance2 = Pivot + (high - low);
+            
         }
         public PivotPoints(DateTime date, double pivot, double support1, double resistance1, double support2, double resistance2)
         {
@@ -40,6 +41,9 @@
             Resistance1 = resistance1;
             Support2 = support2;
             Resistance2 = resistance2;
+        }
+        public bool IsCalculated() {
+            return Resistance2 != Pivot && Support2 != Pivot; // else the input data is not valid for calculating the pivot points
         }
     }
 }

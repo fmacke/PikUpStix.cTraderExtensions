@@ -5,6 +5,7 @@ namespace Robots.Interfaces
     public interface IStrategy
     {
         List<PositionUpdate> PositionInstructions { get; set; }
+        List<string> LogMessages { get; set; }
     }
     public enum InstructionType
     {

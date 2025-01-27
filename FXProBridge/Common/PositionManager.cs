@@ -11,7 +11,7 @@ namespace FXProBridge.Common
     public abstract class PositionManager : RobotTestWrapper, IPositionManager
     {
         public void ManagePositions(IStrategy x)
-        {
+        { 
             foreach (var instruction in x.PositionInstructions)
             {
                 var tradeType = cAlgo.API.TradeType.Buy;
@@ -63,6 +63,10 @@ namespace FXProBridge.Common
                         break;
 
                 }
+            }
+            foreach (var message in x.LogMessages)
+            {
+                Print(message);
             }
         }
     }

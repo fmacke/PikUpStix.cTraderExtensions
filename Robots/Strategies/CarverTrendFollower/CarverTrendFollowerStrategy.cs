@@ -13,6 +13,7 @@ namespace Robots.Strategies.CarverTrendFollower
     public class CarverTrendFollowerStrategy : IStrategy
     {
         public List<PositionUpdate> PositionInstructions { get; set; }
+        public List<string> LogMessages { get; set; } = new List<string>();
         public decimal MinimumOpeningForecast { get; private set; }
         public decimal StopLossMax { get; private set; }
         public decimal TargetVolatility { get; private set; }

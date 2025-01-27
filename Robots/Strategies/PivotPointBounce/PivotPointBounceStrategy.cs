@@ -11,13 +11,17 @@ namespace Robots.Strategies.PivotPointBounce
     {
         public PivotPoints PivotPoints { get; private set; }
         public AdxScores AdxScores { get; private set; }
+        public bool UseAdxFilter { get; set; }
+        public int AdxMinimumThreshold { get; set; }
         public bool MarketTrending { get; private set; }
         public double CurrentPrice { get; private set; }
         public DateTime CursorDate { get; private set; }
         public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
+        public List<string> LogMessages { get; set; } = new List<string>();
         public List<HistoricalData> Bars { get; set; } = new List<HistoricalData>();
 
-        public PivotPointStrategy(DateTime cursorDate, string symbolName, bool takeProfitAtPivot, PivotPoints pivotPoints, AdxScores adxValues, double bid, double ask, Positions positions,
+        public PivotPointStrategy(DateTime cursorDate, string symbolName, bool takeProfitAtPivot, PivotPoints pivotPoints, 
+            bool useAdx, int adxMinThreshold, AdxScores adxValues, double bid, double ask, Positions positions,
             List<PendingOrderCommon> orders, List<HistoricalData> bars)
         {
             //CancelExpiredOrders(orders);
@@ -27,11 +31,20 @@ namespace Robots.Strategies.PivotPointBounce
                 CurrentPrice = (bid + ask) / 2;
                 PivotPoints = pivotPoints;
                 AdxScores = adxValues;
+                UseAdxFilter = useAdx;
+                AdxMinimumThreshold = adxMinThreshold;
                 Bars = bars;
                 if (ConditionsForOrderMet(CurrentPrice) && positions.Count < 1)
                 {
-                    var position = CreateOrder(cursorDate, symbolName, takeProfitAtPivot);
-                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.PlaceOrder, 1));
+                    if (PivotPoints.IsCalculated())
+                    {
+                        var position = CreateOrder(cursorDate, symbolName, takeProfitAtPivot);
+                        PositionInstructions.Add(new PositionUpdate(position, InstructionType.PlaceOrder, 1));
+                    }
+                    else
+                    {
+                        LogMessages.Add("Conditions for order logged but Pivot Points not valid at cursorDate = " + cursorDate.Day + "/" + cursorDate.Month + "/" + cursorDate.Year);
+                    }
                 }
             }
         }
@@ -102,10 +115,15 @@ namespace Robots.Strategies.PivotPointBounce
             var currentPrice = Bars[0].LowPrice; 
             //"Long Entry at Support1";
             if (previousPrice < PivotPoints.Support1 
-                && currentPrice > PivotPoints.Support1
-                && AdxScores.DIPlus > 20)
+                && currentPrice > PivotPoints.Support1)
             {
-                return true; // Long position should be placed }
+                if(UseAdxFilter)
+                {
+                    if(AdxScores.DIPlus > AdxMinimumThreshold)
+                        return true; 
+                    return false;
+                }
+                return true; 
             }
             return false;
         }
@@ -116,10 +134,15 @@ namespace Robots.Strategies.PivotPointBounce
             var currentPrice = Bars[0].HighPrice;
             //"Short Entry at Support1";
             if (previousPrice > PivotPoints.Resistance1
-                && currentPrice < PivotPoints.Resistance1
-                && AdxScores.DIMinus > 20)
+                && currentPrice < PivotPoints.Resistance1)
             {
-                return true; // Short position should be placed }
+                if (UseAdxFilter)
+                {
+                    if (AdxScores.DIMinus > AdxMinimumThreshold)
+                        return true;
+                    return false;
+                }
+                return true;
             }
             return false;
         }
