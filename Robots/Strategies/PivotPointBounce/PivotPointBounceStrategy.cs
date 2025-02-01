@@ -11,18 +11,21 @@ namespace Robots.Strategies.PivotPointBounce
     {
         public PivotPoints PivotPoints { get; private set; }
         public AdxScores AdxScores { get; private set; }
-        public bool UseAdxFilter { get; set; }
+        public bool UseAdxMinFilter { get; set; }
         public int AdxMinimumThreshold { get; set; }
+        public bool UseAdxMaxFilter { get; set; }
+        public int AdxMaximumThreshold { get; set; }
         public bool MarketTrending { get; private set; }
         public double CurrentPrice { get; private set; }
+        public  double RSI { get; private set; }
         public DateTime CursorDate { get; private set; }
         public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
         public List<string> LogMessages { get; set; } = new List<string>();
         public List<HistoricalData> Bars { get; set; } = new List<HistoricalData>();
 
         public PivotPointStrategy(DateTime cursorDate, string symbolName, bool takeProfitAtPivot, PivotPoints pivotPoints, 
-            bool useAdx, int adxMinThreshold, AdxScores adxValues, double bid, double ask, Positions positions,
-            List<PendingOrderCommon> orders, List<HistoricalData> bars)
+            bool useAdxMin, int adxMinThreshold, bool useAdxMax, int adxMaxThreshold, AdxScores adxValues, double bid, double ask, Positions positions,
+            List<PendingOrderCommon> orders, List<HistoricalData> bars, double rsi)
         {
             //CancelExpiredOrders(orders);
             if (orders.Count < 1)
@@ -31,8 +34,12 @@ namespace Robots.Strategies.PivotPointBounce
                 CurrentPrice = (bid + ask) / 2;
                 PivotPoints = pivotPoints;
                 AdxScores = adxValues;
-                UseAdxFilter = useAdx;
+                UseAdxMinFilter = useAdxMin;
                 AdxMinimumThreshold = adxMinThreshold;
+                RSI = rsi;
+                UseAdxMaxFilter = useAdxMax;
+                AdxMaximumThreshold = adxMaxThreshold;
+
                 Bars = bars;
                 if (ConditionsForOrderMet(CurrentPrice) && positions.Count < 1)
                 {
@@ -117,13 +124,22 @@ namespace Robots.Strategies.PivotPointBounce
             if (previousPrice < PivotPoints.Support1 
                 && currentPrice > PivotPoints.Support1)
             {
-                if(UseAdxFilter)
+                if (RSI < 30)
                 {
-                    if(AdxScores.DIPlus > AdxMinimumThreshold)
-                        return true; 
-                    return false;
+                    if (UseAdxMinFilter)
+                    {
+                        if (AdxScores.DIPlus > AdxMinimumThreshold)
+                            return true;
+                        return false;
+                    }
+                    if (UseAdxMaxFilter)
+                    {
+                        if (AdxScores.DIPlus < AdxMaximumThreshold)
+                            return true;
+                        return false;
+                    }
+                    return true;
                 }
-                return true; 
             }
             return false;
         }
@@ -136,46 +152,24 @@ namespace Robots.Strategies.PivotPointBounce
             if (previousPrice > PivotPoints.Resistance1
                 && currentPrice < PivotPoints.Resistance1)
             {
-                if (UseAdxFilter)
+                if (RSI > 70)
                 {
-                    if (AdxScores.DIMinus > AdxMinimumThreshold)
-                        return true;
-                    return false;
+                    if (UseAdxMinFilter)
+                    {
+                        if (AdxScores.DIMinus > AdxMinimumThreshold)
+                            return true;
+                        return false;
+                    }
+                    if (UseAdxMaxFilter)
+                    {
+                        if (AdxScores.DIMinus < AdxMaximumThreshold)
+                            return true;
+                        return false;
+                    }
+                    return true;
                 }
-                return true;
             }
             return false;
-        }
-
-        private bool BelowPivotPoint(double pivot)
-        {
-            return CurrentPrice <= pivot ? true : false;
-        }
-
-        private bool IsPivotPointBounce()
-        {
-            return Bars[1].LowPrice <= PivotPoints.Resistance1;
-        }
-        private bool IsCurrentPriceAbovePivot()
-        {
-            return Bars[0].ClosePrice >= PivotPoints.Resistance1;
-        }
-
-        //private bool ShortConditionMet()
-        //{
-        //    return false; // TESTING LONG ONLY RIGHT NOW
-        //    // "Short Entry at Resistance1";
-        //    return CurrentPrice >= PivotPoints.Resistance1;
-        //}
-        ////private bool LongConditionMet()
-        //{
-        //    //"Long Entry at Support1";
-        //    return CurrentPrice <= PivotPoints.Support1;
-        //}
-        //private bool ShortConditionMet()
-        //{
-        //    // "Short Entry at Resistance1";
-        //    return CurrentPrice >= PivotPoints.Resistance1;
-        //}
+        }        
     }
 }

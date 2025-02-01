@@ -122,6 +122,12 @@ namespace Application.Features.Tests.Commands.Update
         {
             test.MaxAdverseExcursion = command.MaxAdverseExcursion ?? test.MaxAdverseExcursion;
             test.SharpeRatio = command.SharpeRatio ?? test.SharpeRatio;
+            test.EndingCapital = command.EndingCapital;
+            test.AverageWinShort = command.AverageWinShort;
+            test.Commission = command.Commission;
+            test.ProfitFactor = command.ProfitFactor;
+            test.TestEndAt = command.TestEndAt;
+            test.NetProfit = command.NetProfit;
         }
     }
 }

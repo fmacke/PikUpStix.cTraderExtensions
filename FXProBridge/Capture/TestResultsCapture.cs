@@ -2,7 +2,7 @@
 using Application.Features.Tests.Commands.Create;
 using Application.Features.Tests.Commands.Update;
 using Application.Features.TestTrades.Commands.Create;
-//using cAlgo.API;
+using cAlgo.API;
 using DataServices;
 using Domain.Entities;
 
@@ -78,7 +78,8 @@ namespace FXProBridge.Capture
                     Id = TestId,
                     FromDate = tts.Min(x => x.Created).AddDays(-1),
                     ToDate = Convert.ToDateTime(tts.Max(x => x.ClosedAt)).AddDays(1),
-                    EndingCapital = tts.Sum(x => x.Margin) + test.StartingCapital
+                    EndingCapital = tts.Sum(x => x.Margin) + test.StartingCapital,
+                    TestEndAt = DateTime.Now
                 });
             }
             catch (Exception ex)
