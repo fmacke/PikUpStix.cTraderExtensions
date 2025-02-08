@@ -5,8 +5,8 @@ namespace Application.Business.BackTest.Reports
     public class AnnualReturn
     {
         public int TestId { get; set; }
-        public decimal ReturnInCash { get; set; }
-        public decimal ReturnAsPercentofInvestmentCapital { get; set; }
+        public double ReturnInCash { get; set; }
+        public double ReturnAsPercentofInvestmentCapital { get; set; }
         public int Year { get; set; }
     }
     public class AnnualReturns : Dictionary<int, AnnualReturn>
@@ -34,14 +34,14 @@ namespace Application.Business.BackTest.Reports
             }
         }
 
-        private decimal CalculateMarginToDate(IOrderedEnumerable<TestTrade> trades, int upToButExludingYear)
+        private double CalculateMarginToDate(IOrderedEnumerable<TestTrade> trades, int upToButExludingYear)
         {
             var filteredTrades = trades.Where(x => Convert.ToDateTime(x.ClosedAt).Year < upToButExludingYear); 
             if (filteredTrades.Any()) 
                 return filteredTrades.Sum(x => x.Margin); 
             return 0;
         }
-        private decimal CalculateMarginThisYearOnly(IOrderedEnumerable<TestTrade> trades, int thisYear)
+        private double CalculateMarginThisYearOnly(IOrderedEnumerable<TestTrade> trades, int thisYear)
         {
             var filteredTrades = trades.Where(x => Convert.ToDateTime(x.ClosedAt).Year == thisYear);
             if (filteredTrades.Any())

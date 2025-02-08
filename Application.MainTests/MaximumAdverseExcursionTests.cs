@@ -23,7 +23,7 @@ namespace Application.MainTests
                     //CumulativeMargin = 1100
                 }
             };
-            var mae = new DailyExcursions(results);
+            var mae = new DailyExcursionss(results);
 
             Assert.AreEqual(Math.Round(0.10, 2), Math.Round(mae.MaxFavourableExcursion, 2));
             Assert.AreEqual(Math.Round(-0.15, 2), Math.Round(mae.MaxAdverseExcursion, 2));

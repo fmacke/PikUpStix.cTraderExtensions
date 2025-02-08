@@ -4,10 +4,9 @@ using Domain.Entities;
 using Domain.Enums;
 using Robots.Common;
 using Robots.Interfaces;
-
 namespace Robots.Strategies.PivotPointBounce
 {
-    public class PivotPointStrategy : IStrategy
+    public class PivotPointConfirmedStrategy : IStrategy
     {
         public PivotPoints PivotPoints { get; private set; }
         public AdxScores AdxScores { get; private set; }
@@ -23,9 +22,9 @@ namespace Robots.Strategies.PivotPointBounce
         public List<string> LogMessages { get; set; } = new List<string>();
         public List<HistoricalData> Bars { get; set; } = new List<HistoricalData>();
 
-        public PivotPointStrategy(DateTime cursorDate, string symbolName, bool takeProfitAtPivot, PivotPoints pivotPoints, 
+        public PivotPointConfirmedStrategy(DateTime cursorDate, string symbolName, bool takeProfitAtPivot, PivotPoints pivotPoints, 
             bool useAdxMin, int adxMinThreshold, bool useAdxMax, int adxMaxThreshold, AdxScores adxValues, double bid, double ask, Positions positions,
-            List<PendingOrderCommon> orders, List<HistoricalData> bars, double rsi)
+            List<Application.Business.PendingOrder> orders, List<HistoricalData> bars, double rsi)
         {
             //CancelExpiredOrders(orders);
             if (orders.Count < 1)
@@ -56,7 +55,7 @@ namespace Robots.Strategies.PivotPointBounce
             }
         }
 
-        private void CancelExpiredOrders(List<PendingOrderCommon> orders)
+        private void CancelExpiredOrders(List<PendingOrder> orders)
         {
             foreach (var order in orders)
                 PositionInstructions.Add(new PositionUpdate(new Position(){Id = order.Id}, InstructionType.CancelOrder, 1));

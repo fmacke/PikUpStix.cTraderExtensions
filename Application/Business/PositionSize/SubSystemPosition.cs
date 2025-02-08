@@ -4,7 +4,7 @@
     {
         private const int SquareRootOfTime = 16;
 
-        public SubSystemPosition(decimal instrumentForecast, decimal tradingCapital, decimal targetVolatility,
+        public SubSystemPosition(double instrumentForecast, double tradingCapital, double targetVolatility,
             InstrumentPositionSize instrumentDetails)
         {
             if (tradingCapital < 0)
@@ -18,31 +18,31 @@
             InstrumentDetails = instrumentDetails;
         }
 
-        public decimal InstrumentForecast { get; private set; }
-        public decimal TradingCapital { get; private set; }
-        public decimal TargetVolatility { get; private set; }
+        public double InstrumentForecast { get; private set; }
+        public double TradingCapital { get; private set; }
+        public double TargetVolatility { get; private set; }
         public InstrumentPositionSize InstrumentDetails { get; private set; }
 
-        public decimal AnnualisedCashVolatility
+        public double AnnualisedCashVolatility
         {
             get { return TradingCapital * TargetVolatility; }
         }
 
-        public decimal DailyCashVolatilityTarget
+        public double DailyCashVolatilityTarget
         {
             get { return AnnualisedCashVolatility / SquareRootOfTime; }
         }
 
-        public decimal VolatilityScalar
+        public double VolatilityScalar
         {
             get { return DailyCashVolatilityTarget / InstrumentDetails.ValueVolatility; }
         }
 
-        public decimal GetUnscaledPosition()
+        public double GetUnscaledPosition()
         {
             if (InstrumentDetails.ValueVolatility <= 0)
                 return 0;
-            decimal unscaledPosition = InstrumentForecast * VolatilityScalar / 10;
+            double unscaledPosition = InstrumentForecast * VolatilityScalar / 10;
             return unscaledPosition;
         }
     }

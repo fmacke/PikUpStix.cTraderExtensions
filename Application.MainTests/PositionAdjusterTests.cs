@@ -21,7 +21,7 @@ namespace PikUpStix.Trading.NTests
 
         
 
-        private void TestPositionCorrect(decimal proposedPosition, decimal expectedAdditionalPositionSize, List<TestTrade> existingPositions)
+        private void TestPositionCorrect(double proposedPosition, double expectedAdditionalPositionSize, List<TestTrade> existingPositions)
         {
             var positionAdjuster = new PositionCalculator(proposedPosition, existingPositions);
             Assert.AreEqual(proposedPosition, positionAdjuster.FinalPosition);
@@ -38,7 +38,7 @@ namespace PikUpStix.Trading.NTests
                     Direction = PositionType.BUY.ToString()
                 }
             };
-            var requiredNewPositionAdjustment = 0M;
+            var requiredNewPositionAdjustment = 0;
             TestPositionCorrect(proposedPosition, requiredNewPositionAdjustment, listOfExistingPositions);
         }
         private void WhereNewPositionLargerShort()
@@ -52,7 +52,7 @@ namespace PikUpStix.Trading.NTests
                     Direction = PositionType.SELL.ToString()
                 }
             };
-            var requiredNewPositionAdjustment = -1M;
+            var requiredNewPositionAdjustment = -1;
             TestPositionCorrect(proposedPosition, requiredNewPositionAdjustment, listOfExistingPositions);
         }
 
@@ -67,7 +67,7 @@ namespace PikUpStix.Trading.NTests
                     Direction = PositionType.BUY.ToString()
                 }
             };
-            var requiredNewPositionAdjustment = 1M;
+            var requiredNewPositionAdjustment = 1;
             TestPositionCorrect(proposedPosition, requiredNewPositionAdjustment, listOfExistingPositions);
         }
         private void WhereNewLongPositionAggregatesOldAndNew()
@@ -96,7 +96,7 @@ namespace PikUpStix.Trading.NTests
                     Direction = PositionType.BUY.ToString()
                 }
             };
-            var newPositionSize = 9M;  // Note Test_Trade with volume of 21 is removed as it's too large.  Then 9 more contracts required to balance
+            var newPositionSize = 9;  // Note Test_Trade with volume of 21 is removed as it's too large.  Then 9 more contracts required to balance
             TestPositionCorrect(proposedPosition, newPositionSize, listOfExistingPositions);
         }
 
@@ -126,7 +126,7 @@ namespace PikUpStix.Trading.NTests
                     Direction = PositionType.BUY.ToString()
                 }
             };
-            var newPositionSize = 9M;  // Note Test_Trade with volume of 21 is removed as it's too large.  Then 9 more contracts required to balance
+            var newPositionSize = 9;  // Note Test_Trade with volume of 21 is removed as it's too large.  Then 9 more contracts required to balance
             TestPositionCorrect(proposedPosition, newPositionSize, listOfExistingPositions);
         }
 
@@ -156,7 +156,7 @@ namespace PikUpStix.Trading.NTests
                     Direction = PositionType.BUY.ToString()
                 }
             };
-            var requiredNewPositionAdjustment = 0M;
+            var requiredNewPositionAdjustment = 0;
             TestPositionCorrect(proposedPosition, requiredNewPositionAdjustment, listOfExistingPositions);
         }
 
@@ -171,7 +171,7 @@ namespace PikUpStix.Trading.NTests
                     Direction = PositionType.SELL.ToString()
                 }
             };
-            var requiredNewPositionAdjustment = 11M;
+            var requiredNewPositionAdjustment = 11;
             TestPositionCorrect(proposedPosition, requiredNewPositionAdjustment, listOfExistingPositions);
         }
 
@@ -186,7 +186,7 @@ namespace PikUpStix.Trading.NTests
                     Direction = PositionType.BUY.ToString()
                 }
             };
-            var requiredNewPositionAdjustment = -11M;
+            var requiredNewPositionAdjustment = -11;
             TestPositionCorrect(proposedPosition, requiredNewPositionAdjustment, listOfExistingPositions);
         }
     }

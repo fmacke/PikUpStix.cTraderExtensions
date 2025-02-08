@@ -4,7 +4,7 @@ namespace Application.Business.Forecasts.CarverTrendFollower
 {
     public class ForecastScaling
     {
-        public decimal CapForecast(decimal uncappedForecast)
+        public double CapForecast(double uncappedForecast)
         {
             if (uncappedForecast > 20)
                 return 20;
@@ -13,16 +13,16 @@ namespace Application.Business.Forecasts.CarverTrendFollower
             return uncappedForecast;
         }
 
-        public decimal GetForecastScalar(List<ForecastValue> forecastValues)
+        public double GetForecastScalar(List<ForecastValue> forecastValues)
         {
-            var total = new decimal(0);
+            var total = 0.0;
             foreach (ForecastValue forecastValue in forecastValues)
                 if (forecastValue.Forecast < 0)
                     total += forecastValue.Forecast * -1;
                 else
                     total += forecastValue.Forecast;
-            decimal averageForecastValue = total / forecastValues.Count;
-            decimal forecastScalar = 10 / averageForecastValue;
+            double averageForecastValue = total / forecastValues.Count;
+            double forecastScalar = 10 / averageForecastValue;
             return forecastScalar;
         }
 

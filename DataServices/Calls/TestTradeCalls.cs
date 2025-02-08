@@ -1,6 +1,8 @@
 ﻿using Application.Common.Results;
 using Application.Features.TestTrades.Commands.Create;
 using Application.Features.TestTrades.Queries.GetAllCached;
+using DocumentFormat.OpenXml.Office2016.Excel;
+using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

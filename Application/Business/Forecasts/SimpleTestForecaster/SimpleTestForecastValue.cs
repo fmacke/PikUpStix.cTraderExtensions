@@ -32,7 +32,7 @@ namespace Application.Business.Forecasts.SimpleTestForecaster
             LastMondayPriceData = GetLast(DayOfWeek.Monday, index, priceData);
         }
 
-        public new decimal CalculateForecast()
+        public new double CalculateForecast()
         {
             Forecast = 0;
 

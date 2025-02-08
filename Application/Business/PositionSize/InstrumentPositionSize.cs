@@ -2,8 +2,8 @@
 {
     public class InstrumentPositionSize
     {
-        public InstrumentPositionSize(decimal instrumentBlock, decimal instrumentPrice,
-            decimal instrumentPriceVolatility, decimal exchangeRate)
+        public InstrumentPositionSize(double instrumentBlock, double instrumentPrice,
+            double instrumentPriceVolatility, double exchangeRate)
         {
             InstrumentBlock = instrumentBlock;
             CurrentPrice = instrumentPrice;
@@ -11,22 +11,22 @@
             ExchangeRate = exchangeRate;
         }
 
-        public decimal InstrumentBlock { get; private set; }
-        public decimal CurrentPrice { get; private set; }
-        public decimal PriceVolatility { get; private set; }
-        public decimal ExchangeRate { get; private set; }
+        public double InstrumentBlock { get; private set; }
+        public double CurrentPrice { get; private set; }
+        public double PriceVolatility { get; private set; }
+        public double ExchangeRate { get; private set; }
 
-        public decimal BlockValue
+        public double BlockValue
         {
             get { return InstrumentBlock * (CurrentPrice / 100); }
         }
 
-        public decimal CurrencyVolatility
+        public double CurrencyVolatility
         {
             get { return BlockValue * PriceVolatility * 100; }
         }
 
-        public decimal ValueVolatility
+        public double ValueVolatility
         {
             get { return CurrencyVolatility * ExchangeRate; }
         }

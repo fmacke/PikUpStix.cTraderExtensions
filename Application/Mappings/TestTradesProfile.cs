@@ -8,7 +8,7 @@ using Domain.Entities;
 
 namespace Application.Mappings 
 {
-    internal class TestTradesProfile : Profile
+    public class TestTradesProfile : Profile
     {
         public TestTradesProfile()
         {

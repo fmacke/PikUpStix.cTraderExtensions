@@ -6,7 +6,7 @@ namespace Application.Business.BackTest
 {
     public class TradingSystemParams
     {
-        public TradingSystemParams(decimal tradingCapital, decimal targetVolatility, decimal exchangeRate, DateTime startDate, DateTime endDate, decimal stopLossPercent, int portfolioId, bool enableLogging,
+        public TradingSystemParams(double tradingCapital, double targetVolatility, double exchangeRate, DateTime startDate, DateTime endDate, double stopLossPercent, int portfolioId, bool enableLogging,
             List<PortfolioInstrument> portfolioInstruments, List<Instrument> instruments, IForecastHandler handler)
         {
             TradingCapital = tradingCapital;
@@ -24,14 +24,14 @@ namespace Application.Business.BackTest
 
         public string ForecastType { get; private set; }
         public Logger Logger { get; private set; }
-        public decimal ExchangeRate { get; set; }
-        public decimal TargetVolatility { get; set; }
-        public decimal TradingCapital { get; set; }
+        public double ExchangeRate { get; set; }
+        public double TargetVolatility { get; set; }
+        public double TradingCapital { get; set; }
         public List<PortfolioInstrument> PorfolioInstruments { get; set; }
         public List<Instrument> Instruments { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public decimal StopLossPercent { get; set; }
+        public double StopLossPercent { get; set; }
         public int PortfolioId { get; set; }
     }
 }

@@ -8,24 +8,24 @@ namespace Application.Business.Portfolio
 {
     public class PositionValue
     {
-        public decimal UnweightedPosition { get; private set; }
-        public decimal ProposedWeightedPosition { get; private set; }
-        public decimal NonRoundedProposedWeightedPosition { get; private set; }
-        public decimal InstrumentPriceVolatility { get; private set; }
-        public decimal StopLossAt { get; private set; }
-        public decimal StopLossInPips { get; private set; }
+        public double UnweightedPosition { get; private set; }
+        public double ProposedWeightedPosition { get; private set; }
+        public double NonRoundedProposedWeightedPosition { get; private set; }
+        public double InstrumentPriceVolatility { get; private set; }
+        public double StopLossAt { get; private set; }
+        public double StopLossInPips { get; private set; }
         public List<PortfolioInstrument> PorfolioInstruments { get; private set; }
         public List<HistoricalData> HistoricalPriceSet { get; private set; }
-        public decimal StopLossPercent { get; private set; }
-        public decimal ExchangeRate { get; private set; }
-        public decimal TargetVolatility { get; private set; }
+        public double StopLossPercent { get; private set; }
+        public double ExchangeRate { get; private set; }
+        public double TargetVolatility { get; private set; }
         public double AskingPrice { get; set; }
         public double BiddingPrice { get; set; }
         public Instrument Instrument { get; set; }
-        public decimal AvailableTradingCapital { get; set; }
+        public double AvailableTradingCapital { get; set; }
 
-        public PositionValue(IForecastValue forecast, decimal stopLossPercent, decimal exchangeRate, decimal targetVolatility,
-            List<HistoricalData> historicalData, decimal availableTradingCapital)
+        public PositionValue(IForecastValue forecast, double stopLossPercent, double exchangeRate, double targetVolatility,
+            List<HistoricalData> historicalData, double availableTradingCapital)
         {
             ForecastValue = forecast;
             HistoricalPriceSet = historicalData.OrderByDescending(x => x.Date).ToList();
@@ -40,13 +40,13 @@ namespace Application.Business.Portfolio
             Instrument = new Instrument()
             {
                 ContractUnit = 1,
-                MinimumPriceFluctuation = 0.0001M,
+                MinimumPriceFluctuation = 0.0001,
                 InstrumentName = "EURUSD",
                 Id = 1,
                 Currency = "GBP"
             };
             UnweightedPosition = CalculateUnweightedPosition(forecast);
-            decimal weightedPosition = CalculateWeightedPosition(forecast, UnweightedPosition);
+            double weightedPosition = CalculateWeightedPosition(forecast, UnweightedPosition);
             ProposedWeightedPosition = FloorCeiling(weightedPosition);
             NonRoundedProposedWeightedPosition = weightedPosition;
             if (ProposedWeightedPosition != 0)
@@ -58,14 +58,14 @@ namespace Application.Business.Portfolio
 
 
 
-        private decimal FloorCeiling(decimal weightedPosition)
+        private double FloorCeiling(double weightedPosition)
         {
             if (weightedPosition > 0) return Math.Floor(weightedPosition);
             if (weightedPosition < 0) return Math.Ceiling(weightedPosition);
             return 0;
         }
 
-        private decimal GetStopLoss(decimal proposedWeightedPosition, double askingPrice, double biddingPrice)
+        private double GetStopLoss(double proposedWeightedPosition, double askingPrice, double biddingPrice)
         {
             var positionType = PositionType.BUY;
             if (proposedWeightedPosition < 0)
@@ -85,14 +85,14 @@ namespace Application.Business.Portfolio
             return 0;
         }
 
-        private decimal CalculateWeightedPosition(IForecastValue ewmacForecast, decimal position)
+        private double CalculateWeightedPosition(IForecastValue ewmacForecast, double position)
         {
-            decimal forecastDiversicationMultiplier = GetForecastDiversificationMultiplier();
-            decimal instrumentWeight = GetInstrumentWeight(); // ewmacForecast.Instrument.Id);
+            double forecastDiversicationMultiplier = GetForecastDiversificationMultiplier();
+            double instrumentWeight = GetInstrumentWeight(); // ewmacForecast.Instrument.Id);
             return position * forecastDiversicationMultiplier * instrumentWeight;
         }
 
-        private decimal CalculateUnweightedPosition(IForecastValue foreCast)
+        private double CalculateUnweightedPosition(IForecastValue foreCast)
         {
             PriceVolatility instrumentPriceVolatility = CalculateInstrumentPriceVolatility(//foreCast.Instrument.Id,
                 foreCast.DateTime);
@@ -100,10 +100,10 @@ namespace Application.Business.Portfolio
                 foreCast.Forecast, AvailableTradingCapital, TargetVolatility,
                 new InstrumentPositionSize(
                     foreCast.InstrumentBlock,
-                    Convert.ToDecimal(foreCast.AskingPrice),
-                    Convert.ToDecimal(instrumentPriceVolatility.StandardDeviation),
+                    foreCast.AskingPrice,
+                    instrumentPriceVolatility.StandardDeviation,
                     ExchangeRate));
-            return decimal.Round(subSystemPosition.GetUnscaledPosition(), 9);
+            return Math.Round(subSystemPosition.GetUnscaledPosition(), 9);
         }
 
         public PriceVolatility CalculateInstrumentPriceVolatility(//int instrumentId,
@@ -123,12 +123,12 @@ namespace Application.Business.Portfolio
                     IEnumerable<HistoricalData> recentData = HistoricalPriceSet
                         .GetRange(index, periodsToCheck).Where(x => x.ClosePrice != 0);
                     var pv = new PriceVolatility(recentData.ToList(), periodsToCheck);
-                    InstrumentPriceVolatility = Convert.ToDecimal(pv.StandardDeviation);
+                    InstrumentPriceVolatility = pv.StandardDeviation;
                     return pv;
                 }
             }
             var pev = new PriceVolatility(new List<HistoricalData>(), 0);
-            InstrumentPriceVolatility = Convert.ToDecimal(pev.StandardDeviation);
+            InstrumentPriceVolatility = pev.StandardDeviation;
             return pev;
         }
 
@@ -145,14 +145,14 @@ namespace Application.Business.Portfolio
                         x.Date.Value.Date == currentPeriodDate.Date);
         }
 
-        public decimal GetForecastDiversificationMultiplier()
+        public double GetForecastDiversificationMultiplier()
         {
             // See C:\Users\Finn\OneDrive\Documents\Business\trading\Systematic Trading - Robert Carver - Resources\Instrument Diversification Calculator.xlsx for calculation
-            return Convert.ToDecimal(1);
+            return 1;
             //return Convert.ToDecimal(1.652892562);
         }
 
-        private decimal GetInstrumentWeight()
+        private double GetInstrumentWeight()
         {
             return 1;
             //return PorfolioInstruments.First(x => x.InstrumentId == instrumentId).InstrumentWeight;

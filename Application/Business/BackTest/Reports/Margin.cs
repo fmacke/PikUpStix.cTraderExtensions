@@ -5,23 +5,23 @@ namespace Application.Business.BackTest.Reports
 {
     public static class Margin
     {
-        public static decimal Calculate(decimal contractUnit, decimal exchangeRate, TestTrade trade,
-            decimal currentPriceData, decimal volume)
+        public static double Calculate(double contractUnit, double exchangeRate, TestTrade trade,
+            double currentPriceData, double volume)
         {
-            var priceMovement = new decimal();
+            var priceMovement = 0.0;
             if (trade.Direction == PositionType.BUY.ToString())
                 priceMovement = currentPriceData - trade.EntryPrice;
             else
                 priceMovement = trade.EntryPrice - currentPriceData;
 
-            return Convert.ToDecimal(contractUnit * exchangeRate * priceMovement * EnsurePositive(volume));
+            return contractUnit * exchangeRate * priceMovement * EnsurePositive(volume);
         }
 
-        private static decimal EnsurePositive(decimal number)
+        private static double EnsurePositive(double number)
         {
-            var powers = Math.Pow(Convert.ToDouble(number), Convert.ToDouble(2));
+            var powers = Math.Pow(number, 2);
             var squred = Math.Sqrt(powers);
-            return Convert.ToDecimal(squred);
+            return squred;
         }
     }
 }

@@ -1,6 +1,7 @@
 using Application.Business.Forecasts;
 using Application.Business.Forecasts.CarverTrendFollower;
 using Domain.Entities;
+using System;
 
 namespace Application.Business.Forecasts.CarverTrendFollower
 {
@@ -17,31 +18,31 @@ namespace Application.Business.Forecasts.CarverTrendFollower
 
         private void LoadScalars(List<Test_Parameter> testParameters)
         {
-            ShortScalar = 0.4M;
-            MediumScalar = 0.2M;
-            LongScalar = 0.4M;
+            ShortScalar = 0.4;
+            MediumScalar = 0.2;
+            LongScalar = 0.4;
 
             foreach (var parameter in testParameters)
             {
                 if (parameter.Name.Equals("ShortScalar[Double]"))
-                    ShortScalar = Convert.ToDecimal(parameter.Value);
+                    ShortScalar = Convert.ToDouble(parameter.Value);
                 if (parameter.Name.Equals("LongScalar[Double]"))
-                    LongScalar = Convert.ToDecimal(parameter.Value);
+                    LongScalar = Convert.ToDouble(parameter.Value);
                 if (parameter.Name.Equals("MediumScalar[Double]"))
-                    MediumScalar = Convert.ToDecimal(parameter.Value);
+                    MediumScalar = Convert.ToDouble(parameter.Value);
             }
         }
 
         public List<ForecastElement> ForecastData { get; set; }
-        public decimal ShortScalar { get; private set; }
-        public decimal MediumScalar { get; private set; }
-        public decimal LongScalar { get; private set; }
+        public double ShortScalar { get; private set; }
+        public double MediumScalar { get; private set; }
+        public double LongScalar { get; private set; }
 
-        public new decimal CalculateForecast()
+        public new double CalculateForecast()
         {
-            ShortForecast = Convert.ToDecimal(CalculateScaledForecast(16, 64, 36, 0.99).Forecast);
-            MediumForecast = Convert.ToDecimal(CalculateScaledForecast(32, 128, 36, 0.99).Forecast);
-            LongForecast = Convert.ToDecimal(CalculateScaledForecast(64, 256, 36, 0.99).Forecast);
+            ShortForecast = CalculateScaledForecast(16, 64, 36, 0.99).Forecast;
+            MediumForecast = CalculateScaledForecast(32, 128, 36, 0.99).Forecast;
+            LongForecast = CalculateScaledForecast(64, 256, 36, 0.99).Forecast;
             var combinedForecast = new SingleInstrumentCombinedForecast(ShortForecast, MediumForecast,
                 LongForecast, ShortScalar, MediumScalar, LongScalar);
             Forecast = combinedForecast.CombinedForecast;
@@ -58,7 +59,7 @@ namespace Application.Business.Forecasts.CarverTrendFollower
             ForecastElement fc = unscaledForecast.Last();
             if (!double.IsNaN(fc.Forecast) && !double.IsInfinity(fc.Forecast))
                 if (fc.Forecast != 0.0)
-                    fc.Forecast = Convert.ToDouble(_forecastScaling.CapForecast(Convert.ToDecimal(fc.Forecast * forecastScalar)));
+                    fc.Forecast = _forecastScaling.CapForecast(fc.Forecast * forecastScalar);
             return fc;
         }
 
@@ -67,7 +68,7 @@ namespace Application.Business.Forecasts.CarverTrendFollower
         {
             double FastDecay = 2 / Convert.ToDouble(fastPeriod + 1);
             double SlowDecay = 2 / Convert.ToDouble(slowPeriod + 1);
-            double StandardDeviationDecay = 2 / Convert.ToDouble(standardDeviationLookBack + 1);
+            double StandardDeviationDecay = 2 / (standardDeviationLookBack + 1);
             ForecastData = new List<ForecastElement>();
             double previousPrice = 0;
             double previousFastEwma = 0;

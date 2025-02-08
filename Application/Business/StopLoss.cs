@@ -4,8 +4,8 @@ namespace Application.Business
 {
     public class StopLoss
     {
-        public StopLoss(decimal existingMargin, decimal stopLossMaxPercent, decimal contractUnit,
-            decimal volume, decimal exchangeRate, PositionType posType, double askingPrice, double biddingPrice, decimal minimumPriceFluctuation)
+        public StopLoss(double existingMargin, double stopLossMaxPercent, double contractUnit,
+            double volume, double exchangeRate, PositionType posType, double askingPrice, double biddingPrice, double minimumPriceFluctuation)
         {
             ExistingMargin = existingMargin;
             StopLossMaxPercent = stopLossMaxPercent;
@@ -18,46 +18,46 @@ namespace Application.Business
             MinimumPriceFluctuation = minimumPriceFluctuation;
         }
 
-        public decimal ExistingMargin { get; private set; }
-        public decimal StopLossMaxPercent { get; private set; }
-        public decimal ContractUnit { get; private set; }
-        public decimal Volume { get; private set; }
-        public decimal ExchangeRate { get; private set; }
+        public double ExistingMargin { get; private set; }
+        public double StopLossMaxPercent { get; private set; }
+        public double ContractUnit { get; private set; }
+        public double Volume { get; private set; }
+        public double ExchangeRate { get; private set; }
         public double AskingPrice { get; private set; }
         public double BiddingPrice { get; private set; }
-        public decimal MinimumPriceFluctuation { get; set; }
+        public double MinimumPriceFluctuation { get; set; }
         public PositionType PositionType { get; private set; }
 
-        public decimal StopLossInPips()
+        public double StopLossInPips()
         {
-            decimal stopLossValue = ExistingMargin * StopLossMaxPercent * ExchangeRate;
+            double stopLossValue = ExistingMargin * StopLossMaxPercent * ExchangeRate;
 
             // Note pip size calculation should be same irrespective of trade direction
             var vol = Volume;
             if (PositionType == PositionType.SELL)
                 vol = Volume * -1;
-            decimal onePipValue =
-                Convert.ToDecimal(ContractUnit * ExchangeRate * vol * MinimumPriceFluctuation);
+            double onePipValue =
+                ContractUnit * ExchangeRate * vol * MinimumPriceFluctuation;
             if (onePipValue == 0)
-                return 0M;
+                return 0;
             return stopLossValue / onePipValue;
         }
 
-        public decimal StopLossInCurrency()
+        public double StopLossInCurrency()
         {
-            decimal stopLossInPips = StopLossInPips();
+            double stopLossInPips = StopLossInPips();
             double currentPrice = AskingPrice;
             if (PositionType == PositionType.SELL)
             {
                 stopLossInPips = stopLossInPips * -1;
                 currentPrice = BiddingPrice;
             }
-            decimal stopInCurrency = CalculateStopAdjustmentByInstrument(stopLossInPips);
-            var x = Convert.ToDecimal(currentPrice) - stopInCurrency;
+            double stopInCurrency = CalculateStopAdjustmentByInstrument(stopLossInPips);
+            var x = currentPrice - stopInCurrency;
             return x;
         }
 
-        public bool StopLossHit(decimal currentPrice)
+        public bool StopLossHit(double currentPrice)
         {
             if (PositionType == PositionType.BUY && currentPrice <= StopLossInCurrency())
                 return true;
@@ -66,7 +66,7 @@ namespace Application.Business
             return false;
         }
 
-        private decimal CalculateStopAdjustmentByInstrument(decimal stopLossInPips)
+        private double CalculateStopAdjustmentByInstrument(double stopLossInPips)
         {
             //for (int x = 0; x < unitOfChange; x++)
             //{

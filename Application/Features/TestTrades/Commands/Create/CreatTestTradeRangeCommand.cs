@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-    using MediatR;
-    using Application.Common.Results;
-    using Application.Common.Interfaces;
-    using Domain.Entities;
-    using Application.Interfaces.Repositories;
-
+using MediatR;
+using Application.Common.Results;
+using Application.Common.Interfaces;
+using Domain.Entities;
+using Application.Interfaces.Repositories;
 
 namespace Application.Features.TestTrades.Commands.Create
 {

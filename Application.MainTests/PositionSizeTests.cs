@@ -5,24 +5,24 @@ namespace PikUpStix.Trading.NTests
     [TestFixture]
     public class PositionSizeTests
     {
-        public decimal instrument_Forecast { get; set; }
-        public decimal tradingCapital { get; set; }
-        public decimal targetVolatility { get; set; }
-        public decimal instrumentPrice { get; set; }
-        public decimal instrumentPriceVolatility { get; set; }
-        public decimal instrumentBlock { get; set; }
-        public decimal exchangeRate { get; set; }
+        public double instrument_Forecast { get; set; }
+        public double tradingCapital { get; set; }
+        public double targetVolatility { get; set; }
+        public double instrumentPrice { get; set; }
+        public double instrumentPriceVolatility { get; set; }
+        public double instrumentBlock { get; set; }
+        public double exchangeRate { get; set; }
 
         [Test]
         public void Calculate_Position_Size_From_Forecast()
         {
-            instrument_Forecast = Convert.ToDecimal(-6.0);
+            instrument_Forecast = -6.0;
             tradingCapital = 4000000;
-            targetVolatility = Convert.ToDecimal(0.25);
-            instrumentPrice = Convert.ToDecimal(75);
-            instrumentPriceVolatility = Convert.ToDecimal(0.0133);
+            targetVolatility = 0.25;
+            instrumentPrice = 75;
+            instrumentPriceVolatility = 0.0133;
             instrumentBlock = 1000;
-            exchangeRate = Convert.ToDecimal(0.67);
+            exchangeRate = 0.67;
             var insrtumentPositionSize = new InstrumentPositionSize(instrumentBlock, instrumentPrice, instrumentPriceVolatility, exchangeRate);
             var subSystemPosition = new SubSystemPosition(instrument_Forecast, tradingCapital, targetVolatility, insrtumentPositionSize);
 
@@ -38,13 +38,13 @@ namespace PikUpStix.Trading.NTests
         [Test]
         public void Calculate_Position_Size_From_Forecast_FxProTesting()
         {
-            instrument_Forecast = Convert.ToDecimal(20.0);
+            instrument_Forecast = 20.0;
             tradingCapital = 1000000;
-            targetVolatility = Convert.ToDecimal(0.25);
-            instrumentPrice = Convert.ToDecimal(0.76014);
-            instrumentPriceVolatility = Convert.ToDecimal(0.00379131403653604);
+            targetVolatility = 0.25;
+            instrumentPrice = 0.76014;
+            instrumentPriceVolatility = 0.00379131403653604;
             instrumentBlock = 100000;
-            exchangeRate = Convert.ToDecimal(1);
+            exchangeRate = 1;
             var insrtumentPositionSize = new InstrumentPositionSize(instrumentBlock, instrumentPrice, instrumentPriceVolatility, exchangeRate);
             var subSystemPosition = new SubSystemPosition(instrument_Forecast, tradingCapital, targetVolatility, insrtumentPositionSize);
 

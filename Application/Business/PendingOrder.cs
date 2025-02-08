@@ -1,13 +1,8 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Business
 {
-    public class PendingOrderCommon
+    public class PendingOrder
     {
         public TradeType TradeType { get; set; }
         public double VolumeInUnits { get; set; }

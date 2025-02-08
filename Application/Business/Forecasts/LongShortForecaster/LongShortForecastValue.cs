@@ -13,7 +13,7 @@ namespace Application.Business.Forecasts.LongShortForecaster
             AskingPrice = askingPrice;
             BiddingPrice = biddingPrice;
         }
-        public new decimal CalculateForecast()
+        public new double CalculateForecast()
         {
             Forecast = 0;
             // InstrumentId = CursorDatePriceData.Instrument.InstrumentId;

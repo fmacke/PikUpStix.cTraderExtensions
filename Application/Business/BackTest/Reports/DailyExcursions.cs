@@ -2,9 +2,9 @@
 
 namespace Application.Business.BackTest.Reports
 {
-    public class DailyExcursions
+    public class DailyExcursionss
     {
-        public DailyExcursions(IReadOnlyCollection<TestTrade> results)
+        public DailyExcursionss(IReadOnlyCollection<TestTrade> results)
         {
             Excursions = new List<decimal>();
             foreach (TestTrade result in results)

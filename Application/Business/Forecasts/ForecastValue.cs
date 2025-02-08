@@ -19,34 +19,34 @@ namespace Application.Business.Forecasts
                 InstrumentName = "EURUSD",
                 Id = 1,
                 Currency = "GBP",
-                MinimumPriceFluctuation = 0.0001M
+                MinimumPriceFluctuation = 0.0001
             };
             DateTime = date;
             PriceData = historicalData;
             AskingPrice = askingPrice;
             BiddingPrice = biddingPrice;
-            InstrumentBlock = 1;//Instrument.ContractUnit;
-            MinimumPriceFluctuation =Convert.ToDecimal(0.00010);//Instrument.MinimumPriceFluctuation;
+            InstrumentBlock = Instrument.ContractUnit;
+            MinimumPriceFluctuation =Instrument.MinimumPriceFluctuation;
         }
 
         public List<HistoricalData> PriceData { get; protected set; }
         public double AskingPrice { get; set; }
         public DateTime DateTime { get; set; }
-        public decimal Forecast { get; set; }
+        public double Forecast { get; set; }
         public double BiddingPrice { get; set; }
-        public decimal InstrumentBlock { get; set; }
-        public decimal ShortForecast { get; protected set; }
-        public decimal LongForecast { get; protected set; }
-        public decimal MediumForecast { get; protected set; }
+        public double InstrumentBlock { get; set; }
+        public double ShortForecast { get; protected set; }
+        public double LongForecast { get; protected set; }
+        public double MediumForecast { get; protected set; }
         public Instrument Instrument { get; set; }
-        public decimal MinimumPriceFluctuation { get; set; }
+        public double MinimumPriceFluctuation { get; set; }
 
-        public decimal CalculateForecast()
+        public double CalculateForecast()
         {
             throw new Exception("implement in child classes");
         }
 
-        //protected decimal CalculateCurrentPrice(List<HistoricalData> historicalPriceSet, DateTime cursorDate)
+        //protected double CalculateCurrentPrice(List<HistoricalData> historicalPriceSet, DateTime cursorDate)
         //{
         //    if (historicalPriceSet.Any(x => Convert.ToDateTime(x.Date).Date == cursorDate.Date))
         //        return

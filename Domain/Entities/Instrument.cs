@@ -32,12 +32,12 @@ namespace Domain.Entities
         [Required]
         [StringLength(50)]
         public string Sort { get; set; }
-        public decimal ContractUnit { get; set; }
+        public double ContractUnit { get; set; }
         [StringLength(200)]
         public string ContractUnitType { get; set; }
         [StringLength(500)]
         public string PriceQuotation { get; set; }
-        public decimal MinimumPriceFluctuation { get; set; }
+        public double MinimumPriceFluctuation { get; set; }
         [Required]
         [StringLength(50)]
         public string Currency { get; set; }

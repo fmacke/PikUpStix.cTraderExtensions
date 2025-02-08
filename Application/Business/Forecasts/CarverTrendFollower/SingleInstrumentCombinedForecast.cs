@@ -2,7 +2,7 @@
 {
     public class SingleInstrumentCombinedForecast
     {
-        public SingleInstrumentCombinedForecast(decimal shortForecast, decimal mediumForecast, decimal longForecast, decimal shortScalar, decimal mediumScalar, decimal longScalar)
+        public SingleInstrumentCombinedForecast(double shortForecast, double mediumForecast, double longForecast, double shortScalar, double mediumScalar, double longScalar)
         {
             LongForecast = longForecast * longScalar;
             ShortForecast = shortForecast * shortScalar;
@@ -10,9 +10,9 @@
             CombinedForecast = LongForecast + MediumForecast + ShortForecast;
         }
 
-        public decimal LongForecast { get; private set; }
-        public decimal MediumForecast { get; private set; }
-        public decimal ShortForecast { get; private set; }
-        public decimal CombinedForecast { get; private set; }
+        public double LongForecast { get; private set; }
+        public double MediumForecast { get; private set; }
+        public double ShortForecast { get; private set; }
+        public double CombinedForecast { get; private set; }
     }
 }

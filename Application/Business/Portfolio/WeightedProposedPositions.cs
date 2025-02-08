@@ -5,8 +5,8 @@ namespace Application.Business.Portfolio
 {
     public class WeightedProposedPositions : List<PositionValue>
     {
-        public WeightedProposedPositions(List<IForecastValue> instrumentForecasts, decimal stopLossPercent, decimal exchangeRate, decimal targetVolatility,
-            List<List<HistoricalData>> historicalDataSets, decimal availableTradingCapital)
+        public WeightedProposedPositions(List<IForecastValue> instrumentForecasts, double stopLossPercent, double exchangeRate, double targetVolatility,
+            List<List<HistoricalData>> historicalDataSets, double availableTradingCapital)
         {
             foreach (IForecastValue forecast in instrumentForecasts)
             {

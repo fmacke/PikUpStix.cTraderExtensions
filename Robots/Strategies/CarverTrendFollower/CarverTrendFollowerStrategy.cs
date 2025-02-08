@@ -14,15 +14,15 @@ namespace Robots.Strategies.CarverTrendFollower
     {
         public List<PositionUpdate> PositionInstructions { get; set; }
         public List<string> LogMessages { get; set; } = new List<string>();
-        public decimal MinimumOpeningForecast { get; private set; }
-        public decimal StopLossMax { get; private set; }
-        public decimal TargetVolatility { get; private set; }
-        public decimal TrailStopAtPips { get; private set; }
-        public decimal TrailStopSizeInPips { get; private set; }
+        public double MinimumOpeningForecast { get; private set; }
+        public double StopLossMax { get; private set; }
+        public double TargetVolatility { get; private set; }
+        public double TrailStopAtPips { get; private set; }
+        public double TrailStopSizeInPips { get; private set; }
         public double TakeProfitInPips { get; private set; }
         public List<Test_Parameter> TestParameters { get; private set; }
 
-        public CarverTrendFollowerStrategy(decimal currentCapital, List<List<HistoricalData>> bars, Positions positions, string symbolName,
+        public CarverTrendFollowerStrategy(double currentCapital, List<List<HistoricalData>> bars, Positions positions, string symbolName,
             string dataSource, double askingPrice, double biddingPrice, List<Test_Parameter>? testParameters)
         {
 
@@ -31,7 +31,7 @@ namespace Robots.Strategies.CarverTrendFollower
             var logger = new Logger(false);
             var carverTrendFollower = new CarverTrendFollowerForecast();
             var forecasts = carverTrendFollower.GetForecasts(bars, cursorDate, logger, askingPrice, biddingPrice, testParameters);
-            var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1M, TargetVolatility, bars, currentCapital);
+            var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, bars, currentCapital);
             //foreach (var pos in weightedPositions)
             //    PikUpStix.Trading.Common.FileWriter.WriteToTextFile(new string[] { cursorDate.ToString() + pos.ProposedWeightedPosition.ToString() }, @"C:\Users\Finn\Desktop\text.txt");
 
@@ -128,15 +128,15 @@ namespace Robots.Strategies.CarverTrendFollower
                 foreach (var param in testParameters)
                 {
                     if (param.Name.Equals("MaxStopLoss[Double]"))
-                        StopLossMax = Convert.ToDecimal(param.Value);
+                        StopLossMax = Convert.ToDouble(param.Value);
                     if (param.Name.Equals("TargetVelocity[Double]"))
-                        TargetVolatility = Convert.ToDecimal(param.Value);
+                        TargetVolatility = Convert.ToDouble(param.Value);
                     if (param.Name.Equals("MinimumOpeningForecast[Double]"))
-                        MinimumOpeningForecast = Convert.ToDecimal(param.Value);
+                        MinimumOpeningForecast = Convert.ToDouble(param.Value);
                     if (param.Name.Equals("TrailStopAtPips[Double]"))
-                        TrailStopAtPips = Convert.ToDecimal(param.Value);
+                        TrailStopAtPips = Convert.ToDouble(param.Value);
                     if (param.Name.Equals("TrailStopSizeInPips[Double]"))
-                        TrailStopSizeInPips = Convert.ToDecimal(param.Value);
+                        TrailStopSizeInPips = Convert.ToDouble(param.Value);
                     if (param.Name.Equals("TakeProfitInPips[Double]"))
                         TakeProfitInPips = Convert.ToDouble(param.Value);
                 }
@@ -145,9 +145,9 @@ namespace Robots.Strategies.CarverTrendFollower
             {
                 /// TODO : GET RID OF THIS ONCE REFACTORING COMPLETE
                 StopLossMax = 50;
-                TargetVolatility = Convert.ToDecimal(0.2);
-                MinimumOpeningForecast = Convert.ToDecimal(0.2);
-                TrailStopAtPips = Convert.ToDecimal(50);
+                TargetVolatility = Convert.ToDouble(0.2);
+                MinimumOpeningForecast = Convert.ToDouble(0.2);
+                TrailStopAtPips = Convert.ToDouble(50);
             }
         }
 

@@ -1,10 +1,13 @@
-﻿using Application.Features.TestParameters.Commands.Create;
+﻿using Application.Business.BackTest.Reports;
+using Application.Features.TestParameters.Commands.Create;
 using Application.Features.Tests.Commands.Create;
 using Application.Features.Tests.Commands.Update;
 using Application.Features.TestTrades.Commands.Create;
 using cAlgo.API;
 using DataServices;
+using AutoMapper;
 using Domain.Entities;
+using Application.Mappings;
 
 namespace FXProBridge.Capture
 {
@@ -12,9 +15,11 @@ namespace FXProBridge.Capture
     {
         public int TestId { get; private set; }
         public List<Test_Parameter> TestParams { get; set; } = new List<Test_Parameter>();
+        public double StartingCapital { get; private set; }
 
-        public TestResultsCapture(string description, decimal accountBalance, Dictionary<string, string> robotProperties, IDataService dataService)
+        public TestResultsCapture(string description, double accountBalance, Dictionary<string, string> robotProperties, IDataService dataService)
         {
+            StartingCapital = accountBalance;
             TestId = dataService.TestCaller.AddTest(new CreateTestCommand()
             {
                 FromDate = new DateTime(1900, 1, 1),
@@ -41,13 +46,10 @@ namespace FXProBridge.Capture
                 });
             }
         }
-        public string Capture(string method, List<HistoricalTrade> trades, IDataService dataService)
+        public string Capture(string method, List<HistoricalTrade> trades, IDataService dataService, double maximumAdverseExcursion)
         {
             try
-            {
-                var historicalTrades = trades;
-                DateTime from = new DateTime(2005, 1, 1);
-                //var instruments = db.Instruments;
+            {                
                 var tts = new CreateTestTradeRangeCommand();
                 foreach (var tr in trades)
                 {
@@ -55,21 +57,25 @@ namespace FXProBridge.Capture
                     {
                         TestId = TestId,
                         Comment = tr.ClosingDealId.ToString() + " || " + tr.Label,
-                        CapitalAtClose = Convert.ToDecimal(tr.Balance),
+                        CapitalAtClose = tr.Balance,
                         Created = tr.EntryTime,
-                        Volume = Convert.ToDecimal(tr.VolumeInUnits),
+                        Volume = tr.VolumeInUnits,
                         Direction = tr.TradeType.ToString().ToUpper(),
-                        EntryPrice = Convert.ToDecimal(tr.EntryPrice),
-                        Commission = Convert.ToDecimal(tr.Commissions),
+                        EntryPrice = tr.EntryPrice,
+                        Commission = tr.Commissions,
                         // STOPLOSS - not possible to get this from HistoricalTrade item.  I presume this is because SL it can change over the lifetime of a position
                         ClosedAt = tr.ClosingTime,
-                        ClosePrice = Convert.ToDecimal(tr.ClosingPrice),
+                        ClosePrice = tr.ClosingPrice,
                         InstrumentId = 1,//db.Instruments.First(x => x.InstrumentName.Equals(tr.SymbolName) && x.DataSource == "FXPRO").Id,
                         InstrumentWeight = "NONE",
                         Status = "HISTORICALTRADE",
-                        Margin = Convert.ToDecimal(tr.NetProfit)
+                        Margin = tr.NetProfit
                     });
                 }
+                var config = new MapperConfiguration(cfg => cfg.AddProfile<TestTradesProfile>());
+                var mapper = config.CreateMapper();
+                var historicalTrades = mapper.Map<List<TestTrade>>(tts);
+                var tradeStatistics = new TradeStatistics(historicalTrades, StartingCapital, maximumAdverseExcursion);
 
                 dataService.TestTradeCaller.AddTestTradeRange(tts);
                 var test = dataService.TestCaller.GetTest(TestId);
@@ -79,7 +85,46 @@ namespace FXProBridge.Capture
                     FromDate = tts.Min(x => x.Created).AddDays(-1),
                     ToDate = Convert.ToDateTime(tts.Max(x => x.ClosedAt)).AddDays(1),
                     EndingCapital = tts.Sum(x => x.Margin) + test.StartingCapital,
-                    TestEndAt = DateTime.Now
+                    TestEndAt = DateTime.Now,
+                    MaxAdverseExcursion = tradeStatistics.MaxAdverseExcursion,
+                    SharpeRatio = tradeStatistics.SharpeRatio,
+                    NetProfit = tradeStatistics.NetProfit,
+                    Commission = tradeStatistics.Commission,
+                    MaxEquityDrawdown = tradeStatistics.MaxEquityDrawdown,
+                    MaxBalanceDrawdown = tradeStatistics.MaxBalanceDrawdown,
+                    TotalTrades = tradeStatistics.TotalTrades,
+                    WinningTrades = tradeStatistics.WinningTrades,
+                    MaxConsecutiveLosingTrades = tradeStatistics.MaxConsecutiveLosingTrades,
+                    LargestLosingTrades = tradeStatistics.LargestLosingTrades,
+                    LosingTrades = tradeStatistics.LosingTrades,
+                    MaxConsecutiveWinningTrades = tradeStatistics.MaxConsecutiveWinningTrades,
+                    LargestWinningTrade = tradeStatistics.LargestWinningTrade,
+                    AverageTrade = tradeStatistics.AverageTrade,
+                    SortinoRatio = tradeStatistics.SortinoRatio,
+                    GrossProfit = tradeStatistics.GrossProfit,
+                    GrossLoss = tradeStatistics.GrossLoss,
+                    NetShortProfit = tradeStatistics.NetShortProfit,
+                    NetLongProfit = tradeStatistics.NetLongProfit,
+                    GrossShortProfit = tradeStatistics.GrossShortProfit,
+                    GrossLongProfit = tradeStatistics.GrossLongProfit,
+                    ProfitFactor = tradeStatistics.ProfitFactor,
+                    ProfitFactorLongTrades = tradeStatistics.ProfitFactorLongTrades,
+                    ProfitFactorShortTrades = tradeStatistics.ProfitFactorShortTrades,
+                    NetShortLoss = tradeStatistics.NetShortLoss,
+                    NetLongLoss = tradeStatistics.NetLongLoss,
+                    GrossShortLoss = tradeStatistics.GrossShortLoss,
+                    GrossLongLoss = tradeStatistics.GrossLongLoss,
+                    ProfitableTradesRatio = tradeStatistics.ProfitableTradesRatio,
+                    LosingTradesRatio = tradeStatistics.LosingTradesRatio,
+                    ProfitableLongTradesRatio = tradeStatistics.ProfitableLongTradesRatio,
+                    ProfitableShortTradesRatio = tradeStatistics.ProfitableShortTradesRatio,
+                    AverageWin = tradeStatistics.AverageWin,
+                    AverageWinLong = tradeStatistics.AverageWinLong,
+                    AverageWinShort = tradeStatistics.AverageWinShort,
+                    AverageLoss = tradeStatistics.AverageLoss,
+                    AverageLossLong = tradeStatistics.AverageLossLong,
+                    AverageLossShort = tradeStatistics.AverageLossShort
+
                 });
             }
             catch (Exception ex)

@@ -6,7 +6,7 @@ namespace Application.Business.BackTest.Reports
     {
         public SharpeRatio(IReadOnlyCollection<TestTrade> results)
         {
-            AveragePnL = Convert.ToDecimal(results.Average(x => x.Margin));
+            AveragePnL = results.Average(x => x.Margin);
             var dailyPnL = new List<double>();
 
             foreach (TestTrade result in results)
@@ -16,16 +16,16 @@ namespace Application.Business.BackTest.Reports
             if (results.Count > 0)
             {
                 var stdDevOfAverageReturns = new StandardDeviation(dailyPnL);
-                StandardDeviationOfPnL = Convert.ToDecimal(stdDevOfAverageReturns.Calculate);
+                StandardDeviationOfPnL = stdDevOfAverageReturns.Calculate;
                 if (StandardDeviationOfPnL == 0)
-                    Get = 0;
+                    Value = 0;
                 else
-                    Get = Math.Round(AveragePnL / StandardDeviationOfPnL, 4);
+                    Value = Math.Round(AveragePnL / StandardDeviationOfPnL, 4);
             }
         }
 
-        public decimal AveragePnL { get; private set; }
-        public decimal StandardDeviationOfPnL { get; private set; }
-        public decimal Get { get; private set; }
+        public double AveragePnL { get; private set; }
+        public double StandardDeviationOfPnL { get; private set; }
+        public double Value { get; private set; }
     }
 }

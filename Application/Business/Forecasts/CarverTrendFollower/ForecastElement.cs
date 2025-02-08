@@ -20,7 +20,6 @@ namespace Application.Business.Forecasts.CarverTrendFollower
                 EwmaSlow = slowDecay * Price + previousSlowEwma * (1 - slowDecay);
             }
 
-
             RawCrossover = EwmaFast - EwmaSlow;
 
             Variance = SquareRet;
@@ -31,7 +30,7 @@ namespace Application.Business.Forecasts.CarverTrendFollower
             Forecast = VolatilityAdjustedCrossOver * forecastScalar;
             UnCapped = Forecast;
             if (!double.IsNaN(Forecast) && !double.IsInfinity(Forecast))
-                Forecast = Convert.ToDouble(new ForecastScaling().CapForecast(Convert.ToDecimal(Forecast)));
+                Forecast = Convert.ToDouble(new ForecastScaling().CapForecast(Forecast));
             else
             {
                 Forecast = 0;

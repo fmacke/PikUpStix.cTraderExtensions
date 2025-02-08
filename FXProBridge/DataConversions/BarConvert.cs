@@ -19,12 +19,12 @@ namespace FXProBridge.DataConversions
                     return Domain.Enums.TradeType.Buy;
             }
         }
-        public static List<PendingOrderCommon> ConvertOrders(cAlgo.API.PendingOrders pendingOrders)
+        public static List<Application.Business.PendingOrder> ConvertOrders(cAlgo.API.PendingOrders pendingOrders)
         {
-            var orders = new List<PendingOrderCommon>();
+            var orders = new List<Application.Business.PendingOrder>();
             foreach (var order in pendingOrders)
             {
-                orders.Add(new PendingOrderCommon()
+                orders.Add(new Application.Business.PendingOrder()
                 {
                     TradeType = ConvertTradeType(order.TradeType),
                     VolumeInUnits = order.VolumeInUnits,

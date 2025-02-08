@@ -34,14 +34,14 @@ namespace Application.Business.BackTest.StopLoss
             return TradingPositions;
         }
 
-        private bool BuyStopLossHit(TestTrade existingPosition, decimal? previousDayLow)
-        {
-            return existingPosition.Direction == PositionType.BUY.ToString() && previousDayLow <= existingPosition.StopLoss;
-        }
+        //private bool BuyStopLossHit(TestTrade existingPosition, decimal? previousDayLow)
+        //{
+        //    return existingPosition.Direction == PositionType.BUY.ToString() && previousDayLow <= existingPosition.StopLoss;
+        //}
 
-        private bool SellStopLossHit(TestTrade existingPosition, decimal? previousDayHigh)
-        {
-            return existingPosition.Direction == PositionType.SELL.ToString() && previousDayHigh >= existingPosition.StopLoss;
-        }
+        //private bool SellStopLossHit(TestTrade existingPosition, decimal? previousDayHigh)
+        //{
+        //    return existingPosition.Direction == PositionType.SELL.ToString() && previousDayHigh >= existingPosition.StopLoss;
+        //}
     }
 }

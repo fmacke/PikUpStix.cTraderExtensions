@@ -6,16 +6,16 @@ namespace PikUpStix.Trading.Forecast
     public class PositionCalculator
     {        
         public List<TestTrade> RevisedPositions { get; set; }
-        public decimal RequiredAdjustmentToVolume { get; private set; }
-        public decimal FinalPosition { get; private set; }
-        public decimal ExistingPosition { get; private set; }
+        public double RequiredAdjustmentToVolume { get; private set; }
+        public double FinalPosition { get; private set; }
+        public double ExistingPosition { get; private set; }
 
-        public PositionCalculator(decimal proposedPosition, List<TestTrade> currentPositions)
+        public PositionCalculator(double proposedPosition, List<TestTrade> currentPositions)
         {
             RevisedPositions = new List<TestTrade>();
             RequiredAdjustmentToVolume = 0;
-            FinalPosition = 0M;
-            ExistingPosition = 0M;
+            FinalPosition = 0;
+            ExistingPosition = 0;
 
             ExistingPosition = currentPositions.Sum(x => x.Volume);
 
@@ -29,7 +29,7 @@ namespace PikUpStix.Trading.Forecast
             FinalPosition = RevisedPositions.Sum(x => x.Volume) + RequiredAdjustmentToVolume;
         }
 
-        private void CalculateRequiredAdjustmentToVolume(decimal proposedPosition)
+        private void CalculateRequiredAdjustmentToVolume(double proposedPosition)
         {
             var existingVolume = RevisedPositions.Sum(x => x.Volume);
             //if (PositionIsReversal(proposedPosition))
@@ -40,7 +40,7 @@ namespace PikUpStix.Trading.Forecast
                 RequiredAdjustmentToVolume = proposedPosition - existingVolume;
         }
 
-        private void RemoveTradesTooBig(decimal proposedPosition)
+        private void RemoveTradesTooBig(double proposedPosition)
         {
             var removals = new List<TestTrade>();
             foreach (var position in RevisedPositions.Where(x => x.Volume * x.Volume > proposedPosition * proposedPosition))
@@ -49,14 +49,14 @@ namespace PikUpStix.Trading.Forecast
                 RevisedPositions.Remove(remove);
         }
 
-        private void RemoveAllButAggregatedTrades(decimal proposedPosition)
+        private void RemoveAllButAggregatedTrades(double proposedPosition)
         {
             // Note this is pretty simple.  Just orders by volume ascending and should use matching combos instead
-            var aggregatedPositionSum = 0M;
+            var aggregatedPositionSum = 0.0;
             var removals = new List<TestTrade>();
             foreach (var position in RevisedPositions.OrderBy(x => x.Volume))
             {
-                if (Math.Pow(Convert.ToDouble(aggregatedPositionSum + position.Volume), 2) <= Math.Pow(Convert.ToDouble(proposedPosition),2))
+                if (Math.Pow(aggregatedPositionSum + position.Volume, 2) <= Math.Pow(proposedPosition,2))
                     aggregatedPositionSum += position.Volume;
                 else
                     removals.Add(position);
@@ -66,7 +66,7 @@ namespace PikUpStix.Trading.Forecast
             
         }
        
-        private void RemoveTradesInOppositeDirection(decimal proposedPosition)
+        private void RemoveTradesInOppositeDirection(double proposedPosition)
         {
             if (IsASell(proposedPosition))
                 RemovePositions(PositionType.BUY);
@@ -85,7 +85,7 @@ namespace PikUpStix.Trading.Forecast
                 RevisedPositions.Remove(remove);
         }
 
-        private void CloseAllExcept(decimal proposedPosition)
+        private void CloseAllExcept(double proposedPosition)
         {
             var singleAlreadyMatched = false;
             var removals = new List<TestTrade>();
@@ -105,11 +105,11 @@ namespace PikUpStix.Trading.Forecast
                 RevisedPositions.Remove(remove);
         }
 
-        private bool IsASell(decimal proposedPosition)
+        private bool IsASell(double proposedPosition)
         {
             return proposedPosition < 0;
         }
-        private bool IsABuy(decimal proposedPosition)
+        private bool IsABuy(double proposedPosition)
         {
             return proposedPosition > 0;
         }

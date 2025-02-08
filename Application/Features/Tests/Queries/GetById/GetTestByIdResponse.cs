@@ -12,9 +12,9 @@ namespace Application.Features.Tests.Queries.GetById
         [Column(TypeName = "smalldatetime")]
         public DateTime ToDate { get; set; }
         [Column(TypeName = "money")]
-        public decimal StartingCapital { get; set; }
+        public double StartingCapital { get; set; }
         [Column(TypeName = "money")]
-        public decimal EndingCapital { get; set; }
+        public double EndingCapital { get; set; }
         [StringLength(1000)]
         public string Description { get; set; }
         [Column(TypeName = "smalldatetime")]
@@ -24,62 +24,62 @@ namespace Application.Features.Tests.Queries.GetById
         public double? MaxAdverseExcursion { get; set; }
         public double? SharpeRatio { get; set; }
         [Column(TypeName = "money")]
-        public decimal NetProfit { get; set; }
+        public double NetProfit { get; set; }
         [Column(TypeName = "money")]
-        public decimal Commission { get; set; }
+        public double Commission { get; set; }
         public double MaxEquityDrawdown { get; set; }
         public double MaxBalanceDrawdown { get; set; }
         public int TotalTrades { get; set; }
         public int WinningTrades { get; set; }
         public int MaxConsecutiveWinningTrades { get; set; }
         [Column(TypeName = "money")]
-        public decimal LargestWinningTrade { get; set; }
+        public double LargestWinningTrade { get; set; }
         public int LosingTrades { get; set; }
         public int MaxConsecutiveLosingTrades { get; set; }
         [Column(TypeName = "money")]
-        public decimal LargestLosingTrades { get; set; }
+        public double LargestLosingTrades { get; set; }
         [Column(TypeName = "money")]
-        public decimal AverageTrade { get; set; }
+        public double AverageTrade { get; set; }
         public double SortinoRatio { get; set; }
         [Column(TypeName = "money")]
-        public decimal GrossProfit { get; set; }
+        public double GrossProfit { get; set; }
         [Column(TypeName = "money")]
-        public decimal GrossLoss { get; set; }
+        public double GrossLoss { get; set; }
         [Column(TypeName = "money")]
-        public decimal NetShortProfit { get; set; }
+        public double NetShortProfit { get; set; }
         [Column(TypeName = "money")]
-        public decimal NetLongProfit { get; set; }
+        public double NetLongProfit { get; set; }
         [Column(TypeName = "money")]
-        public decimal GrossShortProfit { get; set; }
+        public double GrossShortProfit { get; set; }
         [Column(TypeName = "money")]
-        public decimal GrossLongProfit { get; set; }
+        public double GrossLongProfit { get; set; }
         public double ProfitFactor { get; set; }
         public double ProfitFactorLongTrades { get; set; }
         public double ProfitFactorShortTrades { get; set; }
         [Column(TypeName = "money")]
-        public decimal NetShortLoss { get; set; }
+        public double NetShortLoss { get; set; }
         [Column(TypeName = "money")]
-        public decimal NetLongLoss { get; set; }
+        public double NetLongLoss { get; set; }
         [Column(TypeName = "money")]
-        public decimal GrossShortLoss { get; set; }
+        public double GrossShortLoss { get; set; }
         [Column(TypeName = "money")]
-        public decimal GrossLongLoss { get; set; }
+        public double GrossLongLoss { get; set; }
         public double ProfitableTradesRatio { get; set; }
         public double LosingTradesRatio { get; set; }
         public double ProfitableLongTradesRatio { get; set; }
         public double ProfitableShortTradesRatio { get; set; }
         [Column(TypeName = "money")]
-        public decimal AverageWin { get; set; }
+        public double AverageWin { get; set; }
         [Column(TypeName = "money")]
-        public decimal AverageWinLong { get; set; }
+        public double AverageWinLong { get; set; }
         [Column(TypeName = "money")]
-        public decimal AverageWinShort { get; set; }
+        public double AverageWinShort { get; set; }
         [Column(TypeName = "money")]
-        public decimal AverageLoss { get; set; }
+        public double AverageLoss { get; set; }
         [Column(TypeName = "money")]
-        public decimal AverageLossLong { get; set; }
+        public double AverageLossLong { get; set; }
         [Column(TypeName = "money")]
-        public decimal AverageLossShort { get; set; }
+        public double AverageLossShort { get; set; }
     }
     
 }

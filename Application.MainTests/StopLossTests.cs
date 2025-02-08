@@ -118,19 +118,19 @@ namespace Application.MainTests
         [Test]
         public void CalculateStopLossInCurrency()
         {
-            var existingMargin = Convert.ToDecimal(100);
-            var stopLossMaxPercent = Convert.ToDecimal(0.02);
-            var contractUnit = Convert.ToDecimal(1);
-            var volume = Convert.ToDecimal(1);
-            var exchangeRate = Convert.ToDecimal(1);
+            var existingMargin = 100;
+            var stopLossMaxPercent = 0.02;
+            var contractUnit = 1;
+            var volume = 1;
+            var exchangeRate = 1;
             var posType = PositionType.BUY;
-            var purchasePrice = Convert.ToDouble(10);
-            var minimumPriceFluctuation = Convert.ToDecimal(0.0001);
+            var purchasePrice = 10;
+            var minimumPriceFluctuation = 0.0001;
 
             var stopLoss = new StopLoss(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
             var stopLossInCurrency = stopLoss.StopLossInCurrency();
-            Assert.AreEqual(Convert.ToDecimal(8), stopLossInCurrency);
+            Assert.AreEqual(8, stopLossInCurrency);
 
             posType = PositionType.SELL;
             volume = -1;
@@ -138,31 +138,31 @@ namespace Application.MainTests
             stopLoss = new StopLoss(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
             stopLossInCurrency = stopLoss.StopLossInCurrency();
-            Assert.AreEqual(Convert.ToDecimal(12), stopLossInCurrency);
+            Assert.AreEqual(12, stopLossInCurrency);
         }
         [Test]
         public void CalculateStopLossInCurrencyUsingRealValues()
         {
-            var existingMargin = Convert.ToDecimal(2000);
-            var stopLossMaxPercent = Convert.ToDecimal(0.02);
-            var contractUnit = Convert.ToDecimal(6250);
-            var volume = Convert.ToDecimal(1);
-            var exchangeRate = Convert.ToDecimal(1.377);
+            var existingMargin = 2000;
+            var stopLossMaxPercent = 0.02;
+            var contractUnit = 6250;
+            var volume = 1;
+            var exchangeRate = 1.377;
             var posType = PositionType.BUY;
-            var purchasePrice = Convert.ToDouble(1);
-            var minimumPriceFluctuation = Convert.ToDecimal(0.0001);
+            var purchasePrice = 1;
+            var minimumPriceFluctuation = 0.0001;
 
             var stopLoss = new StopLoss(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
             var stopLossInCurrency = stopLoss.StopLossInCurrency();
-            Assert.AreEqual(Convert.ToDecimal(0.9936), stopLossInCurrency);
+            Assert.AreEqual(0.9936, stopLossInCurrency);
 
             posType = PositionType.SELL;
             volume = -1;
             stopLoss = new StopLoss(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
             stopLossInCurrency = stopLoss.StopLossInCurrency();
-            Assert.AreEqual(Convert.ToDecimal(1.0064), stopLossInCurrency);
+            Assert.AreEqual(1.0064, stopLossInCurrency);
         }
     }
 }
