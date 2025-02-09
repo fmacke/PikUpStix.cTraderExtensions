@@ -10,7 +10,7 @@ using FXProBridge.Capture;
 
 namespace FXProBridge.Robots
 {
-    public class GenericRobot : PositionManager
+    public class PivotPointRobot : PositionManager
     {
         [Parameter("ForecastThreshold", DefaultValue = 1, Step = 0.1, MaxValue = 1, MinValue = 0, Group = "Strategy")]
         public double ForecastThreshold { get; set; }
@@ -71,7 +71,7 @@ namespace FXProBridge.Robots
                 signals.Add(new RSI(_rsiIndicator.Result.LastValue, SymbolName));
             }
             var confirmingSignals = new ConfirmingSignals(signals);
-            var props  = new GenericProperties();
+            var props  = new CurrentMarketInfo();
             props.Positions = PositionConvert.ConvertPosition(Positions);
             props.Orders = PendingOrderConvert.ConvertOrders(PendingOrders);
             props.Bars = BarConvert.ConvertBars(Bars);

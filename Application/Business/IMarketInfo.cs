@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace Application.Business
 {
-    public interface IGenericProperties
+    public interface IMarketInfo
     {
         double Ask { get; }
         List<HistoricalData> Bars { get; }

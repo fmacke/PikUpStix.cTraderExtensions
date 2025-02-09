@@ -14,7 +14,7 @@ namespace Robots.Strategies.PivotPointBounce
         public PivotPoints PivotPoints { get; private set; }
         public  double MaximumRisk = 0.02;
 
-        public PivotPointConfirmStrategy(IGenericProperties props, ConfirmingSignals signals, double thresholdForTrade, 
+        public PivotPointConfirmStrategy(IMarketInfo props, ConfirmingSignals signals, double thresholdForTrade, 
             double confirmingSignalsForecastTreshhold, PivotPoints pivotPoints, double riskPerTrade)
         {
             MaximumRisk = riskPerTrade;
@@ -37,6 +37,7 @@ namespace Robots.Strategies.PivotPointBounce
                     var stopLoss = StrategySignal > 0 ?
                             CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
+                    var pricePoint = StrategySignal > 0 ? props.Ask : props.Bid;
                     var position = new Position()
                     {
                         SymbolName = props.SymbolName,
@@ -46,7 +47,7 @@ namespace Robots.Strategies.PivotPointBounce
                         TakeProfit = StrategySignal > 0 ?
                             CalculatePips(PivotPoints.Pivot - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Pivot),
-                        Volume = riskmanager.CalculateLotSize(stopLoss, props.Ask),
+                        Volume = riskmanager.CalculateLotSize(stopLoss, pricePoint),
                         CreatedAt = props.CursorDate,
                         ExpirationDate = new DateTime(props.CursorDate.Year, props.CursorDate.Month, props.CursorDate.Day, 23, 0, 0)
                     };
@@ -66,14 +67,14 @@ namespace Robots.Strategies.PivotPointBounce
             return Math.Sqrt(powered) * 10000;
         }
 
-        private double CaculateStrategySignal(IGenericProperties props)
+        private double CaculateStrategySignal(IMarketInfo props)
         {
             var strategySignal = 0.0;
             if(LongConditionMet(props.Bars[0].LowPrice, props.Bars[1].LowPrice))
             {
                 strategySignal = 1.0;
             }
-            if (ShortConditionMet(props.Bars[0].LowPrice, props.Bars[1].LowPrice))
+            if (ShortConditionMet(props.Bars[0].HighPrice, props.Bars[1].HighPrice))
             {
                 strategySignal = -1.0;
             }

@@ -10,7 +10,7 @@ namespace Application.Business.BackTest.Reports
                 return TestTrades.Where(x => x.Margin > 0).Sum(x => x.Margin);
             }}
         public double GrossLoss { get {
-                return TestTrades.Where(x => x.Margin < 0).Sum(x => x.Margin);
+                return TestTrades.Where(x => x.Margin < 0).Sum(x => x.Margin)*-1;
             }}
         public int TotalTrades { get {
                 return TestTrades.Count;

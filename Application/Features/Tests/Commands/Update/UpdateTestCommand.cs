@@ -128,6 +128,43 @@ namespace Application.Features.Tests.Commands.Update
             test.ProfitFactor = command.ProfitFactor;
             test.TestEndAt = command.TestEndAt;
             test.NetProfit = command.NetProfit;
+            test.AverageLoss = command.AverageLoss;
+            test.AverageLossLong = command.AverageLoss;
+            test.AverageLossShort = command.AverageLossShort;
+            test.AverageTrade = command.AverageTrade;
+            test.MaxAdverseExcursion = command.MaxAdverseExcursion;
+            test.MaxEquityDrawdown = command.MaxEquityDrawdown;
+            test.WinningTrades = command.WinningTrades;
+            test.TotalTrades = command.TotalTrades;
+            test.LosingTrades = command.LosingTrades;
+            test.MaxConsecutiveLosingTrades = command.MaxConsecutiveLosingTrades;
+            test.MaxConsecutiveWinningTrades = command.MaxConsecutiveWinningTrades;
+            test.MaxBalanceDrawdown = command.MaxBalanceDrawdown;
+            test.LargestLosingTrades = command.LargestLosingTrades;
+            test.LargestWinningTrade = command.LargestWinningTrade;
+            test.SortinoRatio = command.SortinoRatio;
+            test.GrossProfit = command.GrossProfit;
+            test.GrossLoss = command.GrossLoss;
+            test.NetLongProfit = command.NetLongProfit;
+            test.NetLongLoss = command.NetLongLoss;
+            test.NetShortLoss = command.NetShortLoss;
+            test.NetShortProfit = command.NetShortProfit;
+            test.GrossLongProfit = command.GrossLongProfit;
+            test.GrossLongLoss = command.GrossLongLoss;
+            test.GrossShortLoss = command.GrossShortLoss;
+            test.GrossShortProfit = command.GrossShortProfit;
+            test.ProfitFactorLongTrades = command.ProfitFactorLongTrades;
+            test.ProfitFactorShortTrades = command.ProfitFactorShortTrades;
+            test.ProfitableTradesRatio = command.ProfitableTradesRatio;
+            test.ProfitableShortTradesRatio = command.ProfitableShortTradesRatio;
+            test.ProfitableLongTradesRatio = command.ProfitableLongTradesRatio;
+            test.AverageWin = command.AverageWin;
+            test.AverageWinLong = command.AverageWinLong;
+            test.AverageWinShort = command.AverageWinShort;
+            test.AverageLossLong = command.AverageLossLong;
+            test.AverageLossShort = command.AverageLossShort;
+            test.AverageLoss = command.AverageLoss;
+
         }
     }
 }
