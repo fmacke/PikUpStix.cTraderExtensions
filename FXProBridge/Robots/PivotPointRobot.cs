@@ -7,6 +7,7 @@ using Application.Business.Indicator;
 using cAlgo.API.Indicators;
 using Application.Business;
 using FXProBridge.Capture;
+using Application.Business.Indicator.Signal;
 
 namespace FXProBridge.Robots
 {
@@ -21,11 +22,12 @@ namespace FXProBridge.Robots
         [Parameter("RiskPerTrade", DefaultValue = 2, Step = 0.5, MaxValue = 20, MinValue = 0.5, Group = "Strategy")]
         public double RiskPerTrade { get; set; }
 
-
+        [Parameter("Enable MA", DefaultValue = "true", Group = "Confirming Signals")]
+        public bool EnableMA { get; set; }
         [Parameter("Enable RSI", DefaultValue = "true", Group = "Confirming Signals")]
         public bool EnableRSI { get; set; }
         [Parameter("UseAdx", DefaultValue = "true", Group = "Confirming Signals")]
-        public bool UseAdx { get; set; }
+        public bool EnableAdx { get; set; }
         [Parameter("Adx Low Threshold", DefaultValue = 20, Step = 2, MaxValue = 24, MinValue = 0, Group = "Confirming Signals")]
         public int AdxLowThreshold { get; set; }
         [Parameter("Adx High Threshold", DefaultValue = 25, Step = 2, MaxValue = 40, MinValue = 24, Group = "Confirming Signals")]
@@ -35,12 +37,21 @@ namespace FXProBridge.Robots
         private PivotPointIndicator _pivotPointIndicator;
         private AverageDirectionalMovementIndexRating _adxIndicator;
         private RelativeStrengthIndex _rsiIndicator;
+        private MovingAverage _shortMovingAverage;
+        private MovingAverage _mediumMovingAverage;
+        private MovingAverage _longMovingAverage;
 
         protected override void OnStart()
         {
             TestParams = RobotProperties.GetRobotProperties(this);
             _pivotPointIndicator = Indicators.GetIndicator<PivotPointIndicator>();
-            if (UseAdx)
+            if(EnableMA)
+            {
+                _shortMovingAverage = Indicators.MovingAverage(Bars.ClosePrices, 20, MovingAverageType.Simple);
+                _mediumMovingAverage = Indicators.MovingAverage(Bars.ClosePrices, 100, MovingAverageType.Simple);
+                _longMovingAverage = Indicators.MovingAverage(Bars.ClosePrices, 200, MovingAverageType.Simple);
+            }
+            if (EnableAdx)
             {
                 if (AdxLowThreshold > AdxHighThreshold)
                     throw new System.Exception("AdxLowThreshold must be less than AdxHighThreshold");
@@ -61,7 +72,12 @@ namespace FXProBridge.Robots
         private void RunStrategy(DateTime cursorDate)
         {
             var signals = new List<ISignal>();
-            if (UseAdx)
+            if(EnableMA)
+            {
+                signals.Add(new MovingAverages(_shortMovingAverage.Result.LastValue, _mediumMovingAverage.Result.LastValue,
+                    _longMovingAverage.Result.LastValue, SymbolName));
+            }
+            if (EnableAdx)
             {
                 signals.Add(new AdxScores(_adxIndicator.ADX.LastValue, _adxIndicator.ADXR.LastValue,
                 _adxIndicator.DIMinus.LastValue, _adxIndicator.DIPlus.LastValue, SymbolName, AdxLowThreshold, AdxHighThreshold));

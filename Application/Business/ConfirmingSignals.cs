@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using Application.Business.Indicator.Signal;
 
 namespace Application.Business
 {

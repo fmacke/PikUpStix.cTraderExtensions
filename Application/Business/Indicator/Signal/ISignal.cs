@@ -1,4 +1,4 @@
-﻿namespace Application.Business
+﻿namespace Application.Business.Indicator.Signal
 {
     public interface ISignal
     {

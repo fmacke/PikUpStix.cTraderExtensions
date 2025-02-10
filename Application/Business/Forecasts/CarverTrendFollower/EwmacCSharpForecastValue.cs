@@ -9,7 +9,8 @@ namespace Application.Business.Forecasts.CarverTrendFollower
     {
         private readonly ForecastScaling _forecastScaling;
 
-        public EwmacForecastValue(DateTime cursorDate, List<HistoricalData> priceData, double askingPrice, double biddingPrice, List<Test_Parameter> testParameters)
+        public EwmacForecastValue(DateTime cursorDate, List<HistoricalData> priceData, double askingPrice, double biddingPrice, 
+            List<Test_Parameter> testParameters)
             : base(cursorDate, priceData, askingPrice, biddingPrice)
         {
             _forecastScaling = new ForecastScaling();
