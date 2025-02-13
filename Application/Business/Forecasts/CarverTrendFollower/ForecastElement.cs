@@ -43,15 +43,11 @@ namespace Application.Business.Forecasts.CarverTrendFollower
         public double SquareRet { get; private set; }
         public double EwmaFast { get; private set; }
         public double EwmaSlow { get; private set; }
-
         public double RawCrossover { get; private set; }
         public double Variance { get; private set; }
         public double StdDeviation { get; private set; }
-
         public double VolatilityAdjustedCrossOver { get; private set; }
-
         public double Forecast { get; set; }
-
         public double UnCapped { get; private set; }
     }
 }

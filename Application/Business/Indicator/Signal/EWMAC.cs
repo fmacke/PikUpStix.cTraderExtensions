@@ -1,48 +1,44 @@
+﻿using Application.Business.Forecasts.CarverTrendFollower;
 using Domain.Entities;
 
-namespace Application.Business.Forecasts.CarverTrendFollower
+namespace Application.Business.Indicator.Signal
 {
-    public class EwmacForecastValue : ForecastValue
+    public class EWMAC : ISignal
     {
+        public string Instrument { get; set; }
+        public string Name { get; set; }
+        public double Forecast { get; set; }
         private readonly ForecastScaling _forecastScaling;
-
-        public EwmacForecastValue(DateTime cursorDate, List<HistoricalData> priceData, double askingPrice, double biddingPrice, 
-            List<Test_Parameter> testParameters)
-            : base(cursorDate, priceData, askingPrice, biddingPrice)
-        {
-            _forecastScaling = new ForecastScaling();
-            LoadScalars(testParameters);
-        }
-
-        private void LoadScalars(List<Test_Parameter> testParameters)
-        {
-            ShortScalar = 0.4;
-            MediumScalar = 0.2;
-            LongScalar = 0.4;
-
-            foreach (var parameter in testParameters)
-            {
-                if (parameter.Name.Equals("ShortScalar[Double]"))
-                    ShortScalar = Convert.ToDouble(parameter.Value);
-                if (parameter.Name.Equals("LongScalar[Double]"))
-                    LongScalar = Convert.ToDouble(parameter.Value);
-                if (parameter.Name.Equals("MediumScalar[Double]"))
-                    MediumScalar = Convert.ToDouble(parameter.Value);
-            }
-        }
-
         public List<ForecastElement> ForecastData { get; set; }
         public double ShortScalar { get; private set; }
         public double MediumScalar { get; private set; }
         public double LongScalar { get; private set; }
+        public List<HistoricalData> PriceData { get; set; } = new List<HistoricalData>();
+
+        public EWMAC(string symbolName, List<HistoricalData> priceData, double askingPrice, double biddingPrice)
+        {
+            Instrument = symbolName;
+            Name = "EWMAC";
+            PriceData = priceData;
+            _forecastScaling = new ForecastScaling();
+            LoadScalars();
+            Forecast = CalculateForecast();
+        }
+
+        private void LoadScalars()
+        {
+            ShortScalar = 0.4;
+            MediumScalar = 0.2;
+            LongScalar = 0.4;
+        }
 
         public new double CalculateForecast()
         {
-            ShortForecast = CalculateScaledForecast(16, 64, 36, 0.99).Forecast;
-            MediumForecast = CalculateScaledForecast(32, 128, 36, 0.99).Forecast;
-            LongForecast = CalculateScaledForecast(64, 256, 36, 0.99).Forecast;
-            var combinedForecast = new SingleInstrumentCombinedForecast(ShortForecast, MediumForecast,
-                LongForecast, ShortScalar, MediumScalar, LongScalar);
+            var shortForecast = CalculateScaledForecast(16, 64, 36, 0.99).Forecast;
+            var mediumForecast = CalculateScaledForecast(32, 128, 36, 0.99).Forecast;
+            var longForecast = CalculateScaledForecast(64, 256, 36, 0.99).Forecast;
+            var combinedForecast = new SingleInstrumentCombinedForecast(shortForecast, mediumForecast,
+            longForecast, ShortScalar, MediumScalar, LongScalar);
             Forecast = combinedForecast.CombinedForecast;
             return combinedForecast.CombinedForecast;
         }
@@ -72,11 +68,11 @@ namespace Application.Business.Forecasts.CarverTrendFollower
             double previousFastEwma = 0;
             double previousSlowEwma = 0;
             double previousVariance = 0;
-            foreach (HistoricalData historicalData in PriceData.Where(x => x.Date <= DateTime).OrderBy(x => x.Date))
+            foreach (HistoricalData historicalData in PriceData.OrderBy(x => x.Date))
             {
                 double currentPrice = Convert.ToDouble(historicalData.ClosePrice);
-                var element = new ForecastElement(Convert.ToDateTime(historicalData.Date), currentPrice
-                    , previousPrice, previousFastEwma, FastDecay,
+                var element = new ForecastElement(Convert.ToDateTime(historicalData.Date), 
+                    currentPrice, previousPrice, previousFastEwma, FastDecay,
                     SlowDecay, previousSlowEwma, StandardDeviationDecay,
                     previousVariance, forecastScalar);
                 previousPrice = element.Price;

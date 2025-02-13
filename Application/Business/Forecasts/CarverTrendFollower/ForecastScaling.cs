@@ -1,5 +1,3 @@
-using Application.Business.Forecasts;
-
 namespace Application.Business.Forecasts.CarverTrendFollower
 {
     public class ForecastScaling

@@ -71,11 +71,22 @@ namespace FXProBridge.Robots
         }
         private void RunStrategy(DateTime cursorDate)
         {
+            var props = new CurrentMarketInfo();
+            props.Positions = PositionConvert.ConvertPosition(Positions);
+            props.Orders = PendingOrderConvert.ConvertOrders(PendingOrders);
+            props.Bars = BarConvert.ConvertBars(Bars);
+            props.SymbolName = SymbolName;
+            props.AccountBalance = Account.Balance;
+            props.CursorDate = cursorDate;
+            props.Ask = Symbol.Ask;
+            props.Bid = Symbol.Bid;
+            props.PipSize = Symbol.PipSize;
+
             var signals = new List<ISignal>();
             if(EnableMA)
             {
-                signals.Add(new MovingAverages(_shortMovingAverage.Result.LastValue, _mediumMovingAverage.Result.LastValue,
-                    _longMovingAverage.Result.LastValue, SymbolName));
+                signals.Add(new EWMAC(SymbolName, props.Bars, Bid, Ask));
+                Print("EWMAC: " + signals.Last().Forecast);
             }
             if (EnableAdx)
             {
@@ -87,16 +98,7 @@ namespace FXProBridge.Robots
                 signals.Add(new RSI(_rsiIndicator.Result.LastValue, SymbolName));
             }
             var confirmingSignals = new ConfirmingSignals(signals);
-            var props  = new CurrentMarketInfo();
-            props.Positions = PositionConvert.ConvertPosition(Positions);
-            props.Orders = PendingOrderConvert.ConvertOrders(PendingOrders);
-            props.Bars = BarConvert.ConvertBars(Bars);
-            props.SymbolName = SymbolName;
-            props.AccountBalance = Account.Balance;            
-            props.CursorDate = cursorDate;
-            props.Ask = Symbol.Ask;
-            props.Bid = Symbol.Bid;
-            props.PipSize = Symbol.PipSize;
+
             var changeInstructions = new PivotPointConfirmStrategy(props, confirmingSignals, ForecastThreshold, ConfirmingForecastThreshold, 
                 new PivotPoints(cursorDate,
                 _pivotPointIndicator.Pivot.LastValue,
