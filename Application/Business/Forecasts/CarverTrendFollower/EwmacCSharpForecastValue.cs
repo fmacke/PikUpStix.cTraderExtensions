@@ -1,3 +1,4 @@
+using Application.Business.Market;
 using Domain.Entities;
 
 namespace Application.Business.Forecasts.CarverTrendFollower
@@ -6,9 +7,9 @@ namespace Application.Business.Forecasts.CarverTrendFollower
     {
         private readonly ForecastScaling _forecastScaling;
         public List<ForecastElement> ForecastData { get; set; }
-        public double ShortScalar { get; private set; }
-        public double MediumScalar { get; private set; }
-        public double LongScalar { get; private set; }
+        public double ShortScalar { get; private set; } = 0.0;
+        public double MediumScalar { get; private set; } = 0.0;
+        public double LongScalar { get; private set; } = 0.0;
 
         public EwmacForecastValue(IMarketInfo marketData, List<Test_Parameter> testParameters)
             : base(marketData) {
@@ -18,10 +19,6 @@ namespace Application.Business.Forecasts.CarverTrendFollower
 
         private void LoadScalars(List<Test_Parameter> testParameters)
         {
-            ShortScalar = 0.4;
-            MediumScalar = 0.2;
-            LongScalar = 0.4;
-
             foreach (var parameter in testParameters)
             {
                 if (parameter.Name.Equals("ShortScalar[Double]"))

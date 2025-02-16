@@ -6,8 +6,9 @@ using Indicators;
 using Application.Business.Indicator;
 using cAlgo.API.Indicators;
 using Application.Business;
-using FXProBridge.Capture;
 using Application.Business.Indicator.Signal;
+using Application.Business.Market;
+using Application.Business.Extensions;
 
 namespace FXProBridge.Robots
 {
@@ -42,7 +43,7 @@ namespace FXProBridge.Robots
 
         protected override void OnStart()
         {
-            TestParams = RobotProperties.GetRobotProperties(this);
+            TestParams = ParametersToDictionary.GetRobotProperties(this);
             _pivotPointIndicator = Indicators.GetIndicator<PivotPointIndicator>();
             if(EnableMA)
             {

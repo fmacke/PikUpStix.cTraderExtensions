@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Business.Market;
+using Domain.Entities;
 
 namespace Application.Business.Forecasts.LongShortForecaster
 {

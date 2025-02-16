@@ -1,4 +1,5 @@
 ﻿using Application.Business.Forecasts;
+using Application.Business.Market;
 
 namespace Application.Business.Portfolio
 {

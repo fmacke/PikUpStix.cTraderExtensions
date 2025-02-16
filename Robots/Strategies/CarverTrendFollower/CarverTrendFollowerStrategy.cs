@@ -7,33 +7,27 @@ using Robots.Common;
 using Application.BackTest;
 using Domain.Enums;
 using Robots.Interfaces;
+using Application.Business.Market;
 
 namespace Robots.Strategies.CarverTrendFollower
 {
     public class CarverTrendFollowerStrategy : IStrategy
     {
-        public List<PositionUpdate> PositionInstructions { get; set; }
+        public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
         public List<string> LogMessages { get; set; } = new List<string>();
         public double MinimumOpeningForecast { get; private set; }
         public double StopLossMax { get; private set; }
         public double TargetVolatility { get; private set; }
         public double TrailStopAtPips { get; private set; }
-        public double TrailStopSizeInPips { get; private set; }
-        public double TakeProfitInPips { get; private set; }
+        //public double TrailStopSizeInPips { get; private set; }
+        //public double TakeProfitInPips { get; private set; }
         public List<Test_Parameter> TestParameters { get; private set; }
 
         public CarverTrendFollowerStrategy(List<IMarketInfo> marketInfos, List<Test_Parameter>? testParameters)
         {
             LoadTestParameters(testParameters);
-
-            var logger = new Logger(false);
-            var carverTrendFollower = new CarverTrendFollowerForecast();
-            var forecasts = carverTrendFollower.GetForecasts(marketInfos,logger, testParameters);
+            var forecasts = CarverTrendFollowerForecasts.GetForecasts(marketInfos, new Logger(false), testParameters);
             var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, marketInfos);
-            //foreach (var pos in weightedPositions)
-            //    FileWriter.WriteToTextFile(new string[] { cursorDate.ToString() + pos.ProposedWeightedPosition.ToString() }, @"C:\Users\Finn\Desktop\text.txt");
-
-            PositionInstructions = new List<PositionUpdate>();
 
             foreach (var market in marketInfos)
             {
@@ -48,24 +42,20 @@ namespace Robots.Strategies.CarverTrendFollower
             // Add new positions
             foreach (var wp in weightedPositions.Where(x => x.Instrument.InstrumentName == market.SymbolName))
             {
-                if (!market.Positions.Where(x => x.SymbolName == wp.Instrument.InstrumentName).Any())
+                if (NoCurrentPositionInMarket(market, wp) && MiniumOpeningForecastMet(wp) && ForecastNotZero(wp))
                 {
-                    if (wp.ForecastValue.Forecast > MinimumOpeningForecast || wp.ForecastValue.Forecast < MinimumOpeningForecast * -1)
-                    {
-                        if (wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0)
-                        {
-                            var position = new Position();
-                            position.SymbolName = wp.Instrument.InstrumentName;
-                            position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
-                            position.TakeProfit = TakeProfitInPips;
-                            position.Volume = GetVolume(wp);
-                            position.TradeType = GetTradeType(wp);
-                            PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
-                        }
-                    }
+                    var position = new Position();
+                    position.SymbolName = wp.Instrument.InstrumentName;
+                    position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
+                    //position.TakeProfit = TakeProfitInPips;
+                    position.Volume = GetVolume(wp);
+                    position.TradeType = GetTradeType(wp);
+                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
                 }
             }
         }
+
+       
 
         private void ModifyExistingPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
         {
@@ -92,7 +82,7 @@ namespace Robots.Strategies.CarverTrendFollower
                             var position = new Position();
                             position.SymbolName = wp.Instrument.InstrumentName;
                             position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
-                            position.TakeProfit = TakeProfitInPips;
+                            //position.TakeProfit = TakeProfitInPips;
                             p.TradeType = p.TradeType == TradeType.Buy ? TradeType.Sell : TradeType.Buy;
                             position.Volume = GetVolume(wp);
                             PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
@@ -114,16 +104,29 @@ namespace Robots.Strategies.CarverTrendFollower
                         Convert.ToDouble(weightedPos.ProposedWeightedPosition)));
                 }
         }
+        private static bool ForecastNotZero(PositionValue wp)
+        {
+            return wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0;
+        }
 
+        private static bool NoCurrentPositionInMarket(IMarketInfo market, PositionValue wp)
+        {
+            return !market.Positions.Where(x => x.SymbolName == wp.Instrument.InstrumentName).Any();
+        }
+
+        private bool MiniumOpeningForecastMet(PositionValue wp)
+        {
+            return wp.ForecastValue.Forecast > MinimumOpeningForecast || wp.ForecastValue.Forecast < MinimumOpeningForecast * -1;
+        }
         private double CalculateStopLoss(double askingPrice, double biddingPrice, PositionValue wp, Position p, Instrument instrument)
         {
-            var trailingStopAt = Convert.ToDouble(instrument.MinimumPriceFluctuation * TrailStopAtPips);
-            var trailingStopSize = Convert.ToDouble(instrument.MinimumPriceFluctuation * TrailStopSizeInPips);
-            var trailingStop = new TrailingStop(GetTradeType(wp), Convert.ToDouble(p.EntryPrice), Convert.ToDouble(wp.StopLossAt), biddingPrice, askingPrice, trailingStopAt, trailingStopSize);
-            if (trailingStop.TrailingStopUpdated)
-                return trailingStop.TrailingStopAt;
-            if (p.StopLoss >= trailingStop.TrailingStopAt && Convert.ToDouble(wp.StopLossAt) < trailingStop.TrailingStopAt)
-                return trailingStop.TrailingStopAt;
+            //var trailingStopAt = Convert.ToDouble(instrument.MinimumPriceFluctuation * TrailStopAtPips);
+            //var trailingStopSize = Convert.ToDouble(instrument.MinimumPriceFluctuation * TrailStopSizeInPips);
+            //var trailingStop = new TrailingStop(GetTradeType(wp), Convert.ToDouble(p.EntryPrice), Convert.ToDouble(wp.StopLossAt), biddingPrice, askingPrice, trailingStopAt, trailingStopSize);
+            //if (trailingStop.TrailingStopUpdated)
+            //    return trailingStop.TrailingStopAt;
+            //if (p.StopLoss >= trailingStop.TrailingStopAt && Convert.ToDouble(wp.StopLossAt) < trailingStop.TrailingStopAt)
+            //    return trailingStop.TrailingStopAt;
             return Convert.ToDouble(wp.StopLossAt);
         }
 
@@ -134,9 +137,6 @@ namespace Robots.Strategies.CarverTrendFollower
                 PropertyChecker.CheckExists("MaxStopLoss[Double]", testParameters);
                 PropertyChecker.CheckExists("TargetVelocity[Double]", testParameters);
                 PropertyChecker.CheckExists("MinimumOpeningForecast[Double]", testParameters);
-                PropertyChecker.CheckExists("TrailStopAtPips[Double]", testParameters);
-                PropertyChecker.CheckExists("TrailStopSizeInPips[Double]", testParameters);
-                PropertyChecker.CheckExists("TakeProfitInPips[Double]", testParameters);
                 PropertyChecker.CheckExists("ShortScalar[Double]", testParameters);
                 PropertyChecker.CheckExists("MediumScalar[Double]", testParameters);
                 PropertyChecker.CheckExists("LongScalar[Double]", testParameters);
@@ -149,21 +149,7 @@ namespace Robots.Strategies.CarverTrendFollower
                         TargetVolatility = Convert.ToDouble(param.Value);
                     if (param.Name.Equals("MinimumOpeningForecast[Double]"))
                         MinimumOpeningForecast = Convert.ToDouble(param.Value);
-                    if (param.Name.Equals("TrailStopAtPips[Double]"))
-                        TrailStopAtPips = Convert.ToDouble(param.Value);
-                    if (param.Name.Equals("TrailStopSizeInPips[Double]"))
-                        TrailStopSizeInPips = Convert.ToDouble(param.Value);
-                    if (param.Name.Equals("TakeProfitInPips[Double]"))
-                        TakeProfitInPips = Convert.ToDouble(param.Value);
                 }
-            }
-            else
-            {
-                /// TODO : GET RID OF THIS ONCE REFACTORING COMPLETE
-                StopLossMax = 50;
-                TargetVolatility = Convert.ToDouble(0.2);
-                MinimumOpeningForecast = Convert.ToDouble(0.2);
-                TrailStopAtPips = Convert.ToDouble(50);
             }
         }
 

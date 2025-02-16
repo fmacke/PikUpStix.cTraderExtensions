@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 
-namespace FXProBridge.Capture
+namespace Application.Business.Extensions
 {
-    public static class RobotProperties
+    public static class ParametersToDictionary
     {
         public static Dictionary<string, string> GetRobotProperties(object robot)
         {

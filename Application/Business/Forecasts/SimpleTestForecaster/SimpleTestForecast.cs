@@ -1,7 +1,7 @@
 ﻿using Application.BackTest;
-using Application.Business;
 using Application.Business.Forecasts;
 using Application.Business.Forecasts.SimpleTestForecaster;
+using Application.Business.Market;
 using Domain.Entities;
 
 namespace PikUpStix.Trading.Forecast.SimpleTestForecaster

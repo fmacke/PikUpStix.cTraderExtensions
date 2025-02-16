@@ -1,5 +1,6 @@
 using Application.Business;
 using Application.Business.Forecasts.CarverTrendFollower;
+using Application.Business.Market;
 using Domain.Entities;
 
 namespace Application.MainTests

@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office.CoverPageProps;
+﻿using Application.Business.Market;
+using DocumentFormat.OpenXml.Office.CoverPageProps;
 using Domain.Entities;
 
 namespace Application.Business.Forecasts
