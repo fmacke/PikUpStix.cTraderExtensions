@@ -5,11 +5,13 @@ namespace Application.Business.Forecasts.CarverTrendFollower
     public class EwmacForecastValue : ForecastValue
     {
         private readonly ForecastScaling _forecastScaling;
+        public List<ForecastElement> ForecastData { get; set; }
+        public double ShortScalar { get; private set; }
+        public double MediumScalar { get; private set; }
+        public double LongScalar { get; private set; }
 
-        public EwmacForecastValue(DateTime cursorDate, List<HistoricalData> priceData, double askingPrice, double biddingPrice, 
-            List<Test_Parameter> testParameters)
-            : base(cursorDate, priceData, askingPrice, biddingPrice)
-        {
+        public EwmacForecastValue(IMarketInfo marketData, List<Test_Parameter> testParameters)
+            : base(marketData) {
             _forecastScaling = new ForecastScaling();
             LoadScalars(testParameters);
         }
@@ -31,10 +33,6 @@ namespace Application.Business.Forecasts.CarverTrendFollower
             }
         }
 
-        public List<ForecastElement> ForecastData { get; set; }
-        public double ShortScalar { get; private set; }
-        public double MediumScalar { get; private set; }
-        public double LongScalar { get; private set; }
 
         public new double CalculateForecast()
         {

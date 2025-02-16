@@ -5,6 +5,6 @@ namespace Application.Business.Forecasts
 {
     public interface IForecastHandler
     {
-        List<IForecastValue> GetForecasts(IEnumerable<List<HistoricalData>> historicalDataSets, DateTime cursorDate, Logger logger, double askingPrice, double biddingPrice, List<Test_Parameter> testParameters);
+        List<IForecastValue> GetForecasts(List<IMarketInfo> historicalDataSets, Logger logger, List<Test_Parameter> testParameters);
     }
 }

@@ -6,18 +6,16 @@ namespace Application.Business.Forecasts.LongShortForecaster
     {
         protected HistoricalData CursorDatePriceData { get; private set; }
 
-        public LongShortForecastValue(DateTime cursorDate, List<HistoricalData> priceData, double askingPrice, double biddingPrice)
-           : base(cursorDate, priceData, askingPrice, biddingPrice)
+        public LongShortForecastValue(IMarketInfo marketInfo)
+           : base(marketInfo)
         {
-            CursorDatePriceData = priceData[priceData.FindIndex(x => x.Date == cursorDate)];
-            AskingPrice = askingPrice;
-            BiddingPrice = biddingPrice;
+            CursorDatePriceData = marketInfo.Bars[marketInfo.Bars.FindIndex(x => x.Date == marketInfo.CursorDate)];
+            AskingPrice = marketInfo.Ask;
+            BiddingPrice = marketInfo.Bid;
         }
         public new double CalculateForecast()
         {
             Forecast = 0;
-            // InstrumentId = CursorDatePriceData.Instrument.InstrumentId;
-
             if (CursorDatePriceData.Date.HasValue)
             {
                 if (Convert.ToDateTime(CursorDatePriceData.Date).DayOfWeek.Equals(DayOfWeek.Monday))

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Application.Business.Indicator
+﻿namespace Application.Business.Indicator
 {
     public class Ewmac
     {

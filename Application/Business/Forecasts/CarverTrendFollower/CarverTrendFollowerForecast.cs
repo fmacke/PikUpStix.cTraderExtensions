@@ -3,25 +3,20 @@ using Domain.Entities;
 
 namespace Application.Business.Forecasts.CarverTrendFollower
 {
-    public class CarverTrendFollowerForecast : IForecastHandler
+    public class CarverTrendFollowerForecast //: IForecastHandler
     {
         /// <summary>
         /// This is Robert Carver's trend following strategy, plain and simple.
         /// </summary>
-        /// <param name="historicalDataSets"></param>
-        /// <param name="cursorDate"></param>
-        /// <returns></returns>
-        public List<IForecastValue> GetForecasts(IEnumerable<List<HistoricalData>> historicalDataSets, DateTime cursorDate, Logger logger, double askingPrice, double biddingPrice,
-           List<Test_Parameter> testParameters)
+        public List<IForecastValue> GetForecasts(IEnumerable<IMarketInfo> marketInfos, Logger logger, List<Test_Parameter> testParameters)
         {
             var forecasts = new List<IForecastValue>();
-            foreach (var forecast in from historicalDataSet in historicalDataSets
-                                     where historicalDataSet.Count > 0
-                                     select new EwmacForecastValue(cursorDate, historicalDataSet, askingPrice, biddingPrice, testParameters))
-            {
-                forecast.CalculateForecast();
-                forecasts.Add(forecast);
-            }
+            foreach (var forecast in from marketInfo in marketInfos
+                select new EwmacForecastValue(marketInfo, testParameters))
+                {
+                    forecast.CalculateForecast();
+                    forecasts.Add(forecast);
+                }
             return forecasts;
         }
     }

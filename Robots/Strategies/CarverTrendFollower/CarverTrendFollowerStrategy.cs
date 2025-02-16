@@ -22,37 +22,61 @@ namespace Robots.Strategies.CarverTrendFollower
         public double TakeProfitInPips { get; private set; }
         public List<Test_Parameter> TestParameters { get; private set; }
 
-        public CarverTrendFollowerStrategy(double currentCapital, List<List<HistoricalData>> bars, Positions positions, string symbolName,
-            string dataSource, double askingPrice, double biddingPrice, List<Test_Parameter>? testParameters)
+        public CarverTrendFollowerStrategy(List<IMarketInfo> marketInfos, List<Test_Parameter>? testParameters)
         {
-
             LoadTestParameters(testParameters);
-            var cursorDate = Convert.ToDateTime(bars.First().First().Date);
+
             var logger = new Logger(false);
             var carverTrendFollower = new CarverTrendFollowerForecast();
-            var forecasts = carverTrendFollower.GetForecasts(bars, cursorDate, logger, askingPrice, biddingPrice, testParameters);
-            var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, bars, currentCapital);
+            var forecasts = carverTrendFollower.GetForecasts(marketInfos,logger, testParameters);
+            var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, marketInfos);
             //foreach (var pos in weightedPositions)
-            //    PikUpStix.Trading.Common.FileWriter.WriteToTextFile(new string[] { cursorDate.ToString() + pos.ProposedWeightedPosition.ToString() }, @"C:\Users\Finn\Desktop\text.txt");
+            //    FileWriter.WriteToTextFile(new string[] { cursorDate.ToString() + pos.ProposedWeightedPosition.ToString() }, @"C:\Users\Finn\Desktop\text.txt");
 
             PositionInstructions = new List<PositionUpdate>();
 
-            // Close positions with no weightedPosition
-            foreach (var p in positions)
-                if (!weightedPositions.Where(x => x.Instrument.InstrumentName == p.SymbolName).Any())
-                {
-                    var weightedPos = weightedPositions.First(x => x.Instrument.InstrumentName == p.SymbolName);
-                    PositionInstructions.Add(new PositionUpdate(p, InstructionType.Close, Convert.ToDouble(weightedPos.ProposedWeightedPosition)));
-                }
-
-            // Modify
-            foreach (var wp in weightedPositions)
+            foreach (var market in marketInfos)
             {
-                foreach (var p in positions.Where(x => x.SymbolName == wp.Instrument.InstrumentName))
+                ClosePositionsWithNoForecasts(weightedPositions, market);
+                ModifyExistingPositions(weightedPositions, market);
+                CreateNewPositions(weightedPositions, market);
+            }
+        }
+
+        private void CreateNewPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
+        {
+            // Add new positions
+            foreach (var wp in weightedPositions.Where(x => x.Instrument.InstrumentName == market.SymbolName))
+            {
+                if (!market.Positions.Where(x => x.SymbolName == wp.Instrument.InstrumentName).Any())
+                {
+                    if (wp.ForecastValue.Forecast > MinimumOpeningForecast || wp.ForecastValue.Forecast < MinimumOpeningForecast * -1)
+                    {
+                        if (wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0)
+                        {
+                            var position = new Position();
+                            position.SymbolName = wp.Instrument.InstrumentName;
+                            position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
+                            position.TakeProfit = TakeProfitInPips;
+                            position.Volume = GetVolume(wp);
+                            position.TradeType = GetTradeType(wp);
+                            PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ModifyExistingPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
+        {
+            //MODIFY EXISTING POSITIONS
+            foreach (var wp in weightedPositions.Where(x => x.Instrument.InstrumentName == market.SymbolName))
+            {
+                foreach (var p in market.Positions.Where(x => x.SymbolName == wp.Instrument.InstrumentName))
                 {
                     if (AreSameDirection(wp, p))
                     {
-                        p.StopLoss = CalculateStopLoss(askingPrice, biddingPrice, wp, p, wp.Instrument);
+                        p.StopLoss = CalculateStopLoss(market.Ask, market.Bid, wp, p, wp.Instrument);
                         p.TakeProfit = 200;
                         p.Volume = GetVolume(wp);
                         PositionInstructions.Add(
@@ -76,27 +100,19 @@ namespace Robots.Strategies.CarverTrendFollower
                     }
                 }
             }
+        }
 
-            // Add new positions
-            foreach (var wp in weightedPositions)
-            {
-                if (!positions.Where(x => x.SymbolName == wp.Instrument.InstrumentName).Any())
+        private void ClosePositionsWithNoForecasts(WeightedProposedPositions weightedPositions, IMarketInfo market)
+        {
+            //CLOSE CURRENT POSITION IF THERE IS NO WEIGHTED POSITION CALCULATED FOR IT
+            foreach (var p in market.Positions)
+                if (!weightedPositions.Where(x => x.Instrument.InstrumentName == p.SymbolName).Any())
                 {
-                    if (wp.ForecastValue.Forecast > MinimumOpeningForecast || wp.ForecastValue.Forecast < MinimumOpeningForecast * -1)
-                    {
-                        if (wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0)
-                        {
-                            var position = new Position();
-                            position.SymbolName = wp.Instrument.InstrumentName;
-                            position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
-                            position.TakeProfit = TakeProfitInPips;
-                            position.Volume = GetVolume(wp);
-                            position.TradeType = GetTradeType(wp);
-                            PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
-                        }
-                    }
+                    var weightedPos = weightedPositions.First(x => x.Instrument.InstrumentName == p.SymbolName);
+                    PositionInstructions.Add(
+                        new PositionUpdate(p, InstructionType.Close,
+                        Convert.ToDouble(weightedPos.ProposedWeightedPosition)));
                 }
-            }
         }
 
         private double CalculateStopLoss(double askingPrice, double biddingPrice, PositionValue wp, Position p, Instrument instrument)

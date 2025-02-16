@@ -10,6 +10,7 @@ namespace Application.Business.Forecasts
         double AskingPrice { get; set; }
         double BiddingPrice { get; set; }
         double InstrumentBlock { get; set; }
+        string SymbolName { get; }
         double ShortForecast { get; }
         double LongForecast { get; }
         double MediumForecast { get; }

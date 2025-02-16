@@ -10,26 +10,26 @@ namespace Application.Business.Forecasts.SimpleTestForecaster
 
         protected DateTime CursorDate { get; private set; }
 
-        public SimpleTestForecastValue(DateTime cursorDate, List<HistoricalData> priceData, double askingPrice, double biddingPrice)
-            : base(cursorDate, priceData, askingPrice, biddingPrice)
+        public SimpleTestForecastValue(IMarketInfo marketInfo)
+            : base(marketInfo)
         {
-            CursorDate = cursorDate;
+            CursorDate = marketInfo.CursorDate;
 
             int index = 0;
-            index = priceData.FindIndex(x => x.Date == cursorDate);
+            index = marketInfo.Bars.FindIndex(x => x.Date == CursorDate);
 
-            if (cursorDate.DayOfWeek.Equals(DayOfWeek.Monday))
+            if (CursorDate.DayOfWeek.Equals(DayOfWeek.Monday))
             {
-                CursorDatePriceData = priceData[index];
+                CursorDatePriceData = marketInfo.Bars[index];
             }
             else
             {
-                CursorDatePriceData = priceData[index];
+                CursorDatePriceData = marketInfo.Bars[index];
                 //CursorDatePriceData = GetLast(DayOfWeek.Monday, index, priceData);
-                index = priceData.FindIndex(x => x.Date == GetLast(DayOfWeek.Monday, index, priceData).Date);
+                index = marketInfo.Bars.FindIndex(x => x.Date == GetLast(DayOfWeek.Monday, index, marketInfo.Bars).Date);
             }
-            LastFridayPriceData = GetLast(DayOfWeek.Friday, index, priceData);
-            LastMondayPriceData = GetLast(DayOfWeek.Monday, index, priceData);
+            LastFridayPriceData = GetLast(DayOfWeek.Friday, index, marketInfo.Bars);
+            LastMondayPriceData = GetLast(DayOfWeek.Monday, index, marketInfo.Bars);
         }
 
         public new double CalculateForecast()
@@ -42,14 +42,9 @@ namespace Application.Business.Forecasts.SimpleTestForecaster
             try
             {
                 if (LastFridayPriceData.ClosePrice > LastMondayPriceData.ClosePrice)
-                {
                     Forecast = 20;
-                }
                 if (LastFridayPriceData.ClosePrice < LastMondayPriceData.ClosePrice)
-                {
                     Forecast = -20;
-                }
-
             }
             catch (Exception ex)
             {

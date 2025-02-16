@@ -21,7 +21,6 @@ namespace FXProBridge.Robots
         public bool TakeProfitAtPivot { get; set; }
         [Parameter("RiskPerTrade", DefaultValue = 2, Step = 0.5, MaxValue = 20, MinValue = 0.5, Group = "Strategy")]
         public double RiskPerTrade { get; set; }
-
         [Parameter("Enable MA", DefaultValue = "true", Group = "Confirming Signals")]
         public bool EnableMA { get; set; }
         [Parameter("Enable RSI", DefaultValue = "true", Group = "Confirming Signals")]
@@ -71,16 +70,16 @@ namespace FXProBridge.Robots
         }
         private void RunStrategy(DateTime cursorDate)
         {
-            var props = new CurrentMarketInfo();
-            props.Positions = PositionConvert.ConvertPosition(Positions);
-            props.Orders = PendingOrderConvert.ConvertOrders(PendingOrders);
-            props.Bars = BarConvert.ConvertBars(Bars);
-            props.SymbolName = SymbolName;
-            props.AccountBalance = Account.Balance;
-            props.CursorDate = cursorDate;
-            props.Ask = Symbol.Ask;
-            props.Bid = Symbol.Bid;
-            props.PipSize = Symbol.PipSize;
+            var props = new MarketInfo(cursorDate, 
+                Symbol.Bid,
+                Symbol.Ask,
+                PositionConvert.ConvertPosition(Positions),
+                PendingOrderConvert.ConvertOrders(PendingOrders),
+                BarConvert.ConvertBars(Bars),
+                SymbolName,
+                SymbolName,
+                Account.Equity,
+                Symbol.PipSize);
 
             var signals = new List<ISignal>();
             if(EnableMA)

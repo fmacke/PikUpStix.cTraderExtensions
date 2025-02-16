@@ -1,3 +1,4 @@
+using Application.Business;
 using Application.Business.Forecasts.CarverTrendFollower;
 using Domain.Entities;
 
@@ -6,6 +7,7 @@ namespace Application.MainTests
     [TestFixture]
     public class ForecastUsingCSharpTests
     {
+        private MarketInfo currentMarketInfo;
         private List<HistoricalData> data;
         private List<HistoricalData> excelData;
 
@@ -14,13 +16,15 @@ namespace Application.MainTests
         {
             LoadData();
             LoadExcelData();
+            currentMarketInfo = new MarketInfo(new DateTime(2017, 1, 20), 1.2345, 1.2346, new Positions(),
+                new List<PendingOrder>(), data, "CME BP FUTURE MINI", "GBP", 10000, 0.0001);
         }
         [Test]
         public void Calculate_Single_Unscaled_Forecast()
         {
             if (data == null)
                 LoadData();
-            var ewmacCSharpForecastValue = new EwmacForecastValue(DateTime.Now, data, 0, 0, new List<Test_Parameter>());
+            var ewmacCSharpForecastValue = new EwmacForecastValue(currentMarketInfo, new List<Test_Parameter>());
             var forecast16_64 = ewmacCSharpForecastValue.GetUnscaledForecast(16, 64, 36, 3.75);
             var forecastToCheck = forecast16_64.Last();
             Assert.AreEqual(Convert.ToDouble(6.3998), Math.Round(forecastToCheck.Forecast, 4));
@@ -30,7 +34,7 @@ namespace Application.MainTests
         {
             if (excelData == null)
                 LoadExcelData();
-            var ewmacCSharpForecastValue = new EwmacForecastValue(new DateTime(2017, 1, 20), excelData, 0, 0, new List<Test_Parameter>());
+            var ewmacCSharpForecastValue = new EwmacForecastValue(currentMarketInfo, new List<Test_Parameter>());
             //Assert.AreEqual(-13.320916565243922m, ewmacCSharpForecastValue.CalculateForecast());
             // Note this is a slightly different number to the Python version because it calculates forecast starting with less priming data
             Assert.AreEqual(-12.736708587895151m, ewmacCSharpForecastValue.CalculateForecast());

@@ -1,6 +1,6 @@
-﻿using cAlgo.API;
+﻿using Application.Business;
+using cAlgo.API;
 using cAlgo.API.Internals;
-using Domain.Entities;
 using FXProBridge.Capture;
 using FXProBridge.Common;
 using FXProBridge.DataConversions;
@@ -37,12 +37,19 @@ namespace FXProBridge.Robots
 
         protected override void OnBar()
         {
-            var testParams = ResultsCapture.TestParams;
-            var positionDat = PositionConvert.ConvertPosition(Positions);
-            var barData = new List<List<HistoricalData>>();
-            barData.Add(BarConvert.ConvertBars(Bars));
-            var changeInstructions = new CarverTrendFollowerStrategy(Account.Equity, barData, positionDat,
-                SymbolName, "FXPRO", Symbol.Ask, Symbol.Bid, testParams);
+            var changeInstructions = new CarverTrendFollowerStrategy(
+                new List<IMarketInfo> {
+                    new MarketInfo(Bars.OpenTimes.LastValue,
+                    Symbol.Bid,
+                    Symbol.Ask,
+                    PositionConvert.ConvertPosition(Positions),
+                    PendingOrderConvert.ConvertOrders(PendingOrders),
+                    BarConvert.ConvertBars(Bars),
+                    SymbolName,
+                    SymbolName,
+                    Account.Equity,
+                    Symbol.PipSize) },
+                ResultsCapture.TestParams);
             ManagePositions(changeInstructions);
             base.OnBar();
         }

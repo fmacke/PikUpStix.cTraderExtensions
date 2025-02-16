@@ -1,5 +1,4 @@
-﻿using Application.Business.Risk;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Application.Business
 {
@@ -12,6 +11,7 @@ namespace Application.Business
         List<PendingOrder> Orders { get;}
         Positions Positions { get;  }
         string SymbolName { get;  }
+        string Currency { get; }
         double AccountBalance { get;  }
         double PipSize { get; }
     }
