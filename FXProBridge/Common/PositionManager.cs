@@ -14,9 +14,8 @@ namespace FXProBridge.Common
         { 
             foreach (var instruction in x.PositionInstructions)
             {
-                var tradeType = cAlgo.API.TradeType.Buy;
-                if (instruction.Position.TradeType == Domain.Enums.TradeType.Sell)
-                    tradeType = cAlgo.API.TradeType.Sell;
+                TradeType tradeType = instruction.Position.TradeType == Domain.Enums.TradeType.Buy ? TradeType.Buy : tradeType = TradeType.Sell;
+                
                 var position = Positions.FirstOrDefault(p => p.Id == instruction.Position.Id);
                 switch (instruction.InstructionType)
                 {
@@ -26,16 +25,12 @@ namespace FXProBridge.Common
                             Print("error : {0}", result.Error);
                         break;
                     case InstructionType.Modify:
-                        var stop = instruction.Position.StopLoss;// * Symbol.PipSize;*// these need changed to be actual stop loss and take profit prices...
-                        var tp = instruction.Position.TakeProfit;// * Symbol.PipSize;
-                        var res = ModifyPosition(position, stop, tp);
-                        //var res = instruction.Position.ModifyStopLossPrice(stop);
-
-                        var one = position.VolumeInUnits;
-                        var two = Symbol.NormalizeVolumeInUnits(instruction.Position.Volume);
-                        if (!one.Equals(two))
-                            res = ModifyPosition(position, Symbol.NormalizeVolumeInUnits(instruction.Position.Volume));
-                        //res = instruction.Position.ModifyVolume(Symbol.NormalizeVolumeInUnits(instruction.Volume));
+                        var stop = instruction.Position.TradeType == Domain.Enums.TradeType.Buy ?
+                            instruction.Position.EntryPrice - (instruction.Position.StopLoss * Symbol.PipSize) :
+                            instruction.Position.EntryPrice + (instruction.Position.StopLoss * Symbol.PipSize);
+                        position.ModifyStopLossPrice(stop);
+                        if (!position.VolumeInUnits.Equals(Symbol.NormalizeVolumeInUnits(instruction.Position.Volume)))
+                            ModifyPosition(position, Symbol.NormalizeVolumeInUnits(instruction.Position.Volume));                        
                         break;
                     case InstructionType.Open:
                         var normalise = Symbol.NormalizeVolumeInUnits(instruction.Position.Volume);
@@ -56,12 +51,9 @@ namespace FXProBridge.Common
                         break;
                     case InstructionType.CancelOrder:
                         foreach (var order in PendingOrders) 
-                        { 
                             if(instruction.Position.Id == order.Id)
                                 CancelPendingOrder(order); 
-                        } 
                         break;
-
                 }
             }
             foreach (var message in x.LogMessages)

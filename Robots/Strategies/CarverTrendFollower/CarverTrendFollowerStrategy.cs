@@ -66,8 +66,7 @@ namespace Robots.Strategies.CarverTrendFollower
                 {
                     if (AreSameDirection(wp, p))
                     {
-                        p.StopLoss = CalculateStopLoss(market.Ask, market.Bid, wp, p, wp.Instrument);
-                        p.TakeProfit = 200;
+                        p.StopLoss = wp.StopLossInPips;// CalculateStopLoss(market.Ask, market.Bid, wp, p, wp.Instrument);
                         p.Volume = GetVolume(wp);
                         PositionInstructions.Add(
                             new PositionUpdate(p, InstructionType.Modify, Convert.ToDouble(wp.ProposedWeightedPosition)));
@@ -81,7 +80,7 @@ namespace Robots.Strategies.CarverTrendFollower
                         {
                             var position = new Position();
                             position.SymbolName = wp.Instrument.InstrumentName;
-                            position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
+                            position.StopLoss = wp.StopLossInPips;
                             //position.TakeProfit = TakeProfitInPips;
                             p.TradeType = p.TradeType == TradeType.Buy ? TradeType.Sell : TradeType.Buy;
                             position.Volume = GetVolume(wp);
@@ -127,7 +126,7 @@ namespace Robots.Strategies.CarverTrendFollower
             //    return trailingStop.TrailingStopAt;
             //if (p.StopLoss >= trailingStop.TrailingStopAt && Convert.ToDouble(wp.StopLossAt) < trailingStop.TrailingStopAt)
             //    return trailingStop.TrailingStopAt;
-            return Convert.ToDouble(wp.StopLossAt);
+            return Convert.ToDouble(wp.StopLossInPips);
         }
 
         private void LoadTestParameters(List<Test_Parameter>? testParameters)

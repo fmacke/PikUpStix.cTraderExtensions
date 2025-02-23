@@ -30,7 +30,7 @@ namespace Application.Business
 
         public double StopLossInPips()
         {
-            double stopLossValue = ExistingMargin * StopLossMaxPercent * ExchangeRate;
+            double stopLossValue = ExistingMargin * StopLossMaxPercent/100 * ExchangeRate;
 
             // Note pip size calculation should be same irrespective of trade direction
             var vol = Volume;
