@@ -25,7 +25,7 @@ namespace Application.Business.Portfolio
         public double AvailableTradingCapital { get; set; }
 
         public PositionValue(IForecastValue forecast, double stopLossPercent, double exchangeRate, double targetVolatility,
-            List<HistoricalData> historicalData, double availableTradingCapital)
+            List<HistoricalData> historicalData, double availableTradingCapital, string symbol)
         {
             ForecastValue = forecast;
             HistoricalPriceSet = historicalData.OrderByDescending(x => x.Date).ToList();
@@ -41,7 +41,7 @@ namespace Application.Business.Portfolio
             {
                 ContractUnit = 1,
                 MinimumPriceFluctuation = 0.0001,
-                InstrumentName = "EURUSD",
+                InstrumentName = symbol,
                 Id = 1,
                 Currency = "GBP"
             };

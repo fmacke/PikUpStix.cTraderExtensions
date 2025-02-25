@@ -34,11 +34,11 @@ namespace Robots.Strategies.PivotPointBounce
                 StrategySignal = CaculateStrategySignal(props);
                 if (ForecastExceedsMinimumThreshold(StrategySignal, thresholdForTrade))
                 {
-                    var riskmanager = new RiskManager(StrategySignal, MaximumRisk, props.AccountBalance, props.PipSize);
                     var stopLoss = StrategySignal > 0 ?
                             CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
                     var pricePoint = StrategySignal > 0 ? props.Ask : props.Bid;
+                    var riskmanager = new RiskManager(StrategySignal, MaximumRisk, props.AccountBalance, props.PipSize, stopLoss, pricePoint); 
                     var position = new Position()
                     {
                         SymbolName = props.SymbolName,
@@ -48,7 +48,7 @@ namespace Robots.Strategies.PivotPointBounce
                         TakeProfit = StrategySignal > 0 ?
                             CalculatePips(PivotPoints.Pivot - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Pivot),
-                        Volume = riskmanager.CalculateLotSize(stopLoss, pricePoint),
+                        Volume = riskmanager.LotSize,
                         CreatedAt = props.CursorDate,
                         ExpirationDate = new DateTime(props.CursorDate.Year, props.CursorDate.Month, props.CursorDate.Day, 23, 0, 0)
                     };

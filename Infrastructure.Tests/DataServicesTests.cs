@@ -1,13 +1,3 @@
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using AutoMapper;
-using Application.Interfaces.CacheRepositories;
-using Infrastructure.CacheRepositories;
-using Application.Features.Tests.Queries.GetAllPaged;
-using Application.Common.Results;
-using System.Data.Entity.Core.Objects;
-using Application.Features.Tests.Queries.GetAllCached;
 using DataServices;
 using Application.Features.Tests.Commands.Create;
 namespace Infrastructure.Tests

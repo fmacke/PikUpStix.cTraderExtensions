@@ -1,7 +1,6 @@
 ﻿using Application.Business;
 using Application.Business.Portfolio;
 using Application.Business.Forecasts.CarverTrendFollower;
-using Application.RiskControl;
 using Domain.Entities;
 using Robots.Common;
 using Application.BackTest;
@@ -9,9 +8,9 @@ using Domain.Enums;
 using Robots.Interfaces;
 using Application.Business.Market;
 
-namespace Robots.Strategies.CarverTrendFollower
+namespace Robots.Strategies
 {
-    public class CarverTrendFollowerStrategy : IStrategy
+    public class TrendFollowerOpenStrategy : IStrategy
     {
         public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
         public List<string> LogMessages { get; set; } = new List<string>();
@@ -22,19 +21,50 @@ namespace Robots.Strategies.CarverTrendFollower
         //public double TrailStopSizeInPips { get; private set; }
         //public double TakeProfitInPips { get; private set; }
         public List<Test_Parameter> TestParameters { get; private set; }
+        public double LastForecast { get; private set; }
 
-        public CarverTrendFollowerStrategy(List<IMarketInfo> marketInfos, List<Test_Parameter>? testParameters)
+        public TrendFollowerOpenStrategy(List<IMarketInfo> marketInfos, List<Test_Parameter>? testParameters, double lastForecast)
         {
             LoadTestParameters(testParameters);
             var forecasts = CarverTrendFollowerForecasts.GetForecasts(marketInfos, new Logger(false), testParameters);
             var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, marketInfos);
-
+            LastForecast = weightedPositions.Last().ForecastValue.Forecast;
             foreach (var market in marketInfos)
             {
-                ClosePositionsWithNoForecasts(weightedPositions, market);
-                ModifyExistingPositions(weightedPositions, market);
-                CreateNewPositions(weightedPositions, market);
+                if (weightedPositions.Last().ForecastValue.Forecast > 0 && lastForecast < 0
+                    || weightedPositions.Last().ForecastValue.Forecast < 0 && lastForecast > 0)
+                    CloseOnForecastSwitch(weightedPositions, market);
+                OpenPositions(weightedPositions, market);
+
+                //ClosePositionsWithNoForecasts(weightedPositions, market);
+                //ModifyExistingPositions(weightedPositions, market);
+                //CreateNewPositions(weightedPositions, market);
             }
+        }
+
+        private void OpenPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
+        {
+            // Add new positions
+            foreach (var wp in weightedPositions.Where(x => x.Instrument.InstrumentName == market.SymbolName))
+            {
+                if (MiniumOpeningForecastMet(wp) && ForecastNotZero(wp))
+                {
+                    var position = new Position();
+                    position.SymbolName = wp.Instrument.InstrumentName;
+                    position.StopLoss = wp.StopLossInPips;
+                    //position.TakeProfit = TakeProfitInPips;
+                    position.Volume = GetVolume(wp);
+                    position.TradeType = GetTradeType(wp);
+                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                }
+            }
+        }
+
+        private void CloseOnForecastSwitch(WeightedProposedPositions weightedPositions, IMarketInfo market)
+        {
+            foreach (var p in market.Positions)
+                PositionInstructions.Add(
+                    new PositionUpdate(p, InstructionType.Close, 0.0));
         }
 
         private void CreateNewPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
@@ -53,7 +83,7 @@ namespace Robots.Strategies.CarverTrendFollower
                     PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
                 }
             }
-        }       
+        }
 
         private void ModifyExistingPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
         {
@@ -79,6 +109,7 @@ namespace Robots.Strategies.CarverTrendFollower
                             var position = new Position();
                             position.SymbolName = wp.Instrument.InstrumentName;
                             position.StopLoss = wp.StopLossInPips;
+                            //position.TakeProfit = TakeProfitInPips;
                             p.TradeType = p.TradeType == TradeType.Buy ? TradeType.Sell : TradeType.Buy;
                             position.Volume = GetVolume(wp);
                             PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
@@ -114,6 +145,7 @@ namespace Robots.Strategies.CarverTrendFollower
         {
             return wp.ForecastValue.Forecast > MinimumOpeningForecast || wp.ForecastValue.Forecast < MinimumOpeningForecast * -1;
         }
+
         private void LoadTestParameters(List<Test_Parameter>? testParameters)
         {
             if (testParameters != null)

@@ -6,6 +6,7 @@
         double Forecast { get; }
         double RiskPerTrade { get; }
         double PipSize { get; }
-        double CalculateLotSize(double stopLossPips, double entryPrice);
+        double StopLoss { get; }
+        double LotSize { get; }
     }
 }
