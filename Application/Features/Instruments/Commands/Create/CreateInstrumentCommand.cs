@@ -30,24 +30,24 @@ namespace Application.Features.Instruments.Commands.Create
 
     public class CreateInstrumentCommandHandler : IRequestHandler<CreateInstrumentCommand, Result<int>>
     {
-        private readonly IInstrumentRepository _cvrRepository;
+        private readonly IInstrumentRepository _instrumentRepository;
         private readonly IMapper _mapper;
 
         private IUnitOfWork _unitOfWork { get; set; }
 
-        public CreateInstrumentCommandHandler(IInstrumentRepository cvrRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public CreateInstrumentCommandHandler(IInstrumentRepository instrumentRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _cvrRepository = cvrRepository;
+            _instrumentRepository = instrumentRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<Result<int>> Handle(CreateInstrumentCommand request, CancellationToken cancellationToken)
         {
-            var cvr = _mapper.Map<Instrument>(request);
-            await _cvrRepository.InsertAsync(cvr);
+            var instrument = _mapper.Map<Instrument>(request);
+            await _instrumentRepository.InsertAsync(instrument);
             await _unitOfWork.Commit(cancellationToken);
-            return Result<int>.Success(cvr.Id);
+            return Result<int>.Success(instrument.Id);
         }
     }
 }

@@ -65,7 +65,7 @@ namespace FXProBridge.Robots
         {
             var testParams = ResultsCapture.TestParams;
             var currentTime = Bars.OpenTimes.LastValue;
-            if (currentTime.Hour >= 3 && currentTime.Hour < 14)
+            //if (currentTime.Hour >= 3 && currentTime.Hour < 14)
                 RunStrategy(currentTime);
             base.OnBar();
         }

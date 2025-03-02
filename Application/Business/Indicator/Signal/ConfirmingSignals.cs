@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
-using Application.Business.Indicator.Signal;
 
-namespace Application.Business
+namespace Application.Business.Indicator.Signal
 {
     public class ConfirmingSignals : List<ISignal>
     {
@@ -10,27 +9,27 @@ namespace Application.Business
 
         public ConfirmingSignals(List<ISignal> signals)
         {
-            this.AddRange(signals);
+            AddRange(signals);
             UpdateForecast();
         }
 
         public void AddSignal(ISignal signal)
         {
-            this.Add(signal);
+            Add(signal);
             UpdateForecast();
         }
 
         public void AddSignals(List<ISignal> signals)
         {
-            this.AddRange(signals);
+            AddRange(signals);
             UpdateForecast();
         }
 
         private void UpdateForecast()
         {
-            if (this.Count > 0)
+            if (Count > 0)
             {
-                AggregatedForecast = this.Sum(x => x.Forecast) / this.Count;
+                AggregatedForecast = this.Sum(x => x.Forecast) / Count;
             }
             else
             {

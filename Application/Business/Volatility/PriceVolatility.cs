@@ -8,6 +8,9 @@ namespace Application.Business.Volatility
     /// </summary>
     public class PriceVolatility
     {
+        public double StandardDeviation { get; private set; }
+        public int NumberOfPeriods { get; private set; }
+
         public PriceVolatility(List<HistoricalData> prices, int numberOfPeriods)
         {
             NumberOfPeriods = numberOfPeriods;
@@ -28,9 +31,6 @@ namespace Application.Business.Volatility
         {
             return prices.Any();           
         }
-
-        public double StandardDeviation { get; private set; }
-        public int NumberOfPeriods { get; private set; }
 
         private double[] GetPrices(List<HistoricalData> prices)
         {

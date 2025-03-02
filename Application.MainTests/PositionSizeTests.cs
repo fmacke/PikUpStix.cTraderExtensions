@@ -32,7 +32,7 @@ namespace PikUpStix.Trading.NTests
             Assert.AreEqual(997.5, subSystemPosition.InstrumentDetails.CurrencyVolatility);
             Assert.AreEqual(668.325, subSystemPosition.InstrumentDetails.ValueVolatility);
             Assert.AreEqual(93.5173755283731717353084203, subSystemPosition.VolatilityScalar);
-            Assert.AreEqual(-56.11042531702390304118505218, subSystemPosition.GetUnscaledPosition());
+            Assert.AreEqual(-56.110425317023896, subSystemPosition.GetUnscaledPosition());
         }
 
         [Test]
@@ -47,14 +47,14 @@ namespace PikUpStix.Trading.NTests
             exchangeRate = 1;
             var insrtumentPositionSize = new InstrumentPositionSize(instrumentBlock, instrumentPrice, instrumentPriceVolatility, exchangeRate);
             var subSystemPosition = new SubSystemPosition(instrument_Forecast, tradingCapital, targetVolatility, insrtumentPositionSize);
-
-            //Assert.AreEqual(1000000, subSystemPosition.AnnualisedCashVolatility);
-            //Assert.AreEqual(62500, subSystemPosition.DailyCashVolatilityTarget);
-            //Assert.AreEqual(750, subSystemPosition.InstrumentDetails.BlockValue);
-            //Assert.AreEqual(997.5, subSystemPosition.InstrumentDetails.CurrencyVolatility);
-            //Assert.AreEqual(668.325, subSystemPosition.InstrumentDetails.ValueVolatility);
-            //Assert.AreEqual(93.5173755283731717353084203, subSystemPosition.VolatilityScalar);
-            Assert.AreEqual(-56.11042531702390304118505218, subSystemPosition.GetUnscaledPosition());
+            
+            Assert.AreEqual(250000, subSystemPosition.AnnualisedCashVolatility);
+            Assert.AreEqual(15625, subSystemPosition.DailyCashVolatilityTarget);
+            Assert.AreEqual(760.14, Math.Round(subSystemPosition.InstrumentDetails.BlockValue, 4));
+            Assert.AreEqual(288.1929, Math.Round(subSystemPosition.InstrumentDetails.CurrencyVolatility,4));
+            Assert.AreEqual(288.1929, Math.Round(subSystemPosition.InstrumentDetails.ValueVolatility,4));
+            Assert.AreEqual(54.2171, Math.Round(subSystemPosition.VolatilityScalar,4));
+            Assert.AreEqual(108.434, Math.Round(subSystemPosition.GetUnscaledPosition(),3));
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Business;
 using Application.Business.Indicator;
+using Application.Business.Indicator.Signal;
 using Application.Business.Market;
 using Application.Business.Risk;
 using Domain.Enums;

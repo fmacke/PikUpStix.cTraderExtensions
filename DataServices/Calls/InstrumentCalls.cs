@@ -1,5 +1,7 @@
 ﻿using Application.Common.Results;
+using Application.Features.Instruments.Commands.Create;
 using Application.Features.Instruments.Queries.GetAllCached;
+using Application.Features.TestTrades.Commands.Create;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,10 +21,16 @@ namespace DataServices.Calls
             var result = serviceProvider.GetRequiredService<IInstrumentService>().GetAllInstrumentsCachedAsync();
             return result.Result.Data;
         }
+        public int AddInstrument(CreateInstrumentCommand model)
+        {
+            var id = serviceProvider.GetRequiredService<IInstrumentService>().AddInstrument(model).Result.Data;
+            return id;
+        }
     }
     public interface IInstrumentService
     {
         Task<Result<List<GetAllInstrumentsCachedResponse>>> GetAllInstrumentsCachedAsync();
+        Task<Result<int>> AddInstrument(CreateInstrumentCommand model);
     }
     public class InstrumentService : IInstrumentService
     {
@@ -37,6 +45,11 @@ namespace DataServices.Calls
         {
             var query = new GetAllInstrumentsCachedQuery();
             return await _mediator.Send(query);
+        }
+        public async Task<Result<int>> AddInstrument(CreateInstrumentCommand model)
+        {
+            var result = await _mediator.Send(model);
+            return result;
         }
     }
 }
