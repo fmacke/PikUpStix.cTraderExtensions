@@ -1,9 +1,6 @@
 using Domain.Abstractions;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities
 {
-    [Table("HistoricalData")]
     public partial class HistoricalData : BaseEntity
     {
         public DateTime? Date { get; set; }
@@ -15,6 +12,5 @@ namespace Domain.Entities
         public double Settle { get; set; }
         public double OpenInterest { get; set; }
         public int InstrumentId { get; set; }
-        public Instrument Instrument { get; set; }
     }
 }

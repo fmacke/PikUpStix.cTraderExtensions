@@ -26,9 +26,8 @@ namespace FXProBridge.DataConversions
                     OpenPrice = historicalData.OpenPrices[x],
                     HighPrice = historicalData.HighPrices[x],
                     LowPrice = historicalData.LowPrices[x],
-                    //Instrument = instrument,
-                    Date = historicalData.OpenTimes[x],
-                    //InstrumentId = instrumentId
+                    Volume = historicalData.TickVolumes[x],
+                    Date = historicalData.OpenTimes[x]
                 });
             }
             return histoData;

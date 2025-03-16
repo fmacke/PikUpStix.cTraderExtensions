@@ -29,7 +29,7 @@ namespace Infrastructure.Repositories
         {
             return await _repository.Entities
                 .Include(p => p.HistoricalDatas)
-                .Where(p => p.Id == instrumentId ).FirstOrDefaultAsync();
+                .Where(p => p.Id == instrumentId ).FirstOrDefaultAsync(e => e.Id == instrumentId);
         }
 
         public async Task<List<Instrument>> GetListAsync()

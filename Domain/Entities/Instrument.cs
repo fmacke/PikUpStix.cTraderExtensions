@@ -7,8 +7,6 @@ namespace Domain.Entities
         public Instrument()
         {
             HistoricalDatas = new HashSet<HistoricalData>();
-            PortfolioInstruments = new HashSet<PortfolioInstrument>();
-            Test_Trades = new HashSet<TestTrade>();
         }
         public string InstrumentName { get; set; }
         public string Provider { get; set; }
@@ -23,7 +21,5 @@ namespace Domain.Entities
         public double MinimumPriceFluctuation { get; set; }
         public string Currency { get; set; }
         public virtual ICollection<HistoricalData> HistoricalDatas { get; set; }
-        public virtual ICollection<PortfolioInstrument> PortfolioInstruments { get; set; }
-        public virtual ICollection<TestTrade> Test_Trades { get; set; }
     }
 }

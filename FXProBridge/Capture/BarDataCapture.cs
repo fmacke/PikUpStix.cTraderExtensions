@@ -85,7 +85,7 @@ namespace FXProBridge.Capture
                         Volume = bar.Volume,
                         Settle = bar.Settle,
                         OpenInterest = bar.OpenInterest,
-                        InstrumentId = instrument.Id
+                        InstrumentId = existingInstrumentData.Id
                     });
                 }
             }
