@@ -1,12 +1,11 @@
+using Domain.Abstractions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace Domain.Entities
 {
     [Table("HistoricalData")]
-    public partial class HistoricalData
+    public partial class HistoricalData : BaseEntity
     {
-        [Key]
-        public int DataId { get; set; }
         public DateTime? Date { get; set; }
         public double OpenPrice { get; set; }
         public double ClosePrice { get; set; }
@@ -15,5 +14,7 @@ namespace Domain.Entities
         public double Volume { get; set; }
         public double Settle { get; set; }
         public double OpenInterest { get; set; }
+        public int InstrumentId { get; set; }
+        public Instrument Instrument { get; set; }
     }
 }

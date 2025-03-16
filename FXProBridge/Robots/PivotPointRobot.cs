@@ -12,7 +12,7 @@ using Application.Business.Extensions;
 
 namespace FXProBridge.Robots
 {
-    public class PivotPointRobot : PositionManager
+    public abstract class PivotPointRobot : PositionManager
     {
         [Parameter("ForecastThreshold", DefaultValue = 1, Step = 0.1, MaxValue = 1, MinValue = 0, Group = "Strategy")]
         public double ForecastThreshold { get; set; }

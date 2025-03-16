@@ -29,6 +29,9 @@ namespace Infrastructure.Extensions
             services.AddTransient<ITestParametersRepository, TestParametersRepository>();
             services.AddTransient<ITestTradeRepository, TestTradeRepository>();
             services.AddTransient<ITestTradeCacheRepository, TestTradeCacheRepository>();
+            services.AddTransient<IHistoricalDataRepository, HistoricalDataRepository>();
+            services.AddTransient<IHistoricalDataCacheRepository, HistoricalDataCacheRepository>();
+
         }
     }
 }

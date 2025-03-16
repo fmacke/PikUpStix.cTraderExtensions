@@ -17,10 +17,10 @@ namespace Application.Features.Instruments.Commands.Update
         public string Format { get; set; }
         public string Frequency { get; set; }
         public string Sort { get; set; }
-        public decimal ContractUnit { get; set; }
+        public double ContractUnit { get; set; }
         public string ContractUnitType { get; set; }
         public string PriceQuotation { get; set; }
-        public decimal MinimumPriceFluctuation { get; set; }
+        public double MinimumPriceFluctuation { get; set; }
         public string Currency { get; set; }
         public virtual ICollection<HistoricalData> HistoricalDatas { get; set; }
         public virtual ICollection<PortfolioInstrument> PortfolioInstruments { get; set; }
@@ -29,36 +29,48 @@ namespace Application.Features.Instruments.Commands.Update
     public class UpdateInstrumentCommandHandler : IRequestHandler<UpdateInstrumentCommand, Result<int>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IInstrumentRepository _cvrRepository;
+        private readonly IInstrumentRepository _instrumentRepository;
         private readonly IMapper _mapper;
 
-        public UpdateInstrumentCommandHandler(IInstrumentRepository cvrRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public UpdateInstrumentCommandHandler(IInstrumentRepository instrumentRepository, IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _cvrRepository = cvrRepository;
+            _instrumentRepository = instrumentRepository;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
         public async Task<Result<int>> Handle(UpdateInstrumentCommand command, CancellationToken cancellationToken)
         {
-            var cvr = await _cvrRepository.GetByIdAsync(command.Id);
+            var instrument = await _instrumentRepository.GetByIdAsync(command.Id);
 
-            if (cvr == null)
+            if (instrument == null)
             {
                 return Result<int>.Fail($"Instrument Not Found.");
             }
             else
             {
-                UpdateModifiedInstrument(ref cvr, command);
-                await _cvrRepository.UpdateAsync(cvr);
+                UpdateModifiedInstrument(ref instrument, command);
+                await _instrumentRepository.UpdateAsync(instrument);
                 await _unitOfWork.Commit(cancellationToken);
-                return Result<int>.Success(cvr.Id);
+                return Result<int>.Success(instrument.Id);
             }
         }
 
-        private void UpdateModifiedInstrument(ref Instrument cvr, UpdateInstrumentCommand command)
+        private void UpdateModifiedInstrument(ref Instrument instrument, UpdateInstrumentCommand command)
         {
-
+            instrument.InstrumentName = command.InstrumentName;
+            instrument.DataName = command.DataName;
+            instrument.DataSource = command.DataSource;
+            instrument.Provider = command.Provider;
+            instrument.PriceQuotation = command.PriceQuotation;
+            instrument.Currency = command.Currency;
+            instrument.Frequency = command.Frequency;
+            instrument.ContractUnit = command.ContractUnit;
+            instrument.ContractUnitType = command.ContractUnitType;
+            instrument.MinimumPriceFluctuation = command.MinimumPriceFluctuation;
+            instrument.Format = command.Format;
+            instrument.Sort = command.Sort;
+            //instrument.HistoricalDatas = instrument.HistoricalDatas;
         }
     }
 }

@@ -8,7 +8,7 @@ using Robots.Strategies.CarverTrendFollower;
 
 namespace FXProBridge.Robots
 {
-    public class CarverTrendFollowerRobot : PositionManager
+    public abstract class CarverTrendFollowerRobot : PositionManager
     {
         [Parameter("Max Stop Loss", Group = "Risk Management", DefaultValue = 2, MinValue = 1, Step = 1)]
         public double MaxStopLoss { get; set; }

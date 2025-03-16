@@ -28,12 +28,13 @@ namespace Infrastructure.Repositories
         public async Task<Instrument> GetByIdAsync(int instrumentId)
         {
             return await _repository.Entities
+                .Include(p => p.HistoricalDatas)
                 .Where(p => p.Id == instrumentId ).FirstOrDefaultAsync();
         }
 
         public async Task<List<Instrument>> GetListAsync()
         {
-            return await _repository.Entities.ToListAsync();
+            return await _repository.Entities.Include(p => p.HistoricalDatas).ToListAsync();
         }
 
         public async Task<int> InsertAsync(Instrument instrument)

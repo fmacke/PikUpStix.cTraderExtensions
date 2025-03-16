@@ -8,7 +8,7 @@ using Robots.Strategies;
 
 namespace FXProBridge.Robots
 {
-    public class TrendFollowerOpenRobot : PositionManager
+    public abstract class TrendFollowerOpenRobot : PositionManager
     {
         [Parameter("Max Stop Loss", Group = "Risk Management", DefaultValue = 2, MinValue = 1, Step = 1)]
         public double MaxStopLoss { get; set; }

@@ -63,6 +63,12 @@ namespace Infrastructure.Contexts
                 .HasPrecision(18, 0);
 
             modelBuilder.Entity<Instrument>()
+               .ToTable("Instruments")
+               .HasMany(b => b.HistoricalDatas)
+               .WithOne(p => p.Instrument)
+               .HasForeignKey(p => p.InstrumentId);
+
+            modelBuilder.Entity<Instrument>()
                 .Property(e => e.InstrumentName)
                 .IsUnicode(false);
 
@@ -110,12 +116,12 @@ namespace Infrastructure.Contexts
                 .Property(e => e.Currency)
                 .IsUnicode(false);
 
-            modelBuilder.Entity<Instrument>()
-                .HasMany(e => e.HistoricalDatas);
-                //.WithOne(e => e.Instrument)
-                //.HasForeignKey(h => h.InstrumentId)
-                //.OnDelete(DeleteBehavior.Restrict)
-                //.IsRequired(); 
+            //modelBuilder.Entity<Instrument>()
+            //    .HasMany(e => e.HistoricalDatas);
+            //    //.WithOne(e => e.Instrument)
+            //    //.HasForeignKey(h => h.InstrumentId)
+            //    //.OnDelete(DeleteBehavior.Restrict)
+            //    //.IsRequired(); 
 
             modelBuilder.Entity<Instrument>()
                 .HasMany(e => e.PortfolioInstruments)

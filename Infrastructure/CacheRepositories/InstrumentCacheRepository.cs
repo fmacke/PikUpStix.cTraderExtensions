@@ -10,49 +10,49 @@ namespace Infrastructure.CacheRepositories
     public class InstrumentCacheRepository : IInstrumentCacheRepository
     {
         private readonly IDistributedCache _distributedCache;
-        private readonly IInstrumentRepository _cVRRepository;
+        private readonly IInstrumentRepository _instrumentRepository;
 
-        public InstrumentCacheRepository(IDistributedCache distributedCache, IInstrumentRepository cVRRepository)
+        public InstrumentCacheRepository(IDistributedCache distributedCache, IInstrumentRepository instrumentRepository)
         {
             _distributedCache = distributedCache;
-            _cVRRepository = cVRRepository;
+            _instrumentRepository = instrumentRepository;
         }
 
-        public async Task<Instrument> GetByIdAsync(int cVRId)
+        public async Task<Instrument> GetByIdAsync(int instrumentId)
         {
-            string cacheKey = InstrumentCacheKeys.GetKey(cVRId);
-            var cVRBytes = await _distributedCache.GetAsync(cacheKey);
-            Instrument cVR = null;
-            if (cVRBytes != null)
+            string cacheKey = InstrumentCacheKeys.GetKey(instrumentId);
+            var instrumentBytes = await _distributedCache.GetAsync(cacheKey);
+            Instrument instrument = null;
+            if (instrumentBytes != null)
             {
-                cVR = System.Text.Json.JsonSerializer.Deserialize<Instrument>(cVRBytes);
+                instrument = System.Text.Json.JsonSerializer.Deserialize<Instrument>(instrumentBytes);
             }
-            if (cVR == null)
+            if (instrument == null)
             {
-                cVR = await _cVRRepository.GetByIdAsync(cVRId);
-                Throw.Exception.IfNull(cVR, "Instrument", "No Instrument Found");
-                var cVRBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(cVR);
-                await _distributedCache.SetAsync(cacheKey, cVRBytesToCache, new DistributedCacheEntryOptions());
+                instrument = await _instrumentRepository.GetByIdAsync(instrumentId);
+                Throw.Exception.IfNull(instrument, "Instrument", "No Instrument Found");
+                var instrumentBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(instrument);
+                await _distributedCache.SetAsync(cacheKey, instrumentBytesToCache, new DistributedCacheEntryOptions());
             }
-            return cVR;
+            return instrument;
         }
 
         public async Task<List<Instrument>> GetCachedListAsync()
         {
             string cacheKey = InstrumentCacheKeys.ListKey;
-            var cVRListBytes = await _distributedCache.GetAsync(cacheKey);
-            List<Instrument> cVRList = null;
-            if (cVRListBytes != null)
+            var instrumentListBytes = await _distributedCache.GetAsync(cacheKey);
+            List<Instrument> instrumentList = null;
+            if (instrumentListBytes != null)
             {
-                cVRList = System.Text.Json.JsonSerializer.Deserialize<List<Instrument>>(cVRListBytes);
+                instrumentList = System.Text.Json.JsonSerializer.Deserialize<List<Instrument>>(instrumentListBytes);
             }
-            if (cVRList == null)
+            if (instrumentList == null)
             {
-                cVRList = await _cVRRepository.GetListAsync();
-                var cVRListBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(cVRList);
-                await _distributedCache.SetAsync(cacheKey, cVRListBytesToCache, new DistributedCacheEntryOptions());
+                instrumentList = await _instrumentRepository.GetListAsync();
+                var instrumentListBytesToCache = System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(instrumentList);
+                await _distributedCache.SetAsync(cacheKey, instrumentListBytesToCache, new DistributedCacheEntryOptions());
             }
-            return cVRList;
+            return instrumentList;
         }
     }
 }

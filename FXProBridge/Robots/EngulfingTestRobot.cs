@@ -7,7 +7,7 @@ using Indicators;
 
 namespace Robots
 {
-    public class EngulfingTestRobot : RobotTestWrapper
+    public abstract class EngulfingTestRobot : RobotTestWrapper
     {
         private double _volumeInUnits;
         // Common settings

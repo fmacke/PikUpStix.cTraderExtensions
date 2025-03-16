@@ -23,7 +23,7 @@ namespace Application.Features.Instruments.Commands.Create
         public string PriceQuotation { get; set; }
         public decimal MinimumPriceFluctuation { get; set; }
         public string Currency { get; set; }
-        public virtual ICollection<HistoricalData> HistoricalDatas { get; set; }
+        public virtual ICollection<HistoricalData> HistoricalDatas { get; set; } = new List<HistoricalData>();
         public virtual ICollection<PortfolioInstrument> PortfolioInstruments { get; set; }
         public virtual ICollection<TestTrade> Test_Trades { get; set; }
     }

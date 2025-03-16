@@ -11,19 +11,19 @@ namespace Application.Features.Instruments.Queries.GetById
 
         public class GetInstrumentByIdQueryHandler : IRequestHandler<GetInstrumentByIdQuery, Result<GetInstrumentByIdResponse>>
         {
-            private readonly IInstrumentCacheRepository _cVRCache;
+            private readonly IInstrumentCacheRepository _instrumentCache;
             private readonly IMapper _mapper;
 
-            public GetInstrumentByIdQueryHandler(IInstrumentCacheRepository cVRCache, IMapper mapper)
+            public GetInstrumentByIdQueryHandler(IInstrumentCacheRepository instrumentCache, IMapper mapper)
             {
-                _cVRCache = cVRCache;
+                _instrumentCache = instrumentCache;
                 _mapper = mapper;
             }
 
             public async Task<Result<GetInstrumentByIdResponse>> Handle(GetInstrumentByIdQuery query, CancellationToken cancellationToken)
             {
-                var cVR = await _cVRCache.GetByIdAsync(query.Id);
-                var mappedInstrument = _mapper.Map<GetInstrumentByIdResponse>(cVR);
+                var instrument = await _instrumentCache.GetByIdAsync(query.Id);
+                var mappedInstrument = _mapper.Map<GetInstrumentByIdResponse>(instrument);
                 return Result<GetInstrumentByIdResponse>.Success(mappedInstrument);
             }
         }
