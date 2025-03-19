@@ -11,7 +11,7 @@ namespace Application.Business.BackTest.Reports
     }
     public class AnnualReturns : Dictionary<int, AnnualReturn>
     {
-        public AnnualReturns(int testId, IEnumerable<TestTrade> trades)
+        public AnnualReturns(int testId, IEnumerable<TestTrade> trades, double initialCapitalInvestment)
         {
             var resultsToProcess = trades.OrderBy(x => x.ClosedAt);
             //get distinct list of years from results
@@ -19,27 +19,28 @@ namespace Application.Business.BackTest.Reports
                 .Distinct()
                 .ToList()
                 .Select(p => p.Year);
-            
+
             //foreach year in years, calculate annual return
             foreach (var year in years)
             {
-                var initialMargin = CalculateMarginToDate(resultsToProcess, year);
-                var annualMargin = CalculateMarginThisYearOnly(resultsToProcess, year);
+                var initialCapital = CalculateCapitalAtStartOfYear(resultsToProcess, year, initialCapitalInvestment);            
+                var marginThisYear = CalculateMarginThisYearOnly(resultsToProcess, year);
+
                 this.Add(year, new AnnualReturn()
                 {
-                    ReturnAsPercentofInvestmentCapital = annualMargin / initialMargin,
-                    ReturnInCash = annualMargin,
+                    ReturnAsPercentofInvestmentCapital = initialCapital == 0 ? (marginThisYear / 100) : (marginThisYear / initialCapital),
+                    ReturnInCash = marginThisYear,
                     TestId = testId
                 });
             }
         }
 
-        private double CalculateMarginToDate(IOrderedEnumerable<TestTrade> trades, int upToButExludingYear)
+        private double CalculateCapitalAtStartOfYear(IOrderedEnumerable<TestTrade> trades, int upToButExcludingYear, double initialCapital)
         {
-            var filteredTrades = trades.Where(x => Convert.ToDateTime(x.ClosedAt).Year < upToButExludingYear); 
-            if (filteredTrades.Any()) 
-                return filteredTrades.Sum(x => x.Margin); 
-            return 0;
+            var filteredTrades = trades.Where(x => Convert.ToDateTime(x.ClosedAt).Year < upToButExcludingYear); 
+            if (filteredTrades.Any())
+                initialCapital += filteredTrades.Sum(x => x.Margin); 
+            return initialCapital;
         }
         private double CalculateMarginThisYearOnly(IOrderedEnumerable<TestTrade> trades, int thisYear)
         {
