@@ -18,67 +18,62 @@ namespace TradeSimulateTests
             {
                 new Position()
                 {
-                    Id = 3,
                     EntryPrice = 1,
                     StopLoss = 1,
                     TakeProfit = 1,
-                    Volume = 1
+                    Volume = 1,
+                    Created = DateTime.Now
                 },
                 new Position()
                 {
-                    Id = 4,
                     EntryPrice = 1,
                     StopLoss = 1,
                     TakeProfit = 1,
-                    Volume = 1
+                    Volume = 1,
+                    Created = DateTime.Now
                 }
             };
             _closedPositions = _closedPositions = new List<Position>
             {
                 new Position()
                     {
-                        Id = 1,
                         EntryPrice = 1,
                         StopLoss = 1,
                         TakeProfit = 1,
-                        Volume = 1
+                        Volume = 1,
+                        Created = DateTime.Now
                     },
                 new Position()
                     {
-                        Id = 2,
                         EntryPrice = 1,
                         StopLoss = 1,
                         TakeProfit = 1,
-                        Volume = 1
+                        Volume = 1,
+                        Created = DateTime.Now
                     }
             };
         }
         [TestMethod]
         public void ClosePositionTest()
         {
-             var positionHandler = new PositionHandler(
-                new List<PositionUpdate> { 
+            var firstPosition = _openPositions.First();
+            var positionHandler = new PositionHandler(
+                new List<PositionUpdate> {
                     new PositionUpdate(
-                        new Position
-                        {
-                            Id = 4
-                        }, 
+                        firstPosition,
                         InstructionType.Close) }, 
-                ref _openPositions, ref _closedPositions);
+                 ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(1, _openPositions.Count);
             Assert.AreEqual(3, _closedPositions.Count);
 
-
+            firstPosition = _openPositions.First();
             positionHandler = new PositionHandler(
                 new List<PositionUpdate> {
                     new PositionUpdate(
-                        new Position
-                        {
-                            Id = 3
-                        },
+                        firstPosition,
                         InstructionType.Close) },
-                ref _openPositions, ref _closedPositions);
+                 ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(0, _openPositions.Count);
             Assert.AreEqual(4, _closedPositions.Count);
@@ -118,28 +113,28 @@ namespace TradeSimulateTests
             Assert.AreEqual(4, _openPositions.Count);
             Assert.AreEqual(2, _closedPositions.Count);
         }
-
-        private List<HistoricalData> GetData()
+        [TestMethod]
+        public void ModifyPositionTest()
         {
-            var bars = new List<HistoricalData>();
-            var cursorDate = DateTime.Now;
-            for (int i = 0; i < 10; i++)
+            var expectedStopLoss = 2;
+            var expectedTakeProfit = 3;
+            var firstPosition = _openPositions.First();
+            var positionUpdate = new PositionUpdate(
+                firstPosition,
+                InstructionType.Modify)
             {
-                bars.Add(new HistoricalData
-                {
-                    Date = cursorDate,
-                    OpenPrice = i,
-                    ClosePrice = i,
-                    LowPrice = i,
-                    HighPrice = i,
-                    Volume = i,
-                    Settle = i,
-                    OpenInterest = i,
-                    InstrumentId = 1
-                });
-                cursorDate = cursorDate.AddDays(1);
-            }
-            return bars;
+                AdjustStopLossTo = expectedStopLoss,
+                AdjustTakeProfitTo = expectedTakeProfit
+            };
+            var positionHandler = new PositionHandler(
+               new List<PositionUpdate> { positionUpdate },
+                 ref _openPositions, ref _closedPositions);
+            positionHandler.ExecuteInstructions();
+
+            var modifiedPosition = _openPositions.First();
+            Assert.AreEqual(expectedStopLoss, modifiedPosition.StopLoss);
+            Assert.AreEqual(expectedTakeProfit, modifiedPosition.TakeProfit);
         }
+
     }
 }

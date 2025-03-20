@@ -7,13 +7,18 @@ namespace Robots.Common
     {
         public Position Position { get; set; }
         public InstructionType InstructionType { get; set; }
-        //public double Forecast { get; set; }
-
-        public PositionUpdate(Position pos, InstructionType instruction)//, double forecast)
+        public double? AdjustStopLossTo { get; set; }
+        public double? AdjustTakeProfitTo { get; set; }
+        public bool Modify {
+            get
+            {
+                return AdjustStopLossTo.HasValue || AdjustTakeProfitTo.HasValue;
+            }
+        }
+        public PositionUpdate(Position pos, InstructionType instruction)
         {
             Position = pos;
             InstructionType = instruction;
-            //Forecast = forecast;
         }
     }
 }
