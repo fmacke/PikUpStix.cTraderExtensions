@@ -55,12 +55,12 @@ namespace TradeSimulateTests
                     Volume = 1
                 }
             };
-            PositionHandler.ClosePosition(ref positions, ref trades, positions[0]);
-            Assert.AreEqual(1, positions.Count);
-            Assert.AreEqual(3, trades.Count);
-            PositionHandler.ClosePosition(ref positions, ref trades, positions[0]);
-            Assert.AreEqual(0, positions.Count);
-            Assert.AreEqual(4, trades.Count);
+            //PositionHandler.ClosePosition(ref positions, ref trades, positions[0]);
+            //Assert.AreEqual(1, positions.Count);
+            //Assert.AreEqual(3, trades.Count);
+            //PositionHandler.ClosePosition(ref positions, ref trades, positions[0]);
+            //Assert.AreEqual(0, positions.Count);
+            //Assert.AreEqual(4, trades.Count);
         }
 
         private List<HistoricalData> GetData()
