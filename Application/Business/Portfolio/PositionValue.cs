@@ -73,7 +73,7 @@ namespace Application.Business.Portfolio
 
             if (proposedWeightedPosition != 0)
             {
-                var sl = new StopLoss(AvailableTradingCapital, StopLossPercent,
+                var sl = new StopLossCalculator(AvailableTradingCapital, StopLossPercent,
                     Instrument.ContractUnit,
                     proposedWeightedPosition,
                     ExchangeRate,

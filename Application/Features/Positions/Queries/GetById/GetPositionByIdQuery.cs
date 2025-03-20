@@ -3,7 +3,7 @@ using Application.Interfaces.CacheRepositories;
 using AutoMapper;
 using MediatR;
 
-namespace Application.Features.TestTrades.Queries.GetById
+namespace Application.Features.Positions.Queries.GetById
 {
     public class GetPositionByIdQuery : IRequest<Result<GetPositionByIdResponse>>
     {

@@ -2,6 +2,7 @@
 using Domain.Enums;
 using Robots.Common;
 using TradeSimulator;
+using TradeSimulator.Business;
 
 namespace TradeSimulateTests
 {

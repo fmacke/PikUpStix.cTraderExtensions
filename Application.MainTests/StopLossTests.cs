@@ -127,7 +127,7 @@ namespace Application.MainTests
             var purchasePrice = 10;
             var minimumPriceFluctuation = 0.0001;
 
-            var stopLoss = new StopLoss(existingMargin, stopLossMaxPercent, contractUnit,
+            var stopLoss = new StopLossCalculator(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
             var stopLossInCurrency = stopLoss.StopLossInCurrency();
             Assert.AreEqual(8, stopLossInCurrency);
@@ -135,7 +135,7 @@ namespace Application.MainTests
             posType = PositionType.SELL;
             volume = -1;
 
-            stopLoss = new StopLoss(existingMargin, stopLossMaxPercent, contractUnit,
+            stopLoss = new StopLossCalculator(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
             stopLossInCurrency = stopLoss.StopLossInCurrency();
             Assert.AreEqual(12, stopLossInCurrency);
@@ -152,14 +152,14 @@ namespace Application.MainTests
             var purchasePrice = 1;
             var minimumPriceFluctuation = 0.0001;
 
-            var stopLoss = new StopLoss(existingMargin, stopLossMaxPercent, contractUnit,
+            var stopLoss = new StopLossCalculator(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
             var stopLossInCurrency = stopLoss.StopLossInCurrency();
             Assert.AreEqual(0.9936, stopLossInCurrency);
 
             posType = PositionType.SELL;
             volume = -1;
-            stopLoss = new StopLoss(existingMargin, stopLossMaxPercent, contractUnit,
+            stopLoss = new StopLossCalculator(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
             stopLossInCurrency = stopLoss.StopLossInCurrency();
             Assert.AreEqual(1.0064, stopLossInCurrency);

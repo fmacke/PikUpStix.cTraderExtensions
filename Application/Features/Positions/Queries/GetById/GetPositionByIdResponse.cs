@@ -1,10 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using Domain.Entities;
-
-namespace Application.Features.TestTrades.Queries.GetAllPaged
+﻿namespace Application.Features.Positions.Queries.GetById
 {
-    public class GetAllPositionsResponse
+    public class GetPositionByIdResponse
     {
         public int Id { get; set; }
         public int TestId { get; set; }
@@ -28,4 +24,5 @@ namespace Application.Features.TestTrades.Queries.GetAllPaged
         public decimal? ForecastAtEntry { get; set; }
         public decimal? ForecastAtClose { get; set; }
     }
+
 }

@@ -1,5 +1,4 @@
-﻿using Application.Business.Risk;
-using Domain.Entities;
+﻿using Domain.Entities;
 namespace Application.Business.Market
 {
     public class MarketInfo : IMarketInfo

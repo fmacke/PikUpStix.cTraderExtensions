@@ -1,6 +1,6 @@
 ﻿using Application.Common.Results;
 using Application.Features.Positions.Commands.Create;
-using Application.Features.TestTrades.Queries.GetAllCached;
+using Application.Features.Positions.Queries.GetAllCached;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 

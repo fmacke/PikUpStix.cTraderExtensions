@@ -1,6 +1,10 @@
-﻿namespace Application.Features.TestTrades.Queries.GetById
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Domain.Entities;
+
+namespace Application.Features.Positions.Queries.GetAllCached
 {
-    public class GetPositionByIdResponse
+    public class GetAllPositionsCachedResponse
     {
         public int Id { get; set; }
         public int TestId { get; set; }
@@ -24,5 +28,4 @@
         public decimal? ForecastAtEntry { get; set; }
         public decimal? ForecastAtClose { get; set; }
     }
-
 }

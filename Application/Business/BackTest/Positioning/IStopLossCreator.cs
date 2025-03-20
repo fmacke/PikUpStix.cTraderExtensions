@@ -19,7 +19,7 @@ namespace PikUpStix.Trading.Forecast
         public List<Domain.Entities.Position> CalculateStops(List<Domain.Entities.Position> trades, double stopLossPercentage, double currentMargin, 
             double volume, double exchangeRate, PositionValue weightedProposedPosition)
         {
-            var stopLoss = new StopLoss(currentMargin,
+            var stopLoss = new StopLossCalculator(currentMargin,
                 stopLossPercentage,
                 weightedProposedPosition.Instrument.ContractUnit,
                 volume,
@@ -43,7 +43,7 @@ namespace PikUpStix.Trading.Forecast
             var totalVolume = volume;
             if(trades.Any(x => x.InstrumentId == weightedProposedPosition.Instrument.Id))
                 totalVolume = volume + trades.Where(x => x.InstrumentId == weightedProposedPosition.Instrument.Id && x.Status == PositionStatus.OPEN).Sum(x => x.Volume);
-            var stopLoss = new StopLoss(currentMargin,
+            var stopLoss = new StopLossCalculator(currentMargin,
                 stopLossPercentage,
                 weightedProposedPosition.Instrument.ContractUnit,
                 volume,

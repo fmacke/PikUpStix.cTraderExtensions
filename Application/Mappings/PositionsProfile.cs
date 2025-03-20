@@ -1,10 +1,10 @@
 ﻿using Application.Features.Positions.Commands.Update;
-using Application.Features.TestTrades.Queries.GetAllCached;
-using Application.Features.TestTrades.Queries.GetAllPaged;
-using Application.Features.TestTrades.Queries.GetById;
 using AutoMapper;
 using Domain.Entities;
 using Application.Features.Positions.Commands.Create;
+using Application.Features.Positions.Queries.GetAllCached;
+using Application.Features.Positions.Queries.GetAllPaged;
+using Application.Features.Positions.Queries.GetById;
 
 namespace Application.Mappings 
 {

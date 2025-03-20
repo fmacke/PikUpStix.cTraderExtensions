@@ -2,9 +2,9 @@
 
 namespace Application.Business
 {
-    public class StopLoss
+    public class StopLossCalculator
     {
-        public StopLoss(double existingMargin, double stopLossMaxPercent, double contractUnit,
+        public StopLossCalculator(double existingMargin, double stopLossMaxPercent, double contractUnit,
             double volume, double exchangeRate, PositionType posType, double askingPrice, double biddingPrice, double minimumPriceFluctuation)
         {
             ExistingMargin = existingMargin;

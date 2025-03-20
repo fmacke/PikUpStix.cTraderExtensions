@@ -5,7 +5,7 @@ using Application.Interfaces.Repositories;
 using Application.Common.Extensions;
 using Domain.Entities;
 
-namespace Application.Features.TestTrades.Queries.GetAllPaged
+namespace Application.Features.Positions.Queries.GetAllPaged
 {
     public class GetAllPositionsQuery : IRequest<PaginatedResult<GetAllPositionsResponse>>
     {

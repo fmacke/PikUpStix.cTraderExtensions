@@ -3,7 +3,7 @@ using MediatR;
 using Application.Common.Results;
 using Application.Interfaces.CacheRepositories;
 
-namespace Application.Features.TestTrades.Queries.GetAllCached
+namespace Application.Features.Positions.Queries.GetAllCached
 {
     public class GetAllPositionsCachedQuery : IRequest<Result<List<GetAllPositionsCachedResponse>>>
     {

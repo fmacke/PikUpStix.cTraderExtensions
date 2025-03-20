@@ -3,7 +3,7 @@ using Application.Common.Interfaces;
 using Application.Common.Results;
 using Application.Interfaces.Repositories;
 
-namespace Application.Features.TestTrades.Commands.Delete
+namespace Application.Features.Positions.Commands.Delete
 {
     public class DeletePositionCommand : IRequest<Result<int>>
     {
