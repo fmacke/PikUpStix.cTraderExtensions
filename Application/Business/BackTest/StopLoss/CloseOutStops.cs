@@ -6,12 +6,12 @@ namespace Application.Business.BackTest.StopLoss
 {
     public class CloseOutStops : IStopLossHandler
     {
-        public List<TestTrade> TradingPositions { get; private set; }
+        public List<Domain.Entities.Position> TradingPositions { get; private set; }
 
-        public List<TestTrade> CloseStoppedOutPositions(List<TestTrade> existingPositions, DateTime cursorDate, List<List<HistoricalData>> historicalDataSets, decimal exchangeRate, decimal startingTradingCapital)
+        public List<Domain.Entities.Position> CloseStoppedOutPositions(List<Domain.Entities.Position> existingPositions, DateTime cursorDate, List<List<HistoricalData>> historicalDataSets, decimal exchangeRate, decimal startingTradingCapital)
         {
             TradingPositions = existingPositions;
-            foreach (TestTrade existingPosition in TradingPositions.Where(x => x.Status == PositionStatus.POSITION.ToString()))
+            foreach (Domain.Entities.Position existingPosition in TradingPositions.Where(x => x.Status == PositionStatus.OPEN))
             {
                 if (existingPosition.StopLoss <= 0) continue;
                 var history = new RecentHistory(historicalDataSets, existingPosition.InstrumentId, cursorDate);

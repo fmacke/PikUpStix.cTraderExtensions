@@ -4,10 +4,9 @@ namespace Application.Business
 {
     public class PendingOrder
     {
-        public TradeType TradeType { get; set; }
+        public PositionType OrderType { get; set; }
         public double VolumeInUnits { get; set; }
         public int Id { get; set; }
-        public TradeType OrderType { get; set; }
         public double TargetPrice { get; set; }
         public DateTime? ExpirationTime { get; set; }
         public double? StopLoss { get; set; }

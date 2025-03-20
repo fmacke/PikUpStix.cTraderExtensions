@@ -21,6 +21,6 @@ namespace Application.Features.Instruments.Queries.GetAllCached
         public string Currency { get; set; }
         public virtual ICollection<HistoricalData> HistoricalDatas { get; set; }
         public virtual ICollection<PortfolioInstrument> PortfolioInstruments { get; set; }
-        public virtual ICollection<TestTrade> Test_Trades { get; set; }
+        public virtual ICollection<Position> Test_Trades { get; set; }
     }
 }

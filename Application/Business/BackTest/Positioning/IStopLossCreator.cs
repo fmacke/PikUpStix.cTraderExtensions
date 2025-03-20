@@ -8,7 +8,7 @@ namespace PikUpStix.Trading.Forecast
     public interface IStopLossCreator
     {
         double NewPositionStopLoss { get; set; }
-        List<TestTrade> CalculateStops(List<TestTrade> trades, double stopLossPercentage, double currentMargin, double volume, double exchangeRate, PositionValue weightedProposedPosition);
+        List<Domain.Entities.Position> CalculateStops(List<Domain.Entities.Position> trades, double stopLossPercentage, double currentMargin, double volume, double exchangeRate, PositionValue weightedProposedPosition);
     }
 
     public class SimpleStopLossCreator : IStopLossCreator
@@ -16,7 +16,7 @@ namespace PikUpStix.Trading.Forecast
         // Works out stop loss based on single percentage input and does not consider other position that may be on the same instrument
         public double NewPositionStopLoss { get; set; }
 
-        public List<TestTrade> CalculateStops(List<TestTrade> trades, double stopLossPercentage, double currentMargin, 
+        public List<Domain.Entities.Position> CalculateStops(List<Domain.Entities.Position> trades, double stopLossPercentage, double currentMargin, 
             double volume, double exchangeRate, PositionValue weightedProposedPosition)
         {
             var stopLoss = new StopLoss(currentMargin,
@@ -37,12 +37,12 @@ namespace PikUpStix.Trading.Forecast
         // Works out stop loss for all positions on a given instrument to create overall risk based on StopLossPercent
         public double NewPositionStopLoss { get; set; }
 
-        public List<TestTrade> CalculateStops(List<TestTrade> trades, double stopLossPercentage, double currentMargin,
+        public List<Domain.Entities.Position> CalculateStops(List<Domain.Entities.Position> trades, double stopLossPercentage, double currentMargin,
             double volume, double exchangeRate, PositionValue weightedProposedPosition)
         {
             var totalVolume = volume;
             if(trades.Any(x => x.InstrumentId == weightedProposedPosition.Instrument.Id))
-                totalVolume = volume + trades.Where(x => x.InstrumentId == weightedProposedPosition.Instrument.Id && x.Status == PositionStatus.POSITION.ToString()).Sum(x => x.Volume);
+                totalVolume = volume + trades.Where(x => x.InstrumentId == weightedProposedPosition.Instrument.Id && x.Status == PositionStatus.OPEN).Sum(x => x.Volume);
             var stopLoss = new StopLoss(currentMargin,
                 stopLossPercentage,
                 weightedProposedPosition.Instrument.ContractUnit,
@@ -53,7 +53,7 @@ namespace PikUpStix.Trading.Forecast
                 weightedProposedPosition.BiddingPrice,
                 weightedProposedPosition.Instrument.MinimumPriceFluctuation);
             NewPositionStopLoss = stopLoss.StopLossInCurrency();
-            foreach (var trade in trades.Where(x => x.InstrumentId == weightedProposedPosition.Instrument.Id && x.Status == PositionStatus.POSITION.ToString()))
+            foreach (var trade in trades.Where(x => x.InstrumentId == weightedProposedPosition.Instrument.Id && x.Status == PositionStatus.OPEN))
                 trade.StopLoss = NewPositionStopLoss;
             return trades;
         }

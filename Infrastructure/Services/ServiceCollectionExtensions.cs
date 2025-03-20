@@ -5,7 +5,6 @@ using Application.Interfaces.Repositories;
 using Infrastructure.CacheRepositories;
 using Infrastructure.Contexts;
 using Infrastructure.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -27,8 +26,8 @@ namespace Infrastructure.Extensions
             services.AddTransient<IInstrumentRepository, InstrumentRepository>();
             services.AddTransient<IInstrumentCacheRepository, InstrumentCacheRepository>();
             services.AddTransient<ITestParametersRepository, TestParametersRepository>();
-            services.AddTransient<ITestTradeRepository, TestTradeRepository>();
-            services.AddTransient<ITestTradeCacheRepository, TestTradeCacheRepository>();
+            services.AddTransient<IPositionRepository, PositionRepository>();
+            services.AddTransient<IPositionCacheRepository, PositionCacheRepository>();
             services.AddTransient<IHistoricalDataRepository, HistoricalDataRepository>();
             services.AddTransient<IHistoricalDataCacheRepository, HistoricalDataCacheRepository>();
 

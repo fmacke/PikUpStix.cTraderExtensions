@@ -16,17 +16,17 @@ namespace Application.MainTests
             Assert.AreEqual(Math.Round(2.66856, 5), Math.Round(sharpeRatio.StandardDeviationOfPnL, 5));
             Assert.AreEqual(Math.Round(1.9433, 5), Math.Round(sharpeRatio.Value, 5));
         }
-        private List<TestTrade> LoadTestData()
+        private List<Position> LoadTestData()
         {
-            return new List<TestTrade>()
+            return new List<Position>()
             {
-                new TestTrade(){ Margin = 1},
-                new TestTrade(){ Margin = 1.5},
-                new TestTrade(){ Margin = 5},
-                new TestTrade(){ Margin = 6},
-                new TestTrade(){ Margin = 7},
-                new TestTrade(){ Margin = 8},
-                new TestTrade(){ Margin = 7.8}
+                new Position(){ Margin = 1},
+                new Position(){ Margin = 1.5},
+                new Position(){ Margin = 5},
+                new Position(){ Margin = 6},
+                new Position(){ Margin = 7},
+                new Position(){ Margin = 8},
+                new Position(){ Margin = 7.8}
             };
         }
 

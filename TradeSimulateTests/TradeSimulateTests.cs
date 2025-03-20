@@ -1,44 +1,22 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
+using Robots.Common;
 using TradeSimulator;
 
 namespace TradeSimulateTests
 {
     [TestClass]
-    public sealed class TradeSimulateTests
+    public sealed class PositionHandlerTests
     {
-        [TestMethod]
-        public void RunSimpleTestSimulationTest()
-        {
-            var tradeSimulate = new TradeSimulate(GetData());
-            tradeSimulate.RunTradeSimulation();
-        }
+        List<Position> _openPositions;
+        List<Position> _closedPositions;
 
-        [TestMethod]
-        public void ClosePositionTest()
+        [TestInitialize]
+        public void TestInitialize()
         {
-            var positions = new List<TestTrade>
+            _openPositions = new List<Position>
             {
-                new TestTrade()
-                {
-                    Id = 1,
-                    EntryPrice = 1,
-                    StopLoss = 1,
-                    TakeProfit = 1,
-                    Volume = 1
-                },
-                new TestTrade()
-                {
-                    Id = 2,
-                    EntryPrice = 1,
-                    StopLoss = 1,
-                    TakeProfit = 1,
-                    Volume = 1
-                }
-            };
-            var trades = new List<TestTrade>
-            {
-                new TestTrade()
+                new Position()
                 {
                     Id = 3,
                     EntryPrice = 1,
@@ -46,7 +24,7 @@ namespace TradeSimulateTests
                     TakeProfit = 1,
                     Volume = 1
                 },
-                new TestTrade()
+                new Position()
                 {
                     Id = 4,
                     EntryPrice = 1,
@@ -55,12 +33,90 @@ namespace TradeSimulateTests
                     Volume = 1
                 }
             };
-            //PositionHandler.ClosePosition(ref positions, ref trades, positions[0]);
-            //Assert.AreEqual(1, positions.Count);
-            //Assert.AreEqual(3, trades.Count);
-            //PositionHandler.ClosePosition(ref positions, ref trades, positions[0]);
-            //Assert.AreEqual(0, positions.Count);
-            //Assert.AreEqual(4, trades.Count);
+            _closedPositions = _closedPositions = new List<Position>
+            {
+                new Position()
+                    {
+                        Id = 1,
+                        EntryPrice = 1,
+                        StopLoss = 1,
+                        TakeProfit = 1,
+                        Volume = 1
+                    },
+                new Position()
+                    {
+                        Id = 2,
+                        EntryPrice = 1,
+                        StopLoss = 1,
+                        TakeProfit = 1,
+                        Volume = 1
+                    }
+            };
+        }
+        [TestMethod]
+        public void ClosePositionTest()
+        {
+             var positionHandler = new PositionHandler(
+                new List<PositionUpdate> { 
+                    new PositionUpdate(
+                        new Position
+                        {
+                            Id = 4
+                        }, 
+                        InstructionType.Close) }, 
+                ref _openPositions, ref _closedPositions);
+            positionHandler.ExecuteInstructions();
+            Assert.AreEqual(1, _openPositions.Count);
+            Assert.AreEqual(3, _closedPositions.Count);
+
+
+            positionHandler = new PositionHandler(
+                new List<PositionUpdate> {
+                    new PositionUpdate(
+                        new Position
+                        {
+                            Id = 3
+                        },
+                        InstructionType.Close) },
+                ref _openPositions, ref _closedPositions);
+            positionHandler.ExecuteInstructions();
+            Assert.AreEqual(0, _openPositions.Count);
+            Assert.AreEqual(4, _closedPositions.Count);
+        }
+
+        [TestMethod]
+        public void OpenPositionTest()
+        {
+            var positionHandler = new PositionHandler(
+               new List<PositionUpdate> {
+                    new PositionUpdate(
+                        new Position
+                        {
+                            EntryPrice = 1,
+                            StopLoss = 1,
+                            Created = DateTime.Now
+                        },
+                        InstructionType.Open) },
+               ref _openPositions, ref _closedPositions);
+            positionHandler.ExecuteInstructions();
+            Assert.AreEqual(3, _openPositions.Count);
+            Assert.AreEqual(2, _closedPositions.Count);
+
+
+            positionHandler = new PositionHandler(
+                new List<PositionUpdate> {
+                    new PositionUpdate(
+                        new Position
+                        {
+                            EntryPrice = 1,
+                            StopLoss = 1,
+                            Created = DateTime.Now
+                        },
+                        InstructionType.Open) },
+                ref _openPositions, ref _closedPositions);
+            positionHandler.ExecuteInstructions();
+            Assert.AreEqual(4, _openPositions.Count);
+            Assert.AreEqual(2, _closedPositions.Count);
         }
 
         private List<HistoricalData> GetData()

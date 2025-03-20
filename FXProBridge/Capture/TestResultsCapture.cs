@@ -2,11 +2,12 @@
 using Application.Features.TestParameters.Commands.Create;
 using Application.Features.Tests.Commands.Create;
 using Application.Features.Tests.Commands.Update;
-using Application.Features.TestTrades.Commands.Create;
 using cAlgo.API;
 using DataServices;
 using AutoMapper;
 using Domain.Entities;
+using Application.Features.Positions.Commands.Create;
+using Domain.Enums;
 using Application.Mappings;
 
 namespace FXProBridge.Capture
@@ -50,34 +51,31 @@ namespace FXProBridge.Capture
         {
             try
             {                
-                var tts = new CreateTestTradeRangeCommand();
+                var tts = new CreatePositionRangeCommand();
                 foreach (var tr in trades)
                 {
-                    tts.Add(new CreateTestTradeCommand
+                    tts.Add(new CreatePositionCommand
                     {
                         TestId = TestId,
                         Comment = tr.ClosingDealId.ToString() + " || " + tr.Label,
-                        CapitalAtClose = tr.Balance,
                         Created = tr.EntryTime,
                         Volume = tr.VolumeInUnits,
-                        Direction = tr.TradeType.ToString().ToUpper(),
+                        PositionType = GetPositionType(tr.TradeType),
                         EntryPrice = tr.EntryPrice,
-                        Commission = tr.Commissions,
-                        // STOPLOSS - not possible to get this from HistoricalTrade item.  I presume this is because SL it can change over the lifetime of a position
+                        Commission = tr.Commissions,                        
                         ClosedAt = tr.ClosingTime,
                         ClosePrice = tr.ClosingPrice,
                         InstrumentId = 1,//db.Instruments.First(x => x.InstrumentName.Equals(tr.SymbolName) && x.DataSource == "FXPRO").Id,
-                        InstrumentWeight = "NONE",
-                        Status = "HISTORICALTRADE",
+                        Status = PositionStatus.CLOSED,
                         Margin = tr.NetProfit
                     });
                 }
-                var config = new MapperConfiguration(cfg => cfg.AddProfile<TestTradesProfile>());
+                var config = new MapperConfiguration(cfg => cfg.AddProfile<PositionsProfile>());
                 var mapper = config.CreateMapper();
-                var historicalTrades = mapper.Map<List<TestTrade>>(tts);
+                var historicalTrades = mapper.Map<List<Domain.Entities.Position>>(tts);
                 var tradeStatistics = new TradeStatistics(historicalTrades, StartingCapital, maximumAdverseExcursion);
 
-                dataService.TestTradeCaller.AddTestTradeRange(tts);
+                dataService.PositionCaller.AddPositionRange(tts);
                 var test = dataService.TestCaller.GetTest(TestId);
                 dataService.TestCaller.UpdateTest(new UpdateTestCommand()
                 {
@@ -134,5 +132,16 @@ namespace FXProBridge.Capture
             return "pass captured";
         }
 
+        private PositionType GetPositionType(TradeType tradeType)
+        {
+            if(tradeType.GetType().Name == "BUY")
+            {
+                return PositionType.BUY;
+            }
+            else
+            {
+                return PositionType.SELL;
+            }
+        }
     }
 }

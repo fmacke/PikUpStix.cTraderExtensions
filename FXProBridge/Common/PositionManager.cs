@@ -1,5 +1,6 @@
 ﻿using Application.Business;
 using cAlgo.API;
+using Domain.Enums;
 using FXProBridge.Capture;
 using Robots.Interfaces;
 
@@ -14,7 +15,7 @@ namespace FXProBridge.Common
         { 
             foreach (var instruction in x.PositionInstructions)
             {
-                TradeType tradeType = instruction.Position.TradeType == Domain.Enums.TradeType.Buy ? TradeType.Buy : tradeType = TradeType.Sell;
+                TradeType tradeType = instruction.Position.PositionType == Domain.Enums.PositionType.BUY ? TradeType.Buy : tradeType = TradeType.Sell;
                 
                 var position = Positions.FirstOrDefault(p => p.Id == instruction.Position.Id);
                 switch (instruction.InstructionType)
@@ -25,7 +26,7 @@ namespace FXProBridge.Common
                             Print("error : {0}", result.Error);
                         break;
                     case InstructionType.Modify:
-                        var stop = instruction.Position.TradeType == Domain.Enums.TradeType.Buy ?
+                        var stop = instruction.Position.PositionType == Domain.Enums.PositionType.BUY ?
                             instruction.Position.EntryPrice - (instruction.Position.StopLoss * Symbol.PipSize) :
                             instruction.Position.EntryPrice + (instruction.Position.StopLoss * Symbol.PipSize);
                         position.ModifyStopLossPrice(stop);

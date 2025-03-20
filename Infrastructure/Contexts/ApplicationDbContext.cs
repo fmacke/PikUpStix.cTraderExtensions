@@ -16,7 +16,7 @@ namespace Infrastructure.Contexts
         public virtual DbSet<Instrument> Instruments { get; set; }
         public virtual DbSet<Porfolio> Portfolios { get; set; }
         public virtual DbSet<PortfolioInstrument> PortfolioInstruments { get; set; }
-        public virtual DbSet<TestTrade> TestTrades { get; set; }
+        public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<Test> Tests { get; set; }
         public virtual DbSet<Test_Parameter> Test_Parameters { get; set; }
         

@@ -54,8 +54,8 @@ namespace Robots.Strategies
                     position.StopLoss = wp.StopLossInPips;
                     //position.TakeProfit = TakeProfitInPips;
                     position.Volume = GetVolume(wp);
-                    position.TradeType = GetTradeType(wp);
-                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                    position.PositionType = GetTradeType(wp);
+                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open));
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace Robots.Strategies
         {
             foreach (var p in market.Positions)
                 PositionInstructions.Add(
-                    new PositionUpdate(p, InstructionType.Close, 0.0));
+                    new PositionUpdate(p, InstructionType.Close));
         }
 
         private void CreateNewPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
@@ -79,8 +79,8 @@ namespace Robots.Strategies
                     position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
                     //position.TakeProfit = TakeProfitInPips;
                     position.Volume = GetVolume(wp);
-                    position.TradeType = GetTradeType(wp);
-                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                    position.PositionType = GetTradeType(wp);
+                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open));
                 }
             }
         }
@@ -97,12 +97,12 @@ namespace Robots.Strategies
                         p.StopLoss = wp.StopLossInPips;// CalculateStopLoss(market.Ask, market.Bid, wp, p, wp.Instrument);
                         p.Volume = GetVolume(wp);
                         PositionInstructions.Add(
-                            new PositionUpdate(p, InstructionType.Modify, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                            new PositionUpdate(p, InstructionType.Modify));
                     }
                     else
                     {
                         // Close Position
-                        PositionInstructions.Add(new PositionUpdate(p, InstructionType.Close, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                        PositionInstructions.Add(new PositionUpdate(p, InstructionType.Close));
                         // Open new position in opposite direction
                         if (wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0)
                         {
@@ -110,9 +110,9 @@ namespace Robots.Strategies
                             position.SymbolName = wp.Instrument.InstrumentName;
                             position.StopLoss = wp.StopLossInPips;
                             //position.TakeProfit = TakeProfitInPips;
-                            p.TradeType = p.TradeType == TradeType.Buy ? TradeType.Sell : TradeType.Buy;
+                            p.PositionType = p.PositionType == PositionType.BUY ? PositionType.SELL : PositionType.BUY;
                             position.Volume = GetVolume(wp);
-                            PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open, Convert.ToDouble(wp.ProposedWeightedPosition)));
+                            PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open));
                         }
                     }
                 }
@@ -127,8 +127,7 @@ namespace Robots.Strategies
                 {
                     var weightedPos = weightedPositions.First(x => x.Instrument.InstrumentName == p.SymbolName);
                     PositionInstructions.Add(
-                        new PositionUpdate(p, InstructionType.Close,
-                        Convert.ToDouble(weightedPos.ProposedWeightedPosition)));
+                        new PositionUpdate(p, InstructionType.Close));
                 }
         }
         private static bool ForecastNotZero(PositionValue wp)
@@ -179,16 +178,16 @@ namespace Robots.Strategies
             return Convert.ToDouble(wp.ProposedWeightedPosition);
         }
 
-        private TradeType GetTradeType(PositionValue wp)
+        private PositionType GetTradeType(PositionValue wp)
         {
-            return wp.ProposedWeightedPosition >= 0 ? TradeType.Buy : TradeType.Sell;
+            return wp.ProposedWeightedPosition >= 0 ? PositionType.BUY : PositionType.SELL;
         }
 
         private bool AreSameDirection(PositionValue wp, Position p)
         {
-            if (wp.ProposedWeightedPosition > 0 && p.TradeType == TradeType.Buy)
+            if (wp.ProposedWeightedPosition > 0 && p.PositionType == PositionType.BUY)
                 return true;
-            if (wp.ProposedWeightedPosition < 0 && p.TradeType == TradeType.Sell)
+            if (wp.ProposedWeightedPosition < 0 && p.PositionType == PositionType.SELL)
                 return true;
             return false;
         }

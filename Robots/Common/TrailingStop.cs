@@ -4,14 +4,14 @@ namespace Application.RiskControl
 {
     public class TrailingStop
     {
-        private TradeType tradeType;
+        private PositionType tradeType;
         private double entryPrice;
         private double stopLossAt;
         private double biddingPrice;
         private double askingPrice;
         public double TrailingStopAt { get; set; }
         public bool TrailingStopUpdated { get; set; }
-        public TrailingStop(TradeType tradeType, double entryPrice, double stopLossAt, double biddingPrice, double askingPrice, double executeTrailAtPips, double moveTrailByPips)
+        public TrailingStop(PositionType tradeType, double entryPrice, double stopLossAt, double biddingPrice, double askingPrice, double executeTrailAtPips, double moveTrailByPips)
         {
             if (executeTrailAtPips < moveTrailByPips)
                 throw new Exception("Trailing stop is too tight");
@@ -24,7 +24,7 @@ namespace Application.RiskControl
             this.biddingPrice = biddingPrice;
             this.askingPrice = askingPrice;
 
-            if (tradeType == TradeType.Buy)
+            if (tradeType == PositionType.BUY)
             {
                 TrailingStopAt = entryPrice + moveTrailByPips;
                 if (stopLossAt < entryPrice)
@@ -34,7 +34,7 @@ namespace Application.RiskControl
                             TrailingStopUpdated = true;
                         }
             }
-            if (tradeType == TradeType.Sell)
+            if (tradeType == PositionType.SELL)
             {
                 TrailingStopAt = entryPrice - moveTrailByPips;
                 if (stopLossAt > entryPrice)

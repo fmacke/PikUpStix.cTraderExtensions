@@ -7,13 +7,5 @@ namespace Robots.Interfaces
         List<PositionUpdate> PositionInstructions { get; set; }
         List<string> LogMessages { get; set; }
     }
-    public enum InstructionType
-    {
-        Open,
-        Close,
-        Modify,
-        Leave,
-        PlaceOrder,
-        CancelOrder
-    }
+    
 }

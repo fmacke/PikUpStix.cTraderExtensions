@@ -7,35 +7,35 @@ using Domain.Entities;
 
 namespace Application.Features.TestTrades.Queries.GetAllPaged
 {
-    public class GetAllTestTradesQuery : IRequest<PaginatedResult<GetAllTestTradesResponse>>
+    public class GetAllPositionsQuery : IRequest<PaginatedResult<GetAllPositionsResponse>>
     {
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
 
-        public GetAllTestTradesQuery(int pageNumber, int pageSize)
+        public GetAllPositionsQuery(int pageNumber, int pageSize)
         {
             PageNumber = pageNumber;
             PageSize = pageSize;
         }
     }
 
-    public class GetAllTestTradesQueryHandler : IRequestHandler<GetAllTestTradesQuery, PaginatedResult<GetAllTestTradesResponse>>
+    public class GetAllTestTradesQueryHandler : IRequestHandler<GetAllPositionsQuery, PaginatedResult<GetAllPositionsResponse>>
     {
-        private readonly ITestTradeRepository _repository;
+        private readonly IPositionRepository _repository;
 
-        public GetAllTestTradesQueryHandler(ITestTradeRepository repository)
+        public GetAllTestTradesQueryHandler(IPositionRepository repository)
         {
             _repository = repository;
         }
 
-        public async Task<PaginatedResult<GetAllTestTradesResponse>> Handle(GetAllTestTradesQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedResult<GetAllPositionsResponse>> Handle(GetAllPositionsQuery request, CancellationToken cancellationToken)
         {
-            Expression<Func<TestTrade, GetAllTestTradesResponse>> expression = e => new GetAllTestTradesResponse
+            Expression<Func<Position, GetAllPositionsResponse>> expression = e => new GetAllPositionsResponse
             {
                 Id = e.Id
                 /// todo: add other properties
             };
-            var paginatedList = await _repository.TestTrades
+            var paginatedList = await _repository.Positions
                 .Select(expression)
                 .ToPaginatedListAsync(request.PageNumber, request.PageSize);
             return paginatedList;

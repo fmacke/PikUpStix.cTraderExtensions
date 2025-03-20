@@ -21,7 +21,7 @@ namespace PikUpStix.Trading.NTests
 
         
 
-        private void TestPositionCorrect(double proposedPosition, double expectedAdditionalPositionSize, List<TestTrade> existingPositions)
+        private void TestPositionCorrect(double proposedPosition, double expectedAdditionalPositionSize, List<Position> existingPositions)
         {
             var positionAdjuster = new PositionCalculator(proposedPosition, existingPositions);
             Assert.AreEqual(proposedPosition, positionAdjuster.FinalPosition);
@@ -30,12 +30,12 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionEqualsSingleOldPosition()
         {
             var proposedPosition = 5;
-            var listOfExistingPositions = new List<TestTrade>()
+            var listOfExistingPositions = new List<Position>()
             {
-                new TestTrade()
+                new Position()
                 {
                     Volume = 5,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 }
             };
             var requiredNewPositionAdjustment = 0;
@@ -44,12 +44,12 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionLargerShort()
         {
             var proposedPosition = -6;
-            var listOfExistingPositions = new List<TestTrade>()
+            var listOfExistingPositions = new List<Position>()
             {
-                new TestTrade()
+                new Position()
                 {
                     Volume = -5,
-                    Direction = PositionType.SELL.ToString()
+                    PositionType = PositionType.SELL
                 }
             };
             var requiredNewPositionAdjustment = -1;
@@ -59,12 +59,12 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionLargerLong()
         {
             var proposedPosition = 6;
-            var listOfExistingPositions = new List<TestTrade>()
+            var listOfExistingPositions = new List<Position>()
             {
-                new TestTrade()
+                new Position()
                 {
                     Volume = 5,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 }
             };
             var requiredNewPositionAdjustment = 1;
@@ -73,27 +73,27 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewLongPositionAggregatesOldAndNew()
         {
             var proposedPosition = 20;
-            var listOfExistingPositions = new List<TestTrade>()
+            var listOfExistingPositions = new List<Position>()
             {
-                new TestTrade()
+                new Position()
                 {
                     Volume = 1,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 4,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 6,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 21,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 }
             };
             var newPositionSize = 9;  // Note Test_Trade with volume of 21 is removed as it's too large.  Then 9 more contracts required to balance
@@ -103,27 +103,27 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewLongPositionAggregatesOldAndNewReOrdered()
         {
             var proposedPosition = 20;
-            var listOfExistingPositions = new List<TestTrade>()
+            var listOfExistingPositions = new List<Position>()
             {
-                new TestTrade()
+                new Position()
                 {
                     Volume = 1,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 4,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 21,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 6,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 }
             };
             var newPositionSize = 9;  // Note Test_Trade with volume of 21 is removed as it's too large.  Then 9 more contracts required to balance
@@ -133,27 +133,27 @@ namespace PikUpStix.Trading.NTests
         private void WhereOnePositionMatchesRequirement()
         {
             var proposedPosition = 21;
-            var listOfExistingPositions = new List<TestTrade>()
+            var listOfExistingPositions = new List<Position>()
             {
-                new TestTrade()
+                new Position()
                 {
                     Volume = 1,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 4,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 6,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 },
-                new TestTrade()
+                new Position()
                 {
                     Volume = 21,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 }
             };
             var requiredNewPositionAdjustment = 0;
@@ -163,12 +163,12 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionReverseToLong()
         {
             var proposedPosition = 6;
-            var listOfExistingPositions = new List<TestTrade>()
+            var listOfExistingPositions = new List<Position>()
             {
-                new TestTrade()
+                new Position()
                 {
                     Volume = -5,
-                    Direction = PositionType.SELL.ToString()
+                    PositionType = PositionType.SELL
                 }
             };
             var requiredNewPositionAdjustment = 11;
@@ -178,12 +178,12 @@ namespace PikUpStix.Trading.NTests
         private void WhereNewPositionReverseToShort()
         {
             var proposedPosition = -6;
-            var listOfExistingPositions = new List<TestTrade>()
+            var listOfExistingPositions = new List<Position>()
             {
-                new TestTrade()
+                new Position()
                 {
                     Volume = 5,
-                    Direction = PositionType.BUY.ToString()
+                    PositionType = PositionType.BUY
                 }
             };
             var requiredNewPositionAdjustment = -11;

@@ -1,60 +1,58 @@
 ﻿using Application.Common.Results;
-using Application.Features.TestTrades.Commands.Create;
+using Application.Features.Positions.Commands.Create;
 using Application.Features.TestTrades.Queries.GetAllCached;
-using DocumentFormat.OpenXml.Office2016.Excel;
-using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DataServices.Calls
 {
-    public class TestTradeCalls
+    public class PositionCalls
     {
         private ServiceProvider serviceProvider;
-        public TestTradeCalls(ServiceProvider serviceProvider)
+        public PositionCalls(ServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider;
         }
-        public List<GetAllTestTradesCachedResponse> GetAllTestsTradesCachedAsync()
+        public List<GetAllPositionsCachedResponse> GetAllTestsTradesCachedAsync()
         {
-            var result = serviceProvider.GetRequiredService<ITestTradesService>().GetAllTestsTradesAsync();
+            var result = serviceProvider.GetRequiredService<IPositionsService>().GetAllTestsTradesAsync();
             return result.Result.Data;
         }
-        public int AddTestTrade(CreateTestTradeCommand model)
+        public int AddPosition(CreatePositionCommand model)
         {
-            var id = serviceProvider.GetRequiredService<ITestTradesService>().AddTestTrade(model).Result.Data;
+            var id = serviceProvider.GetRequiredService<IPositionsService>().AddPosition(model).Result.Data;
             return id;
         }
-        public int AddTestTradeRange(CreateTestTradeRangeCommand models)
+        public int AddPositionRange(CreatePositionRangeCommand models)
         {
-            var id = serviceProvider.GetRequiredService<ITestTradesService>().AddTestTradeRange(models).Result.Data;
+            var id = serviceProvider.GetRequiredService<IPositionsService>().AddPositionRange(models).Result.Data;
             return id;
         }
     }
-    public interface ITestTradesService
+    public interface IPositionsService
     {
-        Task<Result<List<GetAllTestTradesCachedResponse>>> GetAllTestsTradesAsync();
-        Task<Result<int>> AddTestTrade(CreateTestTradeCommand model);
-        Task<Result<int>> AddTestTradeRange(CreateTestTradeRangeCommand models);
+        Task<Result<List<GetAllPositionsCachedResponse>>> GetAllTestsTradesAsync();
+        Task<Result<int>> AddPosition(CreatePositionCommand model);
+        Task<Result<int>> AddPositionRange(CreatePositionRangeCommand models);
     }
-    public class TestTradesService : ITestTradesService
+    public class PositionsService : IPositionsService
     {
         private readonly IMediator _mediator;
-        public TestTradesService(IMediator mediator)
+        public PositionsService(IMediator mediator)
         {
             _mediator = mediator;
         }
-        public async Task<Result<List<GetAllTestTradesCachedResponse>>> GetAllTestsTradesAsync()
+        public async Task<Result<List<GetAllPositionsCachedResponse>>> GetAllTestsTradesAsync()
         { 
-            var query = new GetAllTestTradesCachedQuery();
+            var query = new GetAllPositionsCachedQuery();
             return await _mediator.Send(query);
         }
-        public async Task<Result<int>> AddTestTrade(CreateTestTradeCommand model)
+        public async Task<Result<int>> AddPosition(CreatePositionCommand model)
         {
             var result = await _mediator.Send(model);
             return result;
         }
-        public async Task<Result<int>> AddTestTradeRange(CreateTestTradeRangeCommand models)
+        public async Task<Result<int>> AddPositionRange(CreatePositionRangeCommand models)
         {
             var result = await _mediator.Send(models);
             return result;

@@ -5,11 +5,11 @@ namespace Application.Business.BackTest.Reports
 {
     public static class Margin
     {
-        public static double Calculate(double contractUnit, double exchangeRate, TestTrade trade,
+        public static double Calculate(double contractUnit, double exchangeRate, Domain.Entities.Position trade,
             double currentPriceData, double volume)
         {
             var priceMovement = 0.0;
-            if (trade.Direction == PositionType.BUY.ToString())
+            if (trade.PositionType == PositionType.BUY)
                 priceMovement = currentPriceData - trade.EntryPrice;
             else
                 priceMovement = trade.EntryPrice - currentPriceData;

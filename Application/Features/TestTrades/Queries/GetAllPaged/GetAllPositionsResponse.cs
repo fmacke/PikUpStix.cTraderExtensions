@@ -2,9 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using Domain.Entities;
 
-namespace Application.Features.TestTrades.Queries.GetAllCached
+namespace Application.Features.TestTrades.Queries.GetAllPaged
 {
-    public class GetAllTestTradesCachedResponse
+    public class GetAllPositionsResponse
     {
         public int Id { get; set; }
         public int TestId { get; set; }

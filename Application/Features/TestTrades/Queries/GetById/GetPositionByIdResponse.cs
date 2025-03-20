@@ -1,6 +1,6 @@
 ﻿namespace Application.Features.TestTrades.Queries.GetById
 {
-    public class GetTestTradeByIdResponse
+    public class GetPositionByIdResponse
     {
         public int Id { get; set; }
         public int TestId { get; set; }

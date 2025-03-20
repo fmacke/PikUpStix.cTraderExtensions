@@ -7,6 +7,7 @@ namespace DataServices
         InstrumentCalls InstrumentCaller { get; }
         TestParameterCalls TestParameterCaller { get; }
         TestCalls TestCaller { get; }
-        TestTradeCalls TestTradeCaller { get; }
+        PositionCalls PositionCaller { get; }
+        HistoricalDataCalls HistoricalDataCaller { get; }
     }
 }

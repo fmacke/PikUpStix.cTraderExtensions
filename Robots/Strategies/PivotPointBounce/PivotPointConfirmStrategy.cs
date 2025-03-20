@@ -1,4 +1,4 @@
-﻿using Application.Business;
+﻿using Domain.Entities;
 using Application.Business.Indicator;
 using Application.Business.Indicator.Signal;
 using Application.Business.Market;
@@ -43,17 +43,17 @@ namespace Robots.Strategies.PivotPointBounce
                     var position = new Position()
                     {
                         SymbolName = props.SymbolName,
-                        TradeType = StrategySignal > 0 ? TradeType.Buy : TradeType.Sell,
+                        PositionType = StrategySignal > 0 ? PositionType.BUY : PositionType.SELL,
                         EntryPrice = StrategySignal > 0 ? props.Ask : props.Bid,
                         StopLoss = stopLoss,
                         TakeProfit = StrategySignal > 0 ?
                             CalculatePips(PivotPoints.Pivot - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Pivot),
                         Volume = riskmanager.LotSize,
-                        CreatedAt = props.CursorDate,
+                        Created = props.CursorDate,
                         ExpirationDate = new DateTime(props.CursorDate.Year, props.CursorDate.Month, props.CursorDate.Day, 23, 0, 0)
                     };
-                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.PlaceOrder, 1));
+                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.PlaceOrder));
                 }
             }
         }

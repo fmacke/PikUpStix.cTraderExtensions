@@ -2,16 +2,16 @@
 {
     public static class PendingOrderConvert
     {
-        public static  Domain.Enums.TradeType ConvertTradeType(cAlgo.API.TradeType tradeType)
+        public static  Domain.Enums.PositionType ConvertTradeType(cAlgo.API.TradeType tradeType)
         {
             switch (tradeType)
             {
                 case cAlgo.API.TradeType.Buy:
-                    return Domain.Enums.TradeType.Buy;
+                    return Domain.Enums.PositionType.BUY;
                 case cAlgo.API.TradeType.Sell:
-                    return Domain.Enums.TradeType.Sell;
+                    return Domain.Enums.PositionType.SELL;
                 default:
-                    return Domain.Enums.TradeType.Buy;
+                    return Domain.Enums.PositionType.BUY;
             }
         }
         public static List<Application.Business.PendingOrder> ConvertOrders(cAlgo.API.PendingOrders pendingOrders)
@@ -21,10 +21,9 @@
             {
                 orders.Add(new Application.Business.PendingOrder()
                 {
-                    TradeType = ConvertTradeType(order.TradeType),
                     VolumeInUnits = order.VolumeInUnits,
                     Id = order.Id,
-                    //OrderType = ConvertTradeType(order.OrderType),
+                    OrderType = ConvertTradeType(order.TradeType),
                     TargetPrice = order.TargetPrice,
                     ExpirationTime = order.ExpirationTime,
                     StopLoss = order.StopLoss,

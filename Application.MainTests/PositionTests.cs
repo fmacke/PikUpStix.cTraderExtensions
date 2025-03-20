@@ -16,10 +16,10 @@ namespace Application.MainTests
             var noOfContracts = 2.5;
             var exchangeRate = 0.77;
 
-            var trade = new TestTrade();
+            var trade = new Position();
             trade.EntryPrice = purchasePrice;
             trade.ClosePrice = closePrice;
-            trade.Direction = PositionType.BUY.ToString();
+            trade.PositionType = PositionType.BUY;
             trade.Volume = noOfContracts;
 
             var margin = Margin.Calculate(contractUnit, exchangeRate, trade, closePrice, trade.Volume);

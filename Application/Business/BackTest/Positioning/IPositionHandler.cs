@@ -6,7 +6,7 @@ namespace Application.Business.BackTest.Position
 {
     public interface IPositionHandler
     {
-        List<TestTrade> GetUpdatedPositions(TradingSystemParams paramsa, int testId, List<TestTrade> existingPositions, double currentMargin, DateTime cursorDate, WeightedProposedPositions weightedPositions,
+        List<Domain.Entities.Position> GetUpdatedPositions(TradingSystemParams paramsa, int testId, List<Domain.Entities.Position> existingPositions, double currentMargin, DateTime cursorDate, WeightedProposedPositions weightedPositions,
             List<List<HistoricalData>> historicalDataSets, IStopLossCreator stopLossCreator);
     }
 }

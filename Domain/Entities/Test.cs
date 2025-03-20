@@ -55,7 +55,7 @@ namespace Domain.Entities
         public double AverageLoss { get; set; }
         public double AverageLossLong { get; set; }
         public double AverageLossShort { get; set; }
-        public virtual ICollection<TestTrade> TestTrades { get; set; } = new HashSet<TestTrade>();
+        public virtual ICollection<Position> Positions { get; set; } = new HashSet<Position>();
         public virtual ICollection<Test_Parameter> Test_Parameters { get; set; } = new HashSet<Test_Parameter>();
     }
 }

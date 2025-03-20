@@ -9,7 +9,7 @@ namespace Application.MainTests
         [Test]
         public void CalculateValidBuyTrailingStopLoss()
         {
-            var tradeType = TradeType.Buy;
+            var tradeType = PositionType.BUY;
             var entryPrice = 10;
             var originalStopLossAt = 8;
             var currentPrice = 15;
@@ -22,7 +22,7 @@ namespace Application.MainTests
         [Test]
         public void CalculateValidSellTrailingStopLoss()
         {
-            var tradeType = TradeType.Sell;
+            var tradeType = PositionType.SELL;
             var entryPrice = 10;
             var originalStopLossAt = 12;
             var currentPrice = 5;
@@ -35,7 +35,7 @@ namespace Application.MainTests
         [Test]
         public void CalculateBuyGainTooSmallTrailingStopLoss()
         {
-            var tradeType = TradeType.Buy;
+            var tradeType = PositionType.BUY;
             var entryPrice = 10;
             var originalStopLossAt = 8;
             var currentPrice = 13;
@@ -48,7 +48,7 @@ namespace Application.MainTests
         [Test]
         public void CalculateSellGainTooSmallTrailingStopLoss()
         {
-            var tradeType = TradeType.Sell;
+            var tradeType = PositionType.SELL;
             var entryPrice = 10;
             var originalStopLossAt = 12;
             var currentPrice = 7;
@@ -61,7 +61,7 @@ namespace Application.MainTests
         [Test]
         public void NoBuyTrailingStopIfLossBeingIncurred()
         {
-            var tradeType = TradeType.Buy;
+            var tradeType = PositionType.BUY;
             var entryPrice = 10;
             var originalStopLossAt = 8;
             var currentPrice = 9;
@@ -74,7 +74,7 @@ namespace Application.MainTests
         [Test]
         public void NoSellTrailingStopIfLossBeingIncurred()
         {
-            var tradeType = TradeType.Sell;
+            var tradeType = PositionType.SELL;
             var entryPrice = 10;
             var originalStopLossAt = 12;
             var currentPrice = 11;
@@ -87,7 +87,7 @@ namespace Application.MainTests
         [Test]
         public void NoBuyTrailingStopIfAlreadyBeyondTrailStopLimit()
         {
-            var tradeType = TradeType.Buy;
+            var tradeType = PositionType.BUY;
             var entryPrice = 10;
             var currentStopLoss = 12;
             var currentPrice = 18;
@@ -100,7 +100,7 @@ namespace Application.MainTests
         [Test]
         public void NoSellTrailingStopIfAlreadyBeyondTrailStopLimit()
         {
-            var tradeType = TradeType.Sell;
+            var tradeType = PositionType.SELL;
             var entryPrice = 10;
             var currentStopLoss = 8;
             var currentPrice = 2;

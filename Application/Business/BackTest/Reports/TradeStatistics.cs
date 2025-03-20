@@ -1,65 +1,66 @@
 ﻿using Application.Mappings;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Business.BackTest.Reports
 {
     public class TradeStatistics
     {
-        public List<TestTrade> TestTrades { get; private set; } = new List<TestTrade>();
+        public List<Domain.Entities.Position> Positions { get; private set; } = new List<Domain.Entities.Position>();
         public double GrossProfit { get {
-                return TestTrades.Where(x => x.Margin > 0).Sum(x => x.Margin);
+                return Positions.Where(x => x.Margin > 0).Sum(x => x.Margin);
             }}
         public double GrossLoss { get {
-                return TestTrades.Where(x => x.Margin < 0).Sum(x => x.Margin)*-1;
+                return Positions.Where(x => x.Margin < 0).Sum(x => x.Margin)*-1;
             }}
         public int TotalTrades { get {
-                return TestTrades.Count;
+                return Positions.Count;
             }}
         public int WinningTrades { get {
-            return TestTrades.Where(x => x.Margin > 0).Count();
+            return Positions.Where(x => x.Margin > 0).Count();
             }}
         public int LosingTrades { get {
-                return TestTrades.Where(x => x.Margin < 0).Count();
+                return Positions.Where(x => x.Margin < 0).Count();
             }}
         public double LargestWinningTrade { get {
-                if (!TestTrades.Any())
+                if (!Positions.Any())
                     return 0;
-                return TestTrades.Max(x => x.Margin);
+                return Positions.Max(x => x.Margin);
             }}
         public double LargestLosingTrades{ get{
-                if (!TestTrades.Any())
+                if (!Positions.Any())
                     return 0;
-                return TestTrades.Min(x => x.Margin);
+                return Positions.Min(x => x.Margin);
             }}
         public double AverageTrade { get {
-                if (!TestTrades.Any())
+                if (!Positions.Any())
                     return 0;
-                return TestTrades.Average(x => x.Margin);
+                return Positions.Average(x => x.Margin);
             }}
         public double NetProfit { get {
-            return TestTrades.Sum(x => x.Margin);
+            return Positions.Sum(x => x.Margin);
             }}
         public double Commission { get {
-            return TestTrades.Sum(x => x.Commission);
+            return Positions.Sum(x => x.Commission);
             }}
         public double NetShortProfit { get {
-               return TestTrades.Where(x => x.Direction == "SELL").Sum(x => x.Margin);
+               return Positions.Where(x => x.PositionType == PositionType.SELL).Sum(x => x.Margin);
             }}
         public double NetLongProfit { get {
-                return TestTrades.Where(x => x.Direction == "BUY").Sum(x => x.Margin);
+                return Positions.Where(x => x.PositionType == PositionType.BUY).Sum(x => x.Margin);
             }}
         public double GrossShortProfit { get {
-                return TestTrades.Where(x => x.Direction == "SELL" && x.Margin > 0).Sum(x => x.Margin);
+                return Positions.Where(x => x.PositionType == PositionType.SELL && x.Margin > 0).Sum(x => x.Margin);
             }}
         public double GrossLongProfit { get {
-                return TestTrades.Where(x => x.Direction == "BUY" && x.Margin > 0).Sum(x => x.Margin);
+                return Positions.Where(x => x.PositionType == PositionType.BUY && x.Margin > 0).Sum(x => x.Margin);
             }}
         public double GrossShortLoss { get {
-                return TestTrades.Where(x => x.Direction == "SELL" && x.Margin < 0).Sum(x => x.Margin);
+                return Positions.Where(x => x.PositionType == PositionType.SELL && x.Margin < 0).Sum(x => x.Margin);
             }
         }
         public double GrossLongLoss { get {
-                return TestTrades.Where(x => x.Direction == "BUY" && x.Margin < 0).Sum(x => x.Margin);
+                return Positions.Where(x => x.PositionType == PositionType.BUY && x.Margin < 0).Sum(x => x.Margin);
             }}
         public double ProfitFactor { get{
                 if (GrossLoss == 0)
@@ -84,72 +85,72 @@ namespace Application.Business.BackTest.Reports
                 return gsp / gsl;
             }}
         public double ProfitableTradesRatio { get{
-                var noOfTrades = TestTrades.ToList().Count;
-                var winners = TestTrades.Where(x => x.Margin > 0).ToList().Count;
+                var noOfTrades = Positions.ToList().Count;
+                var winners = Positions.Where(x => x.Margin > 0).ToList().Count;
                 if (noOfTrades == 0)
                     return 0;
                 double ratio = winners / noOfTrades;
                 return ratio;
             }}
         public double LosingTradesRatio { get {
-                var noOfTrades = TestTrades.ToList().Count;
-                var losers = TestTrades.Where(x => x.Margin < 0).ToList().Count;
+                var noOfTrades = Positions.ToList().Count;
+                var losers = Positions.Where(x => x.Margin < 0).ToList().Count;
                 if (noOfTrades == 0)
                     return 0;
                 return losers / noOfTrades;
             }}
         public double ProfitableLongTradesRatio { get{
-                var noOfTrades = TestTrades.Where(x => x.Direction == "BUY").ToList().Count;
-                var winners = TestTrades.Where(x => x.Margin > 0 && x.Direction == "BUY").ToList().Count;
+                var noOfTrades = Positions.Where(x => x.PositionType == PositionType.BUY).ToList().Count;
+                var winners = Positions.Where(x => x.Margin > 0 && x.PositionType == PositionType.BUY).ToList().Count;
                 if (noOfTrades == 0)
                     return 0;
                 return winners / noOfTrades;
             }}
         public double ProfitableShortTradesRatio { get{
-                var noOfTrades = TestTrades.Where(x => x.Direction == "SELL").ToList().Count;
-                var winners = TestTrades.Where(x => x.Margin > 0 && x.Direction == "SELL").ToList().Count;
+                var noOfTrades = Positions.Where(x => x.PositionType == PositionType.SELL).ToList().Count;
+                var winners = Positions.Where(x => x.Margin > 0 && x.PositionType == PositionType.SELL).ToList().Count;
                 if (noOfTrades == 0)
                     return 0;
                 return winners / noOfTrades;
             }}
         public double AverageWin { get{
-                var winningMargin = TestTrades.Where(x => x.Margin > 0).Sum(x => x.Margin);
-                var tradesCount = TestTrades.Where(x => x.Margin > 0).ToList().Count;
+                var winningMargin = Positions.Where(x => x.Margin > 0).Sum(x => x.Margin);
+                var tradesCount = Positions.Where(x => x.Margin > 0).ToList().Count;
                 if (winningMargin > 0 && tradesCount > 0)
                     return winningMargin / tradesCount;
                 return 0;
             }}
         public double AverageWinLong { get{
-                var winningLongs = TestTrades.Where(x => x.Margin > 0 && x.Direction == "BUY").Sum(x => x.Margin);
-                var noOfWinningLongs = TestTrades.Where(x => x.Margin > 0 && x.Direction == "BUY").ToList().Count;
+                var winningLongs = Positions.Where(x => x.Margin > 0 && x.PositionType == PositionType.BUY).Sum(x => x.Margin);
+                var noOfWinningLongs = Positions.Where(x => x.Margin > 0 && x.PositionType == PositionType.BUY).ToList().Count;
                 if (winningLongs > 0 && noOfWinningLongs > 0)
                     return winningLongs / noOfWinningLongs;
                 return 0;
             }}
         public double AverageWinShort { get{
-                var winningShorts = TestTrades.Where(x => x.Margin > 0 && x.Direction == "SELL").Sum(x => x.Margin);
-                var noOfWinningShorts = TestTrades.Where(x => x.Margin > 0 && x.Direction == "SELL").ToList().Count;
+                var winningShorts = Positions.Where(x => x.Margin > 0 && x.PositionType == PositionType.SELL).Sum(x => x.Margin);
+                var noOfWinningShorts = Positions.Where(x => x.Margin > 0 && x.PositionType == PositionType.SELL).ToList().Count;
                 if (winningShorts > 0 && noOfWinningShorts > 0)
                     return winningShorts / noOfWinningShorts;
                 return 0;
             }}
         public double AverageLoss { get{
-                var losingTrade = TestTrades.Where(x => x.Margin < 0).Sum(x => x.Margin);
-                var noOfLosingTrades = TestTrades.Where(x => x.Margin < 0).ToList().Count;
+                var losingTrade = Positions.Where(x => x.Margin < 0).Sum(x => x.Margin);
+                var noOfLosingTrades = Positions.Where(x => x.Margin < 0).ToList().Count;
                 if (losingTrade < 0 && noOfLosingTrades > 0)
                     return losingTrade / noOfLosingTrades;
                 return 0;
             }}
         public double AverageLossLong { get{
-                var sumOfLosses = TestTrades.Where(x => x.Margin < 0 && x.Direction == "BUY").Sum(x => x.Margin);
-                var noOfLosingTrades = TestTrades.Where(x => x.Margin < 0 && x.Direction == "BUY").ToList().Count;
+                var sumOfLosses = Positions.Where(x => x.Margin < 0 && x.PositionType == PositionType.BUY).Sum(x => x.Margin);
+                var noOfLosingTrades = Positions.Where(x => x.Margin < 0 && x.PositionType == PositionType.BUY).ToList().Count;
                 if (noOfLosingTrades > 0)
                     return sumOfLosses / noOfLosingTrades;
                 return 0;
             }}
         public double AverageLossShort { get {
-                var shortMarginSum = TestTrades.Where(x => x.Margin < 0 && x.Direction == "SELL").Sum(x => x.Margin);
-                var shortLossSum = TestTrades.Where(x => x.Margin < 0 && x.Direction == "SELL").ToList().Count;
+                var shortMarginSum = Positions.Where(x => x.Margin < 0 && x.PositionType == PositionType.SELL).Sum(x => x.Margin);
+                var shortLossSum = Positions.Where(x => x.Margin < 0 && x.PositionType == PositionType.SELL).ToList().Count;
                 if (shortLossSum == 0)
                     return shortMarginSum;
                 return shortMarginSum / shortLossSum;
@@ -157,7 +158,7 @@ namespace Application.Business.BackTest.Reports
         public double MaxAdverseExcursion { get; private set; }
         public double StartingAccountBalance { get; private set; }
         public double SharpeRatio { get {
-                return new SharpeRatio(TestTrades.ToList()).Value;
+                return new SharpeRatio(Positions.ToList()).Value;
             }}
 
         public double MaxBalanceDrawdown
@@ -168,7 +169,7 @@ namespace Application.Business.BackTest.Reports
                 double maxDrawdown = 0.0;
                 double balance = StartingAccountBalance;
 
-                foreach (var trade in TestTrades.OrderBy(t => t.ClosedAt))
+                foreach (var trade in Positions.OrderBy(t => t.ClosedAt))
                 {
                     balance += trade.Margin;
                     if (balance > peakBalance)
@@ -187,7 +188,7 @@ namespace Application.Business.BackTest.Reports
                 double peakEquity = StartingAccountBalance;
                 double maxDrawdown = 0.0;
                 double equity = StartingAccountBalance;
-                foreach (var trade in TestTrades.OrderBy(t => t.ClosedAt))
+                foreach (var trade in Positions.OrderBy(t => t.ClosedAt))
                 {
                     equity += trade.Margin;
                     if (equity > peakEquity)
@@ -207,7 +208,7 @@ namespace Application.Business.BackTest.Reports
                 int maxConsecutiveLosingTrades = 0;
                 int currentConsecutiveLosingTrades = 0;
 
-                foreach (var trade in TestTrades)
+                foreach (var trade in Positions)
                 {
                     if (trade.Margin < 0)
                     {
@@ -233,7 +234,7 @@ namespace Application.Business.BackTest.Reports
                 int maxConsecutiveWinningTrades = 0;
                 int currentConsecutiveWinningTrades = 0;
 
-                foreach (var trade in TestTrades)
+                foreach (var trade in Positions)
                 {
                     if (trade.Margin > 0)
                     {
@@ -256,7 +257,7 @@ namespace Application.Business.BackTest.Reports
         {
             get
             {
-                var returns = TestTrades.Select(t => t.Margin).ToList();
+                var returns = Positions.Select(t => t.Margin).ToList();
                 double averageReturn = returns.Average();
                 double downsideDeviation = CalculateDownsideDeviation(returns);
 
@@ -272,14 +273,14 @@ namespace Application.Business.BackTest.Reports
         {
             get
             {
-                return TestTrades.Where(t => t.Margin < 0 && t.Direction == "SELL").Sum(t => t.Margin);
+                return Positions.Where(t => t.Margin < 0 && t.PositionType == PositionType.SELL).Sum(t => t.Margin);
             }
         }
         public double NetLongLoss
         {
             get
             {
-                return TestTrades.Where(t => t.Direction == "BUY" && t.Margin < 0).Sum(t => t.Margin);
+                return Positions.Where(t => t.PositionType == PositionType.BUY && t.Margin < 0).Sum(t => t.Margin);
             }
         }
         public double RiskFreeRate { get; private set; }
@@ -298,9 +299,9 @@ namespace Application.Business.BackTest.Reports
         }
 
 
-        public TradeStatistics(List<TestTrade> testTrades, double startingAccountBalance, double maximumAdverseExcursion)
+        public TradeStatistics(List<Domain.Entities.Position> testTrades, double startingAccountBalance, double maximumAdverseExcursion)
         {
-            TestTrades = testTrades;
+            Positions = testTrades;
             MaxAdverseExcursion = maximumAdverseExcursion;
             StartingAccountBalance = startingAccountBalance;
             RiskFreeRate = 2.0;

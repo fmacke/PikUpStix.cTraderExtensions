@@ -1,4 +1,5 @@
-﻿namespace FXProBridge.DataConversions
+﻿using Domain.Entities;
+namespace FXProBridge.DataConversions
 {
     public static class PositionConvert
     {
@@ -7,7 +8,7 @@
             var convertedPositions = new Application.Business.Positions();
             foreach (var position in positions)
             {
-                convertedPositions.Add(new Application.Business.Position()
+                convertedPositions.Add(new Position()
                 {
                     SymbolName = position.SymbolName,
                     Volume = position.VolumeInUnits,
@@ -15,17 +16,17 @@
                     TakeProfit = position.TakeProfit,
                     EntryPrice = position.EntryPrice,
                     Id = position.Id,
-                    TradeType = ConvertTradeType(position.TradeType),
+                    PositionType = ConvertTradeType(position.TradeType),
                 });
             }
             return convertedPositions;
         }
 
-        private static Domain.Enums.TradeType ConvertTradeType(cAlgo.API.TradeType tradeType)
+        private static Domain.Enums.PositionType ConvertTradeType(cAlgo.API.TradeType tradeType)
         {
             if (tradeType == cAlgo.API.TradeType.Buy)
-                return Domain.Enums.TradeType.Buy;
-            return Domain.Enums.TradeType.Sell;
+                return Domain.Enums.PositionType.BUY;
+            return Domain.Enums.PositionType.SELL;
         }
     }
 }

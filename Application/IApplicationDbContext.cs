@@ -11,6 +11,6 @@ namespace Application
         DbSet<Porfolio> Portfolios { get; set; }
         DbSet<PortfolioInstrument> PortfolioInstruments { get; set; }
         DbSet<Test_Parameter> Test_Parameters { get; set; }
-        DbSet<TestTrade> TestTrades{ get; set; }
+        DbSet<Position> Positions{ get; set; }
     }
 }

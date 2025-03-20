@@ -17,7 +17,7 @@ namespace DataServices
         public TestParameterCalls TestParameterCaller { get; private set; }
         public InstrumentCalls InstrumentCaller { get; private set; }
         public HistoricalDataCalls HistoricalDataCaller { get; private set; }
-        public TestTradeCalls TestTradeCaller { get; private set; }
+        public PositionCalls PositionCaller { get; private set; }
         public DataService()
         {
             var serviceCollection = new ServiceCollection();
@@ -26,7 +26,7 @@ namespace DataServices
             serviceCollection.AddTransient<ITestService, TestService>();
             serviceCollection.AddTransient<IInstrumentService, InstrumentService>();
             serviceCollection.AddTransient<ITestParametersService, TestParametersService>();
-            serviceCollection.AddTransient<ITestTradesService, TestTradesService>();
+            serviceCollection.AddTransient<IPositionsService, PositionsService>();
             serviceCollection.AddTransient<IHistoricalDataService, HistoricalDataService>();
             serviceCollection.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
             serviceCollection.AddPersistenceContexts();
@@ -39,7 +39,7 @@ namespace DataServices
             InstrumentCaller = new InstrumentCalls(serviceCollection.BuildServiceProvider());
             HistoricalDataCaller = new HistoricalDataCalls(serviceCollection.BuildServiceProvider());
             TestParameterCaller = new TestParameterCalls(serviceCollection.BuildServiceProvider());
-            TestTradeCaller = new TestTradeCalls(serviceCollection.BuildServiceProvider());   
+            PositionCaller = new PositionCalls(serviceCollection.BuildServiceProvider());   
         }
     }
 

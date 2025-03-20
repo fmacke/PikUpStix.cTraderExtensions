@@ -1,6 +1,4 @@
 ﻿using Domain.Entities;
-using Domain.Enums;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Application.Business
 {
@@ -58,39 +56,6 @@ namespace Application.Business
         public bool PositionExists(Position position)
         {
             return this.Any(x => x.Id == position.Id);
-        }
-    }
-    [NotMapped]
-    public class Position 
-    {
-        public int Id { get; set; }
-        public string SymbolName {get; set;}
-        public double? StopLoss { get; set; } = 0;
-        public double? TakeProfit { get; set; } = 0;
-        public double Volume { get; set; } = 0;
-        public PositionStatus Status { get; set; } = PositionStatus.POSITION;
-        public TradeType TradeType { get; set; } 
-        public double EntryPrice { get; set; } = 0;
-        public double ClosePrice { get; set; } = 0;
-        public double Margin { get; set; } = 0;
-        public double TrailingStop { get; set; } = 0;
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime? ExpirationDate { get; set; }
-        
-
-        public bool PositionHasStopLoss()
-        {
-            return StopLoss > 0;
-        }
-
-        public bool PositionHasProfitTarget()
-        {
-            return TakeProfit > 0;
-        }
-
-        public bool PositionIsOpen()
-        {
-            return Status.Equals(PositionStatus.POSITION.ToString());
         }
     }
 }
