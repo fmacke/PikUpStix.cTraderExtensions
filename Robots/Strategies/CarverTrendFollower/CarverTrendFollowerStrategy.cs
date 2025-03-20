@@ -1,7 +1,6 @@
 ﻿using Application.Business;
 using Application.Business.Portfolio;
 using Application.Business.Forecasts.CarverTrendFollower;
-using Application.RiskControl;
 using Domain.Entities;
 using Robots.Common;
 using Application.BackTest;
@@ -13,28 +12,33 @@ namespace Robots.Strategies.CarverTrendFollower
 {
     public class CarverTrendFollowerStrategy : IStrategy
     {
+        public List<IMarketInfo> MarketInfos { get; set; }
         public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
         public List<string> LogMessages { get; set; } = new List<string>();
         public double MinimumOpeningForecast { get; private set; }
         public double StopLossMax { get; private set; }
         public double TargetVolatility { get; private set; }
         public double TrailStopAtPips { get; private set; }
-        //public double TrailStopSizeInPips { get; private set; }
-        //public double TakeProfitInPips { get; private set; }
         public List<Test_Parameter> TestParameters { get; private set; }
 
         public CarverTrendFollowerStrategy(List<IMarketInfo> marketInfos, List<Test_Parameter>? testParameters)
         {
             LoadTestParameters(testParameters);
-            var forecasts = CarverTrendFollowerForecasts.GetForecasts(marketInfos, new Logger(false), testParameters);
-            var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, marketInfos);
+            MarketInfos = marketInfos;
+        }
 
-            foreach (var market in marketInfos)
+        public List<PositionUpdate> GetPositionInstructions()
+        {            
+            var forecasts = CarverTrendFollowerForecasts.GetForecasts(MarketInfos, new Logger(false), TestParameters);
+            var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, MarketInfos);
+
+            foreach (var market in MarketInfos)
             {
                 ClosePositionsWithNoForecasts(weightedPositions, market);
                 ModifyExistingPositions(weightedPositions, market);
                 CreateNewPositions(weightedPositions, market);
             }
+            return PositionInstructions;
         }
 
         private void CreateNewPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
@@ -159,5 +163,7 @@ namespace Robots.Strategies.CarverTrendFollower
                 return true;
             return false;
         }
+
+        
     }
 }

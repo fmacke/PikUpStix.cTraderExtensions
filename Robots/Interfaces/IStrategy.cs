@@ -4,7 +4,7 @@ namespace Robots.Interfaces
 {
     public interface IStrategy
     {
-        List<PositionUpdate> PositionInstructions { get; set; }
+        List<PositionUpdate> GetPositionInstructions();
         List<string> LogMessages { get; set; }
     }
     

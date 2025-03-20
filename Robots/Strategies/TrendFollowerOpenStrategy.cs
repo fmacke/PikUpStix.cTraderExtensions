@@ -191,5 +191,10 @@ namespace Robots.Strategies
                 return true;
             return false;
         }
+
+        public List<PositionUpdate> GetPositionInstructions()
+        {
+            return PositionInstructions;
+        }
     }
 }

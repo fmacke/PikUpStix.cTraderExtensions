@@ -1,7 +1,6 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 using Robots.Common;
-using TradeSimulator;
 using TradeSimulator.Business;
 
 namespace TradeSimulateTests
@@ -58,22 +57,26 @@ namespace TradeSimulateTests
         public void ClosePositionTest()
         {
             var firstPosition = _openPositions.First();
+            var positionUpdate = new PositionUpdate(
+                        firstPosition,
+                        InstructionType.Close);
+            positionUpdate.CloseAt = 1;
             var positionHandler = new PositionHandler(
                 new List<PositionUpdate> {
-                    new PositionUpdate(
-                        firstPosition,
-                        InstructionType.Close) }, 
+                    positionUpdate }, 
                  ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(1, _openPositions.Count);
             Assert.AreEqual(3, _closedPositions.Count);
 
             firstPosition = _openPositions.First();
+            positionUpdate = new PositionUpdate(
+                         firstPosition,
+                         InstructionType.Close);
+            positionUpdate.CloseAt = 2;
             positionHandler = new PositionHandler(
                 new List<PositionUpdate> {
-                    new PositionUpdate(
-                        firstPosition,
-                        InstructionType.Close) },
+                    positionUpdate }, 
                  ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(0, _openPositions.Count);

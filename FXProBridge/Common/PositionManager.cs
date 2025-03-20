@@ -13,7 +13,7 @@ namespace FXProBridge.Common
     {
         public void ManagePositions(IStrategy x)
         { 
-            foreach (var instruction in x.PositionInstructions)
+            foreach (var instruction in x.GetPositionInstructions())
             {
                 TradeType tradeType = instruction.Position.PositionType == Domain.Enums.PositionType.BUY ? TradeType.Buy : tradeType = TradeType.Sell;
                 

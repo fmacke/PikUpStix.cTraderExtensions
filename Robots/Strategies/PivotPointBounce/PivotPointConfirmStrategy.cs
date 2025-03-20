@@ -95,5 +95,10 @@ namespace Robots.Strategies.PivotPointBounce
             return previousPrice > PivotPoints.Resistance1
                 && currentPrice < PivotPoints.Resistance1;
         }
+
+        public List<PositionUpdate> GetPositionInstructions()
+        {
+            return PositionInstructions;
+        }
     }
 }

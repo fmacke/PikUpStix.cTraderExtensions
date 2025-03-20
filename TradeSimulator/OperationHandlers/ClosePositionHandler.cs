@@ -21,7 +21,9 @@ namespace TradeSimulator.Business
                 position.ClosedAt = DateTime.Now;
                 closedTrades.Add(position);
                 openPositions.Remove(position);
-            } 
+                return;
+            }
+            throw new Exception("Close price is required to close a position");
         }
     }
 }
