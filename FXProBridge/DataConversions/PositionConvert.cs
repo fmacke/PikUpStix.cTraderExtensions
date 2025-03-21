@@ -3,9 +3,9 @@ namespace FXProBridge.DataConversions
 {
     public static class PositionConvert
     {
-        public static Application.Business.Positions ConvertPosition(cAlgo.API.Positions positions)
+        public static new List<Position> ConvertPosition(cAlgo.API.Positions positions)
         {
-            var convertedPositions = new Application.Business.Positions();
+            var convertedPositions = new List<Position>();
             foreach (var position in positions)
             {
                 convertedPositions.Add(new Position()

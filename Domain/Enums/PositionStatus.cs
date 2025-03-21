@@ -2,7 +2,7 @@ namespace Domain.Enums
 {
     public enum PositionStatus
     {
-        ORDER,
+        //ORDER,
         OPEN,
         CLOSED
     }

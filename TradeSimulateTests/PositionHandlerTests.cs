@@ -1,6 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.Business.Positioning;
+using Domain.Entities;
 using Domain.Enums;
-using Robots.Common;
 using TradeSimulator.Business;
 
 namespace TradeSimulateTests
@@ -56,26 +56,26 @@ namespace TradeSimulateTests
         [TestMethod]
         public void ClosePositionTest()
         {
+            // Close first position
             var firstPosition = _openPositions.First();
-            var positionUpdate = new PositionUpdate(
-                        firstPosition,
-                        InstructionType.Close);
-            positionUpdate.CloseAt = 1;
+            var positionUpdate = new CloseInstruction(
+                        firstPosition, 1, DateTime.Now);
+            positionUpdate.ClosePrice = 1;
             var positionHandler = new PositionHandler(
-                new List<PositionUpdate> {
+                new List<IPositionInstruction> {
                     positionUpdate }, 
                  ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(1, _openPositions.Count);
             Assert.AreEqual(3, _closedPositions.Count);
 
+            // Close second position
             firstPosition = _openPositions.First();
-            positionUpdate = new PositionUpdate(
-                         firstPosition,
-                         InstructionType.Close);
-            positionUpdate.CloseAt = 2;
+            positionUpdate = new CloseInstruction(
+                         firstPosition, 1, DateTime.Now);
+            positionUpdate.ClosePrice = 2;
             positionHandler = new PositionHandler(
-                new List<PositionUpdate> {
+                new List<IPositionInstruction> {
                     positionUpdate }, 
                  ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
@@ -87,15 +87,23 @@ namespace TradeSimulateTests
         public void OpenPositionTest()
         {
             var positionHandler = new PositionHandler(
-               new List<PositionUpdate> {
-                    new PositionUpdate(
+               new List<IPositionInstruction> {
+                    new OpenInstruction(
                         new Position
                         {
                             EntryPrice = 1,
                             StopLoss = 1,
-                            Created = DateTime.Now
-                        },
-                        InstructionType.Open) },
+                            Created = DateTime.Now,
+                            Volume = 1,
+                            Status = PositionStatus.OPEN,
+                            SymbolName = "Test",
+                            Commission = 0,
+                            TakeProfit = 1,
+                            PositionType = PositionType.BUY,
+                            Margin = 0,
+                            Comment = "Test",
+
+                        }) },
                ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(3, _openPositions.Count);
@@ -103,15 +111,22 @@ namespace TradeSimulateTests
 
 
             positionHandler = new PositionHandler(
-                new List<PositionUpdate> {
-                    new PositionUpdate(
+                new List<IPositionInstruction> {
+                    new OpenInstruction(
                         new Position
                         {
                             EntryPrice = 1,
                             StopLoss = 1,
-                            Created = DateTime.Now
-                        },
-                        InstructionType.Open) },
+                            Created = DateTime.Now,
+                            Volume = 1,
+                            Status = PositionStatus.OPEN,
+                            SymbolName = "Test",
+                            Commission = 0,
+                            TakeProfit = 1,
+                            PositionType = PositionType.BUY,
+                            Margin = 0,
+                            Comment = "Test",
+                        }) },
                 ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(4, _openPositions.Count);
@@ -123,15 +138,12 @@ namespace TradeSimulateTests
             var expectedStopLoss = 2;
             var expectedTakeProfit = 3;
             var firstPosition = _openPositions.First();
-            var positionUpdate = new PositionUpdate(
+            var positionUpdate = new ModifyInstruction(
                 firstPosition,
-                InstructionType.Modify)
-            {
-                AdjustStopLossTo = expectedStopLoss,
-                AdjustTakeProfitTo = expectedTakeProfit
-            };
+                expectedStopLoss,
+                expectedTakeProfit);
             var positionHandler = new PositionHandler(
-               new List<PositionUpdate> { positionUpdate },
+               new List<IPositionInstruction> { positionUpdate },
                  ref _openPositions, ref _closedPositions);
             positionHandler.ExecuteInstructions();
 
@@ -139,6 +151,5 @@ namespace TradeSimulateTests
             Assert.AreEqual(expectedStopLoss, modifiedPosition.StopLoss);
             Assert.AreEqual(expectedTakeProfit, modifiedPosition.TakeProfit);
         }
-
     }
 }

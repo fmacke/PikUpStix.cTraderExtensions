@@ -1,8 +1,8 @@
 ﻿using Application.Business;
+using Application.Business.Strategy;
 using cAlgo.API;
 using Domain.Enums;
 using FXProBridge.Capture;
-using Robots.Interfaces;
 
 namespace FXProBridge.Common
 {

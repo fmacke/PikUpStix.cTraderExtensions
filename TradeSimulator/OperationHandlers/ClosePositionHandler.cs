@@ -12,13 +12,13 @@ namespace TradeSimulator.Business
             this.openPositions = openPositions;
             this.closedTrades = closedTrades;
         }
-        public void ClosePosition(Position position, double? closeAt)
+        public void ClosePosition(Position position, double? closePrice, DateTime? closedAt)
         {
-            if (closeAt.HasValue)
+            if (closePrice.HasValue && closedAt.HasValue)
             {
-                position.ClosePrice = closeAt;
+                position.ClosePrice = closePrice;
                 position.Status = PositionStatus.CLOSED;
-                position.ClosedAt = DateTime.Now;
+                position.ClosedAt = closedAt;
                 closedTrades.Add(position);
                 openPositions.Remove(position);
                 return;

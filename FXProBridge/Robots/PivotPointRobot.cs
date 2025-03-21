@@ -108,6 +108,5 @@ namespace FXProBridge.Robots
                 _pivotPointIndicator.Resistance2.LastValue), RiskPerTrade/100);
             ManagePositions(changeInstructions);
         }
-
     }
 }

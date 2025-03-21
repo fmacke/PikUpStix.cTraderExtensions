@@ -4,20 +4,23 @@ namespace TradeSimulator
 {
     public abstract class TradeSimulateBase
     {
-        public List<HistoricalData> Bars { get; private set; }
+        private List<HistoricalData> TestSet { get;  set; }
+        public List<HistoricalData> CurrentBars { get; private set; } = new List<HistoricalData>();
         public HistoricalData CurrentBar { get; private set; }
         public HistoricalData LastBar { get; private set; }
         public TradeSimulateBase(List<HistoricalData> bars)
         {
-            Bars = bars.OrderBy(bar => bar.Date).ToList();
+            TestSet = bars.OrderBy(bar => bar.Date).ToList();
         }
-        public void RunTradeSimulation()
+        public void Run()
         {
             OnStart();
-            for (int x=0; x<Bars.Count; x++)
+            for (int x=0; x<TestSet.Count; x++)
             {
-                CurrentBar = Bars[x];
-                LastBar = Bars[x - 1];
+                CurrentBars.Add(TestSet[x]);
+                CurrentBar = TestSet[x];
+                if (x > 0)
+                    LastBar = TestSet[x - 1];
                 OnBar();
             }
             OnStop();

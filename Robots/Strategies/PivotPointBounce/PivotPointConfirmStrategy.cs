@@ -4,14 +4,14 @@ using Application.Business.Indicator.Signal;
 using Application.Business.Market;
 using Application.Business.Risk;
 using Domain.Enums;
-using Robots.Common;
-using Robots.Interfaces;
+using Application.Business.Strategy;
+using Application.Business.Positioning;
 namespace Robots.Strategies.PivotPointBounce
 {
     public class PivotPointConfirmStrategy : IStrategy
     {
         public List<string> LogMessages { get; set; } = new List<string>();
-        public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
+        public List<IPositionInstruction> PositionInstructions { get; set; } = new List<IPositionInstruction>();
         public double StrategySignal { get; private set; }
         public PivotPoints PivotPoints { get; private set; }
         public  double MaximumRisk = 0.02;
@@ -53,7 +53,7 @@ namespace Robots.Strategies.PivotPointBounce
                         Created = props.CursorDate,
                         ExpirationDate = new DateTime(props.CursorDate.Year, props.CursorDate.Month, props.CursorDate.Day, 23, 0, 0)
                     };
-                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.PlaceOrder));
+                    PositionInstructions.Add(new OpenInstruction(position));
                 }
             }
         }
@@ -96,7 +96,7 @@ namespace Robots.Strategies.PivotPointBounce
                 && currentPrice < PivotPoints.Resistance1;
         }
 
-        public List<PositionUpdate> GetPositionInstructions()
+        public List<IPositionInstruction> GetPositionInstructions()
         {
             return PositionInstructions;
         }

@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Business.Positioning;
+using Domain.Entities;
 
 namespace TradeSimulator.Business
 {
@@ -11,9 +12,9 @@ namespace TradeSimulator.Business
             this.openPositions = openPositions;
         }
 
-        internal void OpenPosition(Position position)
+        internal void OpenPosition(OpenInstruction positionInstruction)
         {
-            openPositions.Add(position);
+            openPositions.Add(positionInstruction.Position);
         }
     }
 }

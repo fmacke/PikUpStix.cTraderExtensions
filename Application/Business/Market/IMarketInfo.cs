@@ -9,7 +9,7 @@ namespace Application.Business.Market
         double Bid { get; }
         DateTime CursorDate { get; }
         List<PendingOrder> Orders { get; }
-        Positions Positions { get; }
+        List<Position> Positions { get; }
         string SymbolName { get; }
         string Currency { get; }
         double AccountBalance { get; }

@@ -17,7 +17,7 @@ namespace Application.MainTests
         {
             LoadData();
             LoadExcelData();
-            currentMarketInfo = new MarketInfo(new DateTime(2017, 1, 20), 1.2345, 1.2346, new Positions(),
+            currentMarketInfo = new MarketInfo(new DateTime(2017, 1, 20), 1.2345, 1.2346, new List<Position>(),
                 new List<PendingOrder>(), data, "CME BP FUTURE MINI", "GBP", 10000, 0.0001);
         }
         [Test]

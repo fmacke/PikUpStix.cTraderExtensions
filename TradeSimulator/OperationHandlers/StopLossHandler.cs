@@ -8,21 +8,20 @@ namespace TradeSimulator.Business
         private double openPrice;
         private List<Position> openPositions;
         private List<Position> closePositions;
+        private DateTime? cursorDate;
 
-        public StopLossHandler(double openPrice, ref List<Position> openPositions, ref List<Position> closedTrades)
+        public StopLossHandler(DateTime? cursorDate, double openPrice, ref List<Position> openPositions, ref List<Position> closedTrades)
         {
             this.openPrice = openPrice;
             this.openPositions = openPositions;
+            this.closePositions = closedTrades;
+            this.cursorDate = cursorDate;
         }
         public void CloseOutStops()
         {
-            foreach (var position in openPositions)
-            {
-                if (position.StopLoss.HasValue && StopLossHit(position, openPrice))
-                {
-                    new ClosePositionHandler(ref openPositions, ref closePositions).ClosePosition(position, position.StopLoss);
-                }
-            }
+            var positionsToClose = openPositions.FindAll(p => p.StopLoss.HasValue && StopLossHit(p, openPrice));
+            foreach (var position in positionsToClose)
+                    new ClosePositionHandler(ref openPositions, ref closePositions).ClosePosition(position, position.StopLoss, cursorDate);
         }
         private bool StopLossHit(Position position, double currentPrice)
         {

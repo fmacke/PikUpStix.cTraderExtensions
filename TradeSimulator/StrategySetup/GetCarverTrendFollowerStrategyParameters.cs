@@ -9,30 +9,30 @@ namespace TradeSimulator.StrategySetup
             return new List<Test_Parameter>
                 {
                     new Test_Parameter {
-                        Name = "MaxStopLoss",
+                        Name = "MaxStopLoss[Double]",
                         Value = "2"
                     },
                     new Test_Parameter
                     {
-                        Name = "TargetVelocity",
+                        Name = "TargetVelocity[Double]",
                         Value = "0.25"
                     },
                     new Test_Parameter {
-                        Name = "MinimumOpeningForecast",
+                        Name = "MinimumOpeningForecast[Double]",
                         Value = "0.5"
                     },
                     new Test_Parameter
                     {
-                        Name = "ShortScalar",
+                        Name = "ShortScalar[Double]",
                         Value = "0.4"
                     },
                     new Test_Parameter {
-                        Name = "MediumScalar",
+                        Name = "MediumScalar[Double]",
                         Value = "0.2"
                     },
                     new Test_Parameter
                     {
-                        Name = "LongScalar",
+                        Name = "LongScalar[Double]",
                         Value = "0.4"
                     }
                 };

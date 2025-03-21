@@ -2,17 +2,17 @@
 using Application.Business.Portfolio;
 using Application.Business.Forecasts.CarverTrendFollower;
 using Domain.Entities;
-using Robots.Common;
 using Application.BackTest;
 using Domain.Enums;
-using Robots.Interfaces;
 using Application.Business.Market;
+using Application.Business.Positioning;
+using Application.Business.Strategy;
 
 namespace Robots.Strategies
 {
     public class TrendFollowerOpenStrategy : IStrategy
     {
-        public List<PositionUpdate> PositionInstructions { get; set; } = new List<PositionUpdate>();
+        public List<IPositionInstruction> PositionInstructions { get; set; } = new List<IPositionInstruction>();
         public List<string> LogMessages { get; set; } = new List<string>();
         public double MinimumOpeningForecast { get; private set; }
         public double StopLossMax { get; private set; }
@@ -55,7 +55,7 @@ namespace Robots.Strategies
                     //position.TakeProfit = TakeProfitInPips;
                     position.Volume = GetVolume(wp);
                     position.PositionType = GetTradeType(wp);
-                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open));
+                    PositionInstructions.Add(new OpenInstruction(position));
                 }
             }
         }
@@ -64,7 +64,7 @@ namespace Robots.Strategies
         {
             foreach (var p in market.Positions)
                 PositionInstructions.Add(
-                    new PositionUpdate(p, InstructionType.Close));
+                    new CloseInstruction(p, market.Bid, market.CursorDate));
         }
 
         private void CreateNewPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
@@ -80,7 +80,7 @@ namespace Robots.Strategies
                     //position.TakeProfit = TakeProfitInPips;
                     position.Volume = GetVolume(wp);
                     position.PositionType = GetTradeType(wp);
-                    PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open));
+                    PositionInstructions.Add(new OpenInstruction(position));
                 }
             }
         }
@@ -97,12 +97,12 @@ namespace Robots.Strategies
                         p.StopLoss = wp.StopLossInPips;// CalculateStopLoss(market.Ask, market.Bid, wp, p, wp.Instrument);
                         p.Volume = GetVolume(wp);
                         PositionInstructions.Add(
-                            new PositionUpdate(p, InstructionType.Modify));
+                            new ModifyInstruction(p, wp.StopLossAt, null));
                     }
                     else
                     {
                         // Close Position
-                        PositionInstructions.Add(new PositionUpdate(p, InstructionType.Close));
+                        PositionInstructions.Add(new CloseInstruction(p, market.Bid, market.CursorDate));
                         // Open new position in opposite direction
                         if (wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0)
                         {
@@ -112,7 +112,7 @@ namespace Robots.Strategies
                             //position.TakeProfit = TakeProfitInPips;
                             p.PositionType = p.PositionType == PositionType.BUY ? PositionType.SELL : PositionType.BUY;
                             position.Volume = GetVolume(wp);
-                            PositionInstructions.Add(new PositionUpdate(position, InstructionType.Open));
+                            PositionInstructions.Add(new OpenInstruction(position));
                         }
                     }
                 }
@@ -127,7 +127,7 @@ namespace Robots.Strategies
                 {
                     var weightedPos = weightedPositions.First(x => x.Instrument.InstrumentName == p.SymbolName);
                     PositionInstructions.Add(
-                        new PositionUpdate(p, InstructionType.Close));
+                        new CloseInstruction(p, market.Bid, market.CursorDate));
                 }
         }
         private static bool ForecastNotZero(PositionValue wp)
@@ -192,7 +192,7 @@ namespace Robots.Strategies
             return false;
         }
 
-        public List<PositionUpdate> GetPositionInstructions()
+        public List<IPositionInstruction> GetPositionInstructions()
         {
             return PositionInstructions;
         }
