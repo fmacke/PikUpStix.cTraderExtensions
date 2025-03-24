@@ -8,7 +8,6 @@ namespace Application.Business.Market
         List<HistoricalData> Bars { get; }
         double Bid { get; }
         DateTime CursorDate { get; }
-        List<PendingOrder> Orders { get; }
         List<Position> Positions { get; }
         string SymbolName { get; }
         string Currency { get; }

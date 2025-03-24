@@ -53,7 +53,7 @@ namespace Robots.Strategies.CarverTrendFollower
                     position.SymbolName = wp.Instrument.InstrumentName;
                     position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
                     position.SymbolName = market.SymbolName;
-                    //position.TakeProfit = TakeProfitInPips;
+                    position.EntryPrice = market.Ask;
                     position.Volume = GetVolume(wp);
                     position.PositionType = GetTradeType(wp);
                     PositionInstructions.Add(new OpenInstruction(position));
@@ -87,6 +87,7 @@ namespace Robots.Strategies.CarverTrendFollower
                             position.StopLoss = wp.StopLossInPips;
                             p.PositionType = p.PositionType == PositionType.BUY ? PositionType.SELL : PositionType.BUY;
                             position.Volume = GetVolume(wp);
+                            position.EntryPrice = market.Ask;
                             PositionInstructions.Add(new OpenInstruction(position));
                         }
                     }

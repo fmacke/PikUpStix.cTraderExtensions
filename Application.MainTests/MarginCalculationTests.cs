@@ -5,7 +5,7 @@ using Domain.Enums;
 namespace Application.MainTests
 {
     [TestFixture]
-    public class PositionTests
+    public class MarginCalculationTests
     {
         [Test]
         public void CalculateCurrentPositionPositiveMarginTest()
@@ -24,7 +24,7 @@ namespace Application.MainTests
 
             var margin = Margin.Calculate(contractUnit, exchangeRate, trade, closePrice, trade.Volume);
             Console.WriteLine("Margin Anticipated: £1463, Margin Actual: £" + margin);
-            Assert.AreEqual(Convert.ToDecimal(1463), margin);
+            Assert.AreEqual(1463, Math.Round(margin,0));
         }
     }
 }

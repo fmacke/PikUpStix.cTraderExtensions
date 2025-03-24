@@ -38,18 +38,18 @@ namespace FXProBridge.Common
                         ExecuteMarketOrder(tradeType, SymbolName, normalise, x.GetType().Name, instruction.Position.StopLoss, 
                             instruction.Position.TakeProfit);
                         break;
-                    case InstructionType.PlaceOrder:
-                        //var sl = (instruction.Position.EntryPrice - instruction.Position.StopLoss) * Symbol.PipSize;
-                        var placeOrderRes = PlaceLimitOrder(tradeType,
-                            instruction.Position.SymbolName,
-                            Symbol.NormalizeVolumeInUnits(instruction.Position.Volume),
-                            Convert.ToDouble(instruction.Position.EntryPrice),
-                            GetType().Name,
-                            Convert.ToDouble(instruction.Position.StopLoss),
-                            Convert.ToDouble(instruction.Position.TakeProfit),
-                            ProtectionType.Relative, 
-                            instruction.Position.ExpirationDate);
-                        break;
+                    //case InstructionType.PlaceOrder:
+                    //    //var sl = (instruction.Position.EntryPrice - instruction.Position.StopLoss) * Symbol.PipSize;
+                    //    var placeOrderRes = PlaceLimitOrder(tradeType,
+                    //        instruction.Position.SymbolName,
+                    //        Symbol.NormalizeVolumeInUnits(instruction.Position.Volume),
+                    //        Convert.ToDouble(instruction.Position.EntryPrice),
+                    //        GetType().Name,
+                    //        Convert.ToDouble(instruction.Position.StopLoss),
+                    //        Convert.ToDouble(instruction.Position.TakeProfit),
+                    //        ProtectionType.Relative, 
+                    //        instruction.Position.ExpirationDate);
+                    //    break;
                     case InstructionType.CancelOrder:
                         foreach (var order in PendingOrders) 
                             if(instruction.Position.Id == order.Id)

@@ -38,7 +38,6 @@ namespace FXProBridge.Robots
                     Symbol.Bid,
                     Symbol.Ask,
                     PositionConvert.ConvertPosition(Positions),
-                    PendingOrderConvert.ConvertOrders(PendingOrders),
                     BarConvert.ConvertBars(Bars),
                     SymbolName,
                     SymbolName,

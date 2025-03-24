@@ -1,6 +1,4 @@
-﻿using Application.Business;
-using Application.Business.Extensions;
-using Application.Business.Market;
+﻿using Application.Business.Market;
 using Application.Business.Strategy;
 using Domain.Entities;
 using Robots.Strategies.CarverTrendFollower;
@@ -29,7 +27,7 @@ namespace TradeSimulator
                 new List<IMarketInfo>()
                 {
                     new MarketInfo(Convert.ToDateTime(CurrentBar.Date), CurrentBar.OpenPrice, CurrentBar.OpenPrice,
-                        OpenPositions, new List<PendingOrder>(), CurrentBars, "EURUSD", "GBPUSD", 10000, 0.0001)
+                        OpenPositions, CurrentBars, "EURUSD", "GBPUSD", 10000, 0.0001)
                 }, parames
                 );
             new PositionHandler(Strategy.GetPositionInstructions(), ref OpenPositions, ref ClosedTrades).ExecuteInstructions();
