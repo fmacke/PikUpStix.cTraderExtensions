@@ -1,4 +1,0 @@
-﻿namespace Application.Business.Indicator
-{
-    
-}

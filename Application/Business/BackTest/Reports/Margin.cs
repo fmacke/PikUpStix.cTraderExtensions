@@ -1,4 +1,3 @@
-using Domain.Entities;
 using Domain.Enums;
 
 namespace Application.Business.BackTest.Reports
@@ -19,9 +18,7 @@ namespace Application.Business.BackTest.Reports
 
         private static double EnsurePositive(double number)
         {
-            var powers = Math.Pow(number, 2);
-            var squred = Math.Sqrt(powers);
-            return squred;
+            return Math.Sqrt(Math.Pow(number, 2));
         }
     }
 }

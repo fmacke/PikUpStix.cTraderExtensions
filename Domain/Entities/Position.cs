@@ -2,7 +2,7 @@ using Domain.Abstractions;
 using Domain.Enums;
 namespace Domain.Entities
 {
-    public partial class Position : BaseEntity
+    public  class Position : BaseEntity
     {
         public int TestId { get; set; }
         public int InstrumentId { get; set; }

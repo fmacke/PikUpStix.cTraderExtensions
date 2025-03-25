@@ -1,28 +1,25 @@
 ﻿using Domain.Enums;
 using Domain.Entities;
+using Application.Business.Positioning.Validation;
 
 namespace Application.Business.Positioning
 {
     public class CloseInstruction : PositionInstruction
     {
+        private readonly IValidationService _validationService;
+
+        [ValidateCloseInstruction]
         public double ClosePrice { get; set; }
+
+        [ValidateCloseInstruction]
         public DateTime ClosedAt { get; set; }
-        public CloseInstruction(Position pos, double closePrice, DateTime closedAt) : base(pos, InstructionType.Close)
+
+        public CloseInstruction(Position pos, double closePrice, DateTime closedAt, IValidationService validationService) : base(pos, InstructionType.Close)
         {
-            CheckInstructionValid(closePrice, closedAt);
+            _validationService = validationService;
+            _validationService.Validate(this);
             ClosePrice = closePrice;
             ClosedAt = closedAt;
-        }
-        private static void CheckInstructionValid(double closePrice, DateTime closedAt)
-        {
-            if (closePrice <= 0)
-            {
-                throw new InvalidOperationException("Position close price must be greater than 0.");
-            }
-            if (closedAt == null)
-            {
-                throw new InvalidOperationException("Position closed date must be set.");
-            }
         }
     }
 }

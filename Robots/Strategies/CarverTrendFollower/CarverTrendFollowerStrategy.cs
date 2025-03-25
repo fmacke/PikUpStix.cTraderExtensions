@@ -7,6 +7,7 @@ using Domain.Enums;
 using Application.Business.Market;
 using Application.Business.Positioning;
 using Application.Business.Strategy;
+using Application.Business.Positioning.Validation;
 
 namespace Robots.Strategies.CarverTrendFollower
 {
@@ -20,6 +21,7 @@ namespace Robots.Strategies.CarverTrendFollower
         public double TargetVolatility { get; private set; }
         public double TrailStopAtPips { get; private set; }
         public List<Test_Parameter> TestParameters { get; private set; }
+        public IValidationService ValidationService { get; set; } = new ValidationService();
 
         public CarverTrendFollowerStrategy(List<IMarketInfo> marketInfos, List<Test_Parameter>? testParameters)
         {
@@ -56,7 +58,7 @@ namespace Robots.Strategies.CarverTrendFollower
                     position.EntryPrice = market.Ask;
                     position.Volume = GetVolume(wp);
                     position.PositionType = GetTradeType(wp);
-                    PositionInstructions.Add(new OpenInstruction(position));
+                    PositionInstructions.Add(new OpenInstruction(position, ValidationService));
                 }
             }
         }       
@@ -73,12 +75,12 @@ namespace Robots.Strategies.CarverTrendFollower
                         p.StopLoss = wp.StopLossInPips;// CalculateStopLoss(market.Ask, market.Bid, wp, p, wp.Instrument);
                         p.Volume = GetVolume(wp);
                         PositionInstructions.Add(
-                            new ModifyInstruction(p, wp.StopLossAt, null));
+                            new ModifyInstruction(p, wp.StopLossAt, null, ValidationService));
                     }
                     else
                     {
                         // Close Position
-                        PositionInstructions.Add(new CloseInstruction(p, market.Bid, market.CursorDate));
+                        PositionInstructions.Add(new CloseInstruction(p, market.Bid, market.CursorDate, ValidationService));
                         // Open new position in opposite direction
                         if (wp.ProposedWeightedPosition > 0 || wp.ProposedWeightedPosition < 0)
                         {
@@ -88,7 +90,7 @@ namespace Robots.Strategies.CarverTrendFollower
                             p.PositionType = p.PositionType == PositionType.BUY ? PositionType.SELL : PositionType.BUY;
                             position.Volume = GetVolume(wp);
                             position.EntryPrice = market.Ask;
-                            PositionInstructions.Add(new OpenInstruction(position));
+                            PositionInstructions.Add(new OpenInstruction(position, ValidationService));
                         }
                     }
                 }
@@ -103,7 +105,7 @@ namespace Robots.Strategies.CarverTrendFollower
                 {
                     var weightedPos = weightedPositions.First(x => x.Instrument.InstrumentName == p.SymbolName);
                     PositionInstructions.Add(
-                        new CloseInstruction(p, market.Bid, market.CursorDate));
+                        new CloseInstruction(p, market.Bid, market.CursorDate, ValidationService));
                 }
         }
         private static bool ForecastNotZero(PositionValue wp)

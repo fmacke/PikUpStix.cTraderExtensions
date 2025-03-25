@@ -6,6 +6,7 @@ using Application.Business.Risk;
 using Domain.Enums;
 using Application.Business.Strategy;
 using Application.Business.Positioning;
+using Application.Business.Positioning.Validation;
 namespace Robots.Strategies.PivotPointBounce
 {
     public class PivotPointConfirmStrategy : IStrategy
@@ -15,6 +16,7 @@ namespace Robots.Strategies.PivotPointBounce
         public double StrategySignal { get; private set; }
         public PivotPoints PivotPoints { get; private set; }
         public  double MaximumRisk = 0.02;
+        public IValidationService ValidationService { get; set; } = new ValidationService();
 
         public PivotPointConfirmStrategy(IMarketInfo props, ConfirmingSignals signals, double thresholdForTrade, 
             double confirmingSignalsForecastTreshhold, PivotPoints pivotPoints, double riskPerTrade)
@@ -53,7 +55,7 @@ namespace Robots.Strategies.PivotPointBounce
                         Created = props.CursorDate,
                         ExpirationDate = new DateTime(props.CursorDate.Year, props.CursorDate.Month, props.CursorDate.Day, 23, 0, 0)
                     };
-                    PositionInstructions.Add(new OpenInstruction(position));
+                    PositionInstructions.Add(new OpenInstruction(position, ValidationService));
                 }
             }
         }

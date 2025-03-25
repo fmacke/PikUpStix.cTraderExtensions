@@ -1,28 +1,29 @@
 ﻿using Domain.Enums;
 using Domain.Entities;
+using Application.Business.Positioning.Validation;
 
 namespace Application.Business.Positioning
 {
     public class ModifyInstruction : PositionInstruction
     {
+        private readonly IValidationService _validationService;
+
+        [ValidateModifyInstruction]
         public double? AdjustStopLossTo { get; }
+
+        [ValidateModifyInstruction]
         public double? AdjustTakeProfitTo { get; }
-        public ModifyInstruction(Position pos, double? adjustStopLossTo, double? adjustTakeProfitTo) : base(pos, InstructionType.Modify)
+
+        public Position Position { get; set; }
+
+        public ModifyInstruction(Position pos, double? adjustStopLossTo, double? adjustTakeProfitTo, IValidationService validationService) : base(pos, InstructionType.Modify)
         {
-            CheckInstructionValid(pos, adjustStopLossTo, adjustTakeProfitTo);
+            _validationService = validationService;
+            _validationService.Validate(this);
             AdjustStopLossTo = adjustStopLossTo;
             AdjustTakeProfitTo = adjustTakeProfitTo;
-        } 
-        private static void CheckInstructionValid(Position pos, double? adjustStopLossTo, double? adjustTakeProfitTo)
-        {
-            if (pos.Status != PositionStatus.OPEN)
-            {
-                throw new InvalidOperationException("Position must be open to modify.");
-            }
-            if (adjustStopLossTo == null && adjustTakeProfitTo == null)
-            {
-                throw new InvalidOperationException("At least one of STOP LOSS or TAKE PROFIT must be set.");
-            }
+            Position = pos;
         }
     }
+
 }
