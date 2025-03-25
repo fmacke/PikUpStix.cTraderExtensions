@@ -1,7 +1,7 @@
 ﻿namespace Application.Business.Indicator
 {
     
-    public class PivotPoints
+    public class PivotPoints : IIndicator
     {
         public double Pivot { get; private set; }
         public double Support1 { get; private set; }
@@ -16,8 +16,7 @@
             Support1 = (2 * Pivot) - high;
             Resistance1 = (2 * Pivot) - low;
             Support2 = Pivot - (high - low);
-            Resistance2 = Pivot + (high - low);
-            
+            Resistance2 = Pivot + (high - low);            
         }
         public PivotPoints(DateTime date, double pivot, double support1, double resistance1, double support2, double resistance2)
         {

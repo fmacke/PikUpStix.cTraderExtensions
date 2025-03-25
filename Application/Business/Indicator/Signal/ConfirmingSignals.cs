@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-namespace Application.Business.Indicator.Signal
+﻿namespace Application.Business.Indicator.Signal
 {
     public class ConfirmingSignals : List<ISignal>
     {

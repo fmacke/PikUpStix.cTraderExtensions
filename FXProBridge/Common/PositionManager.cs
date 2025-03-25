@@ -1,19 +1,15 @@
-﻿using Application.Business;
-using Application.Business.Strategy;
+﻿using Application.Business.Positioning;
 using cAlgo.API;
 using Domain.Enums;
 using FXProBridge.Capture;
 
 namespace FXProBridge.Common
 {
-    /// <summary>
-    /// This class is responsible for managing the positions of the robot.
-    /// </summary>
-    public abstract class PositionManager : RobotTestWrapper, IPositionManager
+    public abstract class PositionManager : RobotTestWrapper
     {
-        public void ManagePositions(IStrategy x)
+        public void ManagePositions(List<IPositionInstruction> instructions)
         { 
-            foreach (var instruction in x.GetPositionInstructions())
+            foreach (var instruction in instructions)
             {
                 TradeType tradeType = instruction.Position.PositionType == Domain.Enums.PositionType.BUY ? TradeType.Buy : tradeType = TradeType.Sell;
                 
@@ -35,31 +31,15 @@ namespace FXProBridge.Common
                         break;
                     case InstructionType.Open:
                         var normalise = Symbol.NormalizeVolumeInUnits(instruction.Position.Volume);
-                        ExecuteMarketOrder(tradeType, SymbolName, normalise, x.GetType().Name, instruction.Position.StopLoss, 
+                        ExecuteMarketOrder(tradeType, SymbolName, normalise, instruction.GetType().Name, instruction.Position.StopLoss, 
                             instruction.Position.TakeProfit);
                         break;
-                    //case InstructionType.PlaceOrder:
-                    //    //var sl = (instruction.Position.EntryPrice - instruction.Position.StopLoss) * Symbol.PipSize;
-                    //    var placeOrderRes = PlaceLimitOrder(tradeType,
-                    //        instruction.Position.SymbolName,
-                    //        Symbol.NormalizeVolumeInUnits(instruction.Position.Volume),
-                    //        Convert.ToDouble(instruction.Position.EntryPrice),
-                    //        GetType().Name,
-                    //        Convert.ToDouble(instruction.Position.StopLoss),
-                    //        Convert.ToDouble(instruction.Position.TakeProfit),
-                    //        ProtectionType.Relative, 
-                    //        instruction.Position.ExpirationDate);
-                    //    break;
                     case InstructionType.CancelOrder:
                         foreach (var order in PendingOrders) 
                             if(instruction.Position.Id == order.Id)
                                 CancelPendingOrder(order); 
                         break;
                 }
-            }
-            foreach (var message in x.LogMessages)
-            {
-                Print(message);
             }
         }
     }

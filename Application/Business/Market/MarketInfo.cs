@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using Application.Business.Indicator;
+using Application.Business.Indicator.Signal;
+using Domain.Entities;
 namespace Application.Business.Market
 {
     public class MarketInfo : IMarketInfo
@@ -12,6 +14,15 @@ namespace Application.Business.Market
         public double AccountBalance { get; private set; }
         public double PipSize { get; private set; }
         public string Currency { get; private set; }
+
+        public double Balance => throw new NotImplementedException();
+
+        public double Maximumrisk => throw new NotImplementedException();
+
+        public ConfirmingSignals Signals => throw new NotImplementedException();
+
+        public List<IIndicator> Indicators => throw new NotImplementedException();
+
         public MarketInfo(DateTime cursorDate, double bid, double ask, List<Position> positions,
             List<HistoricalData> bars, string symbolName, string currency, double accountBalance,
             double pipSize)

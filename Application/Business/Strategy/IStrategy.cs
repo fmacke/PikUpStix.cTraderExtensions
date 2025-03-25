@@ -1,14 +1,13 @@
-﻿using Application.Business.Positioning;
+﻿using Application.Business.Market;
+using Application.Business.Positioning;
+using Domain.Entities;
 
 namespace Application.Business.Strategy
 {
     public interface IStrategy
     {
-        List<IPositionInstruction> GetPositionInstructions();
         List<string> LogMessages { get; set; }
-    }
-    public interface IPositionManager
-    {
-        void ManagePositions(IStrategy x);
+        List<Test_Parameter> TestParameters { get; }
+        List<IPositionInstruction> Run(List<IMarketInfo> marketInfos);
     }
 }

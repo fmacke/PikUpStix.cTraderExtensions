@@ -13,9 +13,9 @@ namespace Application.Business.Positioning
 
         public OpenInstruction(Position pos, IValidationService validationService) : base(pos, InstructionType.Open)
         {
-            _validationService = validationService;
-            _validationService.Validate(this);
             Position = pos;
+            _validationService = validationService;
+            _validationService.Validate(this);            
         }
     }
 }

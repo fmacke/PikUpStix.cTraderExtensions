@@ -31,7 +31,9 @@ namespace FXProBridge.Robots
 
         protected override void OnBar()
         {
-            var changeInstructions = new CarverTrendFollowerStrategy(
+            var changeInstructions = new CarverTrendFollowerStrategy(ResultsCapture.TestParams);
+
+            ManagePositions(changeInstructions.Run(
                 new List<IMarketInfo> {
                     new MarketInfo(Bars.OpenTimes.LastValue,
                     Symbol.Bid,
@@ -41,9 +43,7 @@ namespace FXProBridge.Robots
                     SymbolName,
                     SymbolName,
                     Account.Equity,
-                    Symbol.PipSize) },
-                ResultsCapture.TestParams);
-            ManagePositions(changeInstructions);
+                    Symbol.PipSize)}));
             base.OnBar();
         }
     }

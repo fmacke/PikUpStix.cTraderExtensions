@@ -8,9 +8,11 @@ namespace TradeSimulator
         public List<HistoricalData> CurrentBars { get; private set; } = new List<HistoricalData>();
         public HistoricalData CurrentBar { get; private set; }
         public HistoricalData LastBar { get; private set; }
-        public TradeSimulateBase(List<HistoricalData> bars)
+        public double InitialCapital { get; private set; }
+        public TradeSimulateBase(double initialcapital, List<HistoricalData> bars)
         {
             TestSet = bars.OrderBy(bar => bar.Date).ToList();
+            InitialCapital = initialcapital;
         }
         public void Run()
         {

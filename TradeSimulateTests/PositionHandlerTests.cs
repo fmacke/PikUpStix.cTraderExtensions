@@ -41,6 +41,7 @@ namespace TradeSimulateTests
                 new Position()
                     {
                         EntryPrice = 1,
+                        ClosePrice = 1,
                         StopLoss = 1,
                         TakeProfit = 1,
                         Volume = 1,
@@ -49,6 +50,7 @@ namespace TradeSimulateTests
                 new Position()
                     {
                         EntryPrice = 1,
+                        ClosePrice = 2,
                         StopLoss = 1,
                         TakeProfit = 1,
                         Volume = 1,

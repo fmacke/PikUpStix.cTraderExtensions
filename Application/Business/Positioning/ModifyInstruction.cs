@@ -9,20 +9,20 @@ namespace Application.Business.Positioning
         private readonly IValidationService _validationService;
 
         [ValidateModifyInstruction]
-        public double? AdjustStopLossTo { get; }
+        public double AdjustStopLossTo { get; }
 
         [ValidateModifyInstruction]
-        public double? AdjustTakeProfitTo { get; }
+        public double AdjustTakeProfitTo { get; }
 
         public Position Position { get; set; }
 
-        public ModifyInstruction(Position pos, double? adjustStopLossTo, double? adjustTakeProfitTo, IValidationService validationService) : base(pos, InstructionType.Modify)
-        {
-            _validationService = validationService;
-            _validationService.Validate(this);
+        public ModifyInstruction(Position pos, double adjustStopLossTo, double adjustTakeProfitTo, IValidationService validationService) : base(pos, InstructionType.Modify)
+        {           
             AdjustStopLossTo = adjustStopLossTo;
             AdjustTakeProfitTo = adjustTakeProfitTo;
             Position = pos;
+            _validationService = validationService;
+            _validationService.Validate(this);
         }
     }
 

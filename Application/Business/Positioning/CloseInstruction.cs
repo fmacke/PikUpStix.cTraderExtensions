@@ -16,10 +16,11 @@ namespace Application.Business.Positioning
 
         public CloseInstruction(Position pos, double closePrice, DateTime closedAt, IValidationService validationService) : base(pos, InstructionType.Close)
         {
-            _validationService = validationService;
-            _validationService.Validate(this);
+            
             ClosePrice = closePrice;
             ClosedAt = closedAt;
+            _validationService = validationService;
+            _validationService.Validate(this);
         }
     }
 }

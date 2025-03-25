@@ -62,8 +62,7 @@ namespace FXProBridge.Robots
             base.OnStart();
         }
         protected override void OnBar()
-        {
-            var testParams = ResultsCapture.TestParams;
+        {            
             var currentTime = Bars.OpenTimes.LastValue;
             //if (currentTime.Hour >= 3 && currentTime.Hour < 14)
                 RunStrategy(currentTime);
@@ -71,6 +70,7 @@ namespace FXProBridge.Robots
         }
         private void RunStrategy(DateTime cursorDate)
         {
+            var testParams = ResultsCapture.TestParams;
             var props = new MarketInfo(cursorDate, 
                 Symbol.Bid,
                 Symbol.Ask,
@@ -98,14 +98,8 @@ namespace FXProBridge.Robots
             }
             var confirmingSignals = new ConfirmingSignals(signals);
 
-            var changeInstructions = new PivotPointConfirmStrategy(props, confirmingSignals, ForecastThreshold, ConfirmingForecastThreshold, 
-                new PivotPoints(cursorDate,
-                _pivotPointIndicator.Pivot.LastValue,
-                _pivotPointIndicator.Support1.LastValue,
-                _pivotPointIndicator.Resistance1.LastValue,
-                _pivotPointIndicator.Support2.LastValue,
-                _pivotPointIndicator.Resistance2.LastValue), RiskPerTrade/100);
-            ManagePositions(changeInstructions);
+            var strategy = new PivotPointConfirmStrategy(testParams);
+            ManagePositions(strategy.Run(new List<IMarketInfo> { props }));
         }
     }
 }
