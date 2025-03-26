@@ -1,12 +1,13 @@
-﻿using Application.Mappings;
+﻿using Application.Business.Calculations;
+using Application.Mappings;
 using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Business.BackTest.Reports
+namespace Application.Business.Reports
 {
     public class TradeStatistics
     {
-        public List<Domain.Entities.Position> Positions { get; private set; } = new List<Domain.Entities.Position>();
+        public List<Position> Positions { get; private set; } = new List<Position>();
         public double GrossProfit { get {
                 return Positions.Where(x => x.Margin > 0).Sum(x => x.Margin);
             }}
@@ -299,7 +300,7 @@ namespace Application.Business.BackTest.Reports
         }
 
 
-        public TradeStatistics(List<Domain.Entities.Position> testTrades, double startingAccountBalance, double maximumAdverseExcursion)
+        public TradeStatistics(List<Position> testTrades, double startingAccountBalance, double maximumAdverseExcursion)
         {
             Positions = testTrades;
             MaxAdverseExcursion = maximumAdverseExcursion;

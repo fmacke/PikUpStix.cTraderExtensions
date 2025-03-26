@@ -1,4 +1,4 @@
-using Application.Business.BackTest.Reports;
+using Application.Business.Calculations;
 using Domain.Entities;
 
 namespace PikUpStix.Trading.NTests

@@ -1,16 +1,16 @@
 ﻿using Domain.Entities;
 
-namespace Application.Business.BackTest.Reports
+namespace Application.Business.Calculations
 {
-    public class DailyExcursionss
+    public class DailyExcursions
     {
-        public DailyExcursionss(IReadOnlyCollection<Domain.Entities.Position> results)
+        public DailyExcursions(IReadOnlyCollection<Position> results)
         {
             Excursions = new List<decimal>();
-            foreach (Domain.Entities.Position result in results)
+            foreach (Position result in results.OrderBy(x => x.ClosedAt))
             {
-                //todo: this needs updated since Test_Results table was made redundant
-                //Excursions.Add(Convert.ToDecimal(result.Margin / (result.CumulativeMargin - result.Margin)));
+                var cumulativeMargin = results.Where(x => x.ClosedAt < result.ClosedAt).Sum(x => x.Margin);
+                Excursions.Add(Convert.ToDecimal(result.Margin / cumulativeMargin));
             }
 
             if (results.Count > 0)
@@ -19,7 +19,6 @@ namespace Application.Business.BackTest.Reports
                 MaxAdverseExcursion = Math.Round(Excursions.Min(), 2);
             }
         }
-
         public decimal MaxAdverseExcursion { get; private set; }
         public decimal MaxFavourableExcursion { get; private set; }
         public List<decimal> Excursions { get; private set; }

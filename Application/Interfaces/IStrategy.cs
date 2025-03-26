@@ -2,7 +2,7 @@
 using Application.Business.Positioning;
 using Domain.Entities;
 
-namespace Application.Business.Strategy
+namespace Application.Interfaces
 {
     public interface IStrategy
     {

@@ -1,7 +1,7 @@
 ﻿using Application.Business.Volatility;
 using Domain.Entities;
 
-namespace PikUpStix.Trading.NTests
+namespace Application.MainTests
 {
     [TestFixture]
     public class VolatilityTests
@@ -11,6 +11,19 @@ namespace PikUpStix.Trading.NTests
         public void Init()
         {
             LoadData();
+        }        
+
+        [Test]
+        public void GetInstrumentVolatility()
+        {
+            var priceVol = PriceVolatility.OfClosePrices(data, 25);
+            Assert.AreEqual(0.20514688811905316, priceVol);
+        }
+        [Test]
+        public void Test_Standard_Deviation_Calc()
+        {            
+            var stdDev = StandardDeviation.Calculate(data.Select(d => d.ClosePrice).ToArray());
+            Assert.AreEqual(7.5, stdDev);
         }
 
         private void LoadData()
@@ -44,24 +57,6 @@ namespace PikUpStix.Trading.NTests
                 new HistoricalData() {ClosePrice = 25},
                 new HistoricalData() {ClosePrice = 26},
             };
-        }
-
-        [Test]
-        public void GetInstrumentVolatility()
-        {
-            if (data == null)
-                LoadData();
-            var priceVol = new PriceVolatility(data, 25);
-            var stdDev = priceVol.StandardDeviation;
-            Assert.AreEqual(0.20514688811905316,stdDev);
-        }
-        [Test]
-        public void Test_Standard_Deviation_Calc()
-        {            
-            var priceVol = new PriceVolatility(data, 5);
-            var stdDev = priceVol.CalculateStdDev(new Double[5]{-10,0,10,20,30});
-            var stdDev2 = priceVol.CalculateStdDev(new Double[5] { 8,9,10,11,12 });
-            Assert.AreEqual(14.142135623730951, stdDev);
         }
     }
 }

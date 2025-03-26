@@ -1,5 +1,4 @@
-﻿using Application.Business.BackTest.Reports;
-using Application.Features.TestParameters.Commands.Create;
+﻿using Application.Features.TestParameters.Commands.Create;
 using Application.Features.Tests.Commands.Create;
 using Application.Features.Tests.Commands.Update;
 using cAlgo.API;
@@ -9,6 +8,7 @@ using Domain.Entities;
 using Application.Features.Positions.Commands.Create;
 using Domain.Enums;
 using Application.Mappings;
+using Application.Business.Reports;
 
 namespace FXProBridge.Capture
 {
@@ -122,7 +122,6 @@ namespace FXProBridge.Capture
                     AverageLoss = tradeStatistics.AverageLoss,
                     AverageLossLong = tradeStatistics.AverageLossLong,
                     AverageLossShort = tradeStatistics.AverageLossShort
-
                 });
             }
             catch (Exception ex)

@@ -3,9 +3,9 @@ using Application.Business.Indicator;
 using Application.Business.Market;
 using Application.Business.Risk;
 using Domain.Enums;
-using Application.Business.Strategy;
 using Application.Business.Positioning;
 using Application.Business.Positioning.Validation;
+using Application.Interfaces;
 namespace Robots.Strategies.PivotPointBounce
 {
     public class PivotPointConfirmStrategy : IStrategy

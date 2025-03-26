@@ -10,7 +10,10 @@ namespace TradeSimulator.Business
         private List<IPositionInstruction> _positionInstructions;
         private List<Position> _openPositions;
         private List<Position> _closedPositions;
-        public PositionHandler(List<IPositionInstruction> positionInstructions, ref List<Position> openPositions, ref List<Position> closedTrades)
+        private double exchangeRate;
+        private double contractUnit;
+
+        public PositionHandler(List<IPositionInstruction> positionInstructions, ref List<Position> openPositions, ref List<Position> closedTrades, double exchangeRate, double contractUnit)
         {
             _instructionActions = new Dictionary<InstructionType, Action<IPositionInstruction>>
             {
@@ -21,6 +24,9 @@ namespace TradeSimulator.Business
             _positionInstructions = positionInstructions;
             _openPositions = openPositions;
             _closedPositions = closedTrades;
+
+            this.exchangeRate = exchangeRate;
+            this.contractUnit = contractUnit;
         }   
         private void HandleOpen<T>(T update) where T : OpenInstruction
         {
@@ -29,7 +35,7 @@ namespace TradeSimulator.Business
 
         private void HandleClose<T>(T update) where T : CloseInstruction
         {
-            new ClosePositionHandler(ref _openPositions, ref _closedPositions).ClosePosition(update.Position, update.ClosePrice, update.ClosedAt);
+            new ClosePositionHandler(ref _openPositions, ref _closedPositions).ClosePosition(update.Position, update.ClosePrice, update.ClosedAt, contractUnit, exchangeRate);
         }
 
         private void HandleModify<T>(T update) where T : ModifyInstruction

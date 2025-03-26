@@ -1,10 +1,12 @@
 using Domain.Enums;
 
-namespace Application.Business.BackTest.Reports
+namespace Application.Business.Calculations
 {
     public static class Margin
     {
-        public static double Calculate(double contractUnit, double exchangeRate, Domain.Entities.Position trade,
+        public static double Calculate(double contractUnit, 
+            double exchangeRate, 
+            Domain.Entities.Position trade,
             double currentPriceData, double volume)
         {
             var priceMovement = 0.0;

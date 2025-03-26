@@ -11,7 +11,7 @@ namespace Application.Business.Portfolio
         public double UnweightedPosition { get; private set; }
         public double ProposedWeightedPosition { get; private set; }
         public double NonRoundedProposedWeightedPosition { get; private set; }
-        public double InstrumentPriceVolatility { get; private set; }
+        //public double InstrumentPriceVolatility { get; private set; }
         public double StopLossAt { get; private set; }
         public double StopLossInPips { get; private set; }
         public List<PortfolioInstrument> PorfolioInstruments { get; private set; }
@@ -94,20 +94,17 @@ namespace Application.Business.Portfolio
 
         private double CalculateUnweightedPosition(IForecastValue foreCast)
         {
-            PriceVolatility instrumentPriceVolatility = CalculateInstrumentPriceVolatility(//foreCast.Instrument.Id,
-                foreCast.DateTime);
             var subSystemPosition = new SubSystemPosition(
                 foreCast.Forecast, AvailableTradingCapital, TargetVolatility,
                 new InstrumentPositionSize(
                     foreCast.InstrumentBlock,
                     foreCast.AskingPrice,
-                    instrumentPriceVolatility.StandardDeviation,
+                    CalculateInstrumentPriceVolatility(foreCast.DateTime),
                     ExchangeRate));
             return Math.Round(subSystemPosition.GetUnscaledPosition(), 9);
         }
 
-        public PriceVolatility CalculateInstrumentPriceVolatility(//int instrumentId,
-                                                                  DateTime currentPeriodDate)
+        public double CalculateInstrumentPriceVolatility(DateTime currentPeriodDate)
         {
             int periodsToCheck = 25;
             if (DataSetIncludesPeriodDate(currentPeriodDate))
@@ -122,14 +119,12 @@ namespace Application.Business.Portfolio
                 {
                     IEnumerable<HistoricalData> recentData = HistoricalPriceSet
                         .GetRange(index, periodsToCheck).Where(x => x.ClosePrice != 0);
-                    var pv = new PriceVolatility(recentData.ToList(), periodsToCheck);
-                    InstrumentPriceVolatility = pv.StandardDeviation;
-                    return pv;
+            
+                    //InstrumentPriceVolatility = PriceVolatility.Calculate(recentData.ToList(), periodsToCheck);
+                    return PriceVolatility.OfClosePrices(recentData.ToList(), periodsToCheck);
                 }
             }
-            var pev = new PriceVolatility(new List<HistoricalData>(), 0);
-            InstrumentPriceVolatility = pev.StandardDeviation;
-            return pev;
+            return 0;
         }
 
         private bool SufficientPreviousDataToCalculateVolatility(int index, int periodsToCheck, int maxCount)

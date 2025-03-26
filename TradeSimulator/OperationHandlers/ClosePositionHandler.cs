@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.Business.Calculations;
+using Domain.Entities;
 using Domain.Enums;
 
 namespace TradeSimulator.Business
@@ -12,18 +13,15 @@ namespace TradeSimulator.Business
             this.openPositions = openPositions;
             this.closedTrades = closedTrades;
         }
-        public void ClosePosition(Position position, double? closePrice, DateTime? closedAt)
+        public void ClosePosition(Position position, double closePrice, DateTime closedAt, double contractUnit, double exchangeRate)
         {
-            if (closePrice.HasValue && closedAt.HasValue)
-            {
-                position.ClosePrice = closePrice;
-                position.Status = PositionStatus.CLOSED;
-                position.ClosedAt = closedAt;
-                closedTrades.Add(position);
-                openPositions.Remove(position);
-                return;
-            }
-            throw new Exception("Close price is required to close a position");
+            position.ClosePrice = closePrice;
+            position.Status = PositionStatus.CLOSED;
+            position.ClosedAt = closedAt;
+            position.Margin = Margin.Calculate(contractUnit, exchangeRate, position, closePrice, position.Volume);
+            closedTrades.Add(position);
+            openPositions.Remove(position);
+            return;
         }
     }
 }

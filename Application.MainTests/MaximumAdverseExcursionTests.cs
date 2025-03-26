@@ -1,4 +1,4 @@
-﻿using Application.Business.BackTest.Reports;
+﻿using Application.Business.Calculations;
 using Domain.Entities;
 
 namespace Application.MainTests
@@ -23,7 +23,7 @@ namespace Application.MainTests
                     //CumulativeMargin = 1100
                 }
             };
-            var mae = new DailyExcursionss(results);
+            var mae = new DailyExcursions(results);
 
             Assert.AreEqual(Math.Round(0.10, 2), Math.Round(mae.MaxFavourableExcursion, 2));
             Assert.AreEqual(Math.Round(-0.15, 2), Math.Round(mae.MaxAdverseExcursion, 2));

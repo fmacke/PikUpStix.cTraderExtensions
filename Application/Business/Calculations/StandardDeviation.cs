@@ -1,15 +1,8 @@
-﻿namespace Application.Business
+﻿namespace Application.Business.Volatility
 {
-    public class StandardDeviation
+    public static class StandardDeviation
     {
-        public StandardDeviation(IEnumerable<double> values)
-        {
-            Calculate = CalculatePopulationStdDev(values);
-        }
-
-        public double Calculate { get; private set; }
-
-        private double CalculatePopulationStdDev(IEnumerable<double> values)
+        public static double Calculate(IEnumerable<double> values)
         {
             double ret = 0;
             if (values.Count() > 0)

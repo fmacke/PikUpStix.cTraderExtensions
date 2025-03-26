@@ -1,4 +1,5 @@
 ﻿using Application.Business.BackTest.Position;
+using Application.Business.Calculations;
 using Application.Business.Portfolio;
 using Domain.Entities;
 using Domain.Enums;
@@ -109,7 +110,7 @@ namespace Application.Business.BackTest.Positioning
                 existingPosition.Comment = "Position closed due to volume change.  From existing volume of " + trade.Volume + " to new volume of " + weightedProposedPosition.ProposedWeightedPosition;
                 
                 existingPosition.Margin =
-                    Reports.Margin.Calculate(0.0001, Parameters.ExchangeRate, trade,
+                    Margin.Calculate(0.0001, Parameters.ExchangeRate, trade,
                         currentPrice, trade.Volume);
                 CurrentMargin += existingPosition.Margin;
             }

@@ -6,8 +6,8 @@ using Application.BackTest;
 using Domain.Enums;
 using Application.Business.Market;
 using Application.Business.Positioning;
-using Application.Business.Strategy;
 using Application.Business.Positioning.Validation;
+using Application.Interfaces;
 
 namespace Robots.Strategies.CarverTrendFollower
 {
@@ -31,6 +31,7 @@ namespace Robots.Strategies.CarverTrendFollower
 
         public List<IPositionInstruction> Run(List<IMarketInfo> marketInfos)
         {
+            _positionInstructions = new List<IPositionInstruction>();
             MarketInfos = marketInfos;
             var forecasts = CarverTrendFollowerForecasts.GetForecasts(MarketInfos, new Logger(false), TestParameters);
             var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, MarketInfos);
@@ -69,7 +70,7 @@ namespace Robots.Strategies.CarverTrendFollower
             //MODIFY EXISTING POSITIONS
             foreach (var wp in weightedPositions.Where(x => x.Instrument.InstrumentName == market.SymbolName))
             {
-                foreach (var p in market.Positions.Where(x => x.SymbolName == wp.Instrument.InstrumentName))
+                foreach (var p in market.Positions.Where(x => x.SymbolName == wp.Instrument.InstrumentName  && x.Status == PositionStatus.OPEN))
                 {
                     if (AreSameDirection(wp, p))
                     {

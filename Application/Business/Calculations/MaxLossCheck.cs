@@ -1,4 +1,4 @@
-﻿namespace Application.Business.BackTest.Reports
+﻿namespace Application.Business.Calculations
 {
     public class MaxLossCheck
     {

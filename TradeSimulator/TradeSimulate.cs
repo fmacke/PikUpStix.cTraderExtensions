@@ -1,7 +1,7 @@
-﻿using Application.Business.BackTest.Reports;
-using Application.Business.Market;
-using Application.Business.Strategy;
+﻿using Application.Business.Market;
+using Application.Business.Reports;
 using Application.Business.Utilities;
+using Application.Interfaces;
 using Domain.Entities;
 using System.Diagnostics;
 using TradeSimulator.Business;
@@ -22,8 +22,10 @@ namespace TradeSimulator
 
         protected internal override void OnBar()
         {
+            // remove from OpenPositions and add to ClosedTrades
             new StopLossHandler(CurrentBar.Date, CurrentBar.OpenPrice, ref OpenPositions, ref ClosedTrades).CloseOutStops();
             var positionInstructions = Strategy.Run(GetMarketInfo());
+            // remove/updates OpenPositions and adds to ClosedTrades where necessary
             new PositionHandler(positionInstructions, ref OpenPositions, ref ClosedTrades).ExecuteInstructions();
         }        
         protected internal override void OnStart()
