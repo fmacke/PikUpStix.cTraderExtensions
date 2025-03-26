@@ -12,7 +12,8 @@ namespace Application.Business.Market
         string SymbolName { get; }
         string Currency { get; }
         double AccountBalance { get; }
-        double PipSize { get; }
+        double ContractUnit { get; }
+        double ExchangeRate { get; }
         double Balance { get; }
         double Maximumrisk { get; }
         List<HistoricalData> Bars { get; }

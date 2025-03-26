@@ -1,7 +1,7 @@
 ﻿using Domain.Enums;
 using Domain.Entities;
 
-namespace Application.Business.Positioning
+namespace Application.Business.Positioning.Instructions
 {
     public abstract class PositionInstruction : IPositionInstruction
     {

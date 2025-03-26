@@ -1,4 +1,4 @@
-﻿using Application.Business.Positioning;
+﻿using Application.Business.Positioning.Instructions;
 using cAlgo.API;
 using Domain.Enums;
 using FXProBridge.Capture;

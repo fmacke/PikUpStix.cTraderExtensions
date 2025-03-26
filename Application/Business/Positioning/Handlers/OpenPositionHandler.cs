@@ -1,7 +1,7 @@
-﻿using Application.Business.Positioning;
+﻿using Application.Business.Positioning.Instructions;
 using Domain.Entities;
 
-namespace TradeSimulator.Business
+namespace Application.Business.Positioning.Handlers
 {
     internal class OpenPositionHandler
     {

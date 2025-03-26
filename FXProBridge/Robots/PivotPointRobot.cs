@@ -71,6 +71,7 @@ namespace FXProBridge.Robots
         private void RunStrategy(DateTime cursorDate)
         {
             var testParams = ResultsCapture.TestParams;
+            var exchangeRate = 1;
             var props = new MarketInfo(cursorDate, 
                 Symbol.Bid,
                 Symbol.Ask,
@@ -79,7 +80,7 @@ namespace FXProBridge.Robots
                 SymbolName,
                 SymbolName,
                 Account.Equity,
-                Symbol.PipSize);
+                Symbol.PipSize, exchangeRate);
 
             var signals = new List<ISignal>();
             if(EnableMA)

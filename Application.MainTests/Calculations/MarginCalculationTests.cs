@@ -1,8 +1,9 @@
 using Application.Business.Calculations;
 using Domain.Entities;
 using Domain.Enums;
+using System.Diagnostics;
 
-namespace Application.MainTests
+namespace Application.MainTests.Calculations
 {
     [TestFixture]
     public class MarginCalculationTests
@@ -23,7 +24,7 @@ namespace Application.MainTests
             trade.Volume = noOfContracts;
 
             var margin = Margin.Calculate(contractUnit, exchangeRate, trade, closePrice, trade.Volume);
-            Console.WriteLine("Margin Anticipated: £1463, Margin Actual: £" + margin);
+            Debug.Write("Margin Anticipated: £1463, Margin Actual: £" + margin);
             Assert.AreEqual(1463, Math.Round(margin,0));
         }
     }

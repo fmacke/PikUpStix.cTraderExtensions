@@ -1,8 +1,9 @@
-﻿using Application.Business.Positioning;
+﻿using Application.Business.Market;
+using Application.Business.Positioning.Instructions;
 using Domain.Entities;
 using Domain.Enums;
 
-namespace TradeSimulator.Business
+namespace Application.Business.Positioning.Handlers
 {
     public class PositionHandler
     {
@@ -10,10 +11,9 @@ namespace TradeSimulator.Business
         private List<IPositionInstruction> _positionInstructions;
         private List<Position> _openPositions;
         private List<Position> _closedPositions;
-        private double exchangeRate;
-        private double contractUnit;
+        public List<IMarketInfo> MarketInfo { get; set; }
 
-        public PositionHandler(List<IPositionInstruction> positionInstructions, ref List<Position> openPositions, ref List<Position> closedTrades, double exchangeRate, double contractUnit)
+        public PositionHandler(List<IPositionInstruction> positionInstructions, ref List<Position> openPositions, ref List<Position> closedTrades, List<IMarketInfo> marketInfo)
         {
             _instructionActions = new Dictionary<InstructionType, Action<IPositionInstruction>>
             {
@@ -24,17 +24,18 @@ namespace TradeSimulator.Business
             _positionInstructions = positionInstructions;
             _openPositions = openPositions;
             _closedPositions = closedTrades;
-
-            this.exchangeRate = exchangeRate;
-            this.contractUnit = contractUnit;
+            MarketInfo = marketInfo;
         }   
         private void HandleOpen<T>(T update) where T : OpenInstruction
         {
+            update.Position.SymbolName = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).SymbolName;
             new OpenPositionHandler(ref _openPositions).OpenPosition(update);
         }
 
         private void HandleClose<T>(T update) where T : CloseInstruction
         {
+            var contractUnit = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).ContractUnit;
+            var exchangeRate = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).ExchangeRate;
             new ClosePositionHandler(ref _openPositions, ref _closedPositions).ClosePosition(update.Position, update.ClosePrice, update.ClosedAt, contractUnit, exchangeRate);
         }
 

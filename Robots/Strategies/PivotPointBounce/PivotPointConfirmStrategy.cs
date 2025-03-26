@@ -6,6 +6,8 @@ using Domain.Enums;
 using Application.Business.Positioning;
 using Application.Business.Positioning.Validation;
 using Application.Interfaces;
+using Application.Business.Positioning.Instructions;
+
 namespace Robots.Strategies.PivotPointBounce
 {
     public class PivotPointConfirmStrategy : IStrategy
@@ -54,7 +56,7 @@ namespace Robots.Strategies.PivotPointBounce
                                         CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
                                         CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
                                 var pricePoint = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid;
-                                var riskmanager = new RiskManager(StrategySignal, MaximumRisk, marketInfo.AccountBalance, marketInfo.PipSize, stopLoss, pricePoint);
+                                var riskmanager = new RiskManager(StrategySignal, MaximumRisk, marketInfo.AccountBalance, marketInfo.ContractUnit, stopLoss, pricePoint);
                                 var position = new Position()
                                 {
                                     SymbolName = marketInfo.SymbolName,

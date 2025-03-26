@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Enums;
 
-namespace Application.Business.Positioning
+namespace Application.Business.Positioning.Instructions
 {
     public interface IPositionInstruction
     {

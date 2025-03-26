@@ -1,7 +1,7 @@
 ﻿using Application.Business.Calculations;
 using Domain.Entities;
 
-namespace Application.MainTests
+namespace Application.MainTests.Calculations
 {
     [TestFixture]
     class SharpeRatioTests

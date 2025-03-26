@@ -1,5 +1,5 @@
 ﻿using Application.Business.Market;
-using Application.Business.Positioning;
+using Application.Business.Positioning.Instructions;
 using Domain.Entities;
 
 namespace Application.Interfaces

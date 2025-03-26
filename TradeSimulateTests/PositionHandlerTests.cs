@@ -1,8 +1,9 @@
-﻿using Application.Business.Positioning;
+﻿using Application.Business.Market;
+using Application.Business.Positioning.Handlers;
+using Application.Business.Positioning.Instructions;
 using Application.Business.Positioning.Validation;
 using Domain.Entities;
 using Domain.Enums;
-using TradeSimulator.Business;
 
 namespace TradeSimulateTests
 {
@@ -12,52 +13,18 @@ namespace TradeSimulateTests
         List<Position> _openPositions;
         List<Position> _closedPositions;
         IValidationService _validationService;
+        List<IMarketInfo> _marketInfo;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _validationService = new ValidationService();
-            _openPositions = new List<Position>
-            {
-                new Position()
-                {
-                    EntryPrice = 1,
-                    StopLoss = 1,
-                    TakeProfit = 1,
-                    Volume = 1,
-                    Created = DateTime.Now
-                },
-                new Position()
-                {
-                    EntryPrice = 1,
-                    StopLoss = 1,
-                    TakeProfit = 1,
-                    Volume = 1,
-                    Created = DateTime.Now
-                }
+            _marketInfo = new List<IMarketInfo>{
+                new MarketInfo(DateTime.Now, 2,2,new List<Position>(),new List<HistoricalData>(),"Test", "GBP", 10000, 0.0001, 1)
             };
-            _closedPositions = _closedPositions = new List<Position>
-            {
-                new Position()
-                    {
-                        EntryPrice = 1,
-                        ClosePrice = 1,
-                        StopLoss = 1,
-                        TakeProfit = 1,
-                        Volume = 1,
-                        Created = DateTime.Now
-                    },
-                new Position()
-                    {
-                        EntryPrice = 1,
-                        ClosePrice = 2,
-                        StopLoss = 1,
-                        TakeProfit = 1,
-                        Volume = 1,
-                        Created = DateTime.Now
-                    }
-            };
+            LoadPositions();
         }
+
         [TestMethod]
         public void ClosePositionTest()
         {
@@ -69,7 +36,7 @@ namespace TradeSimulateTests
             var positionHandler = new PositionHandler(
                 new List<IPositionInstruction> {
                     positionUpdate }, 
-                 ref _openPositions, ref _closedPositions);
+                 ref _openPositions, ref _closedPositions, _marketInfo);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(1, _openPositions.Count);
             Assert.AreEqual(3, _closedPositions.Count);
@@ -82,7 +49,7 @@ namespace TradeSimulateTests
             positionHandler = new PositionHandler(
                 new List<IPositionInstruction> {
                     positionUpdate }, 
-                 ref _openPositions, ref _closedPositions);
+                 ref _openPositions, ref _closedPositions, _marketInfo);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(0, _openPositions.Count);
             Assert.AreEqual(4, _closedPositions.Count);
@@ -109,7 +76,7 @@ namespace TradeSimulateTests
                             Comment = "Test",
 
                         }, _validationService) },
-               ref _openPositions, ref _closedPositions);
+               ref _openPositions, ref _closedPositions, _marketInfo);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(3, _openPositions.Count);
             Assert.AreEqual(2, _closedPositions.Count);
@@ -132,7 +99,7 @@ namespace TradeSimulateTests
                             Margin = 0,
                             Comment = "Test",
                         }, _validationService) },
-                ref _openPositions, ref _closedPositions);
+                ref _openPositions, ref _closedPositions, _marketInfo);
             positionHandler.ExecuteInstructions();
             Assert.AreEqual(4, _openPositions.Count);
             Assert.AreEqual(2, _closedPositions.Count);
@@ -149,12 +116,57 @@ namespace TradeSimulateTests
                 expectedTakeProfit, _validationService);
             var positionHandler = new PositionHandler(
                new List<IPositionInstruction> { positionUpdate },
-                 ref _openPositions, ref _closedPositions);
+                 ref _openPositions, ref _closedPositions, _marketInfo);
             positionHandler.ExecuteInstructions();
 
             var modifiedPosition = _openPositions.First();
             Assert.AreEqual(expectedStopLoss, modifiedPosition.StopLoss);
             Assert.AreEqual(expectedTakeProfit, modifiedPosition.TakeProfit);
+        }
+        private void LoadPositions()
+        {
+            _openPositions = new List<Position>
+            {
+                new Position()
+                {
+                    EntryPrice = 1,
+                    StopLoss = 1,
+                    TakeProfit = 1,
+                    Volume = 1,
+                    SymbolName = "Test",
+                    Created = DateTime.Now
+                },
+                new Position()
+                {
+                    EntryPrice = 1,
+                    StopLoss = 1,
+                    TakeProfit = 1,
+                    Volume = 1,
+                    SymbolName = "Test",
+                    Created = DateTime.Now
+                }
+            };
+            _closedPositions = _closedPositions = new List<Position>
+            {
+                new Position()
+                    {
+                        EntryPrice = 1,
+                        ClosePrice = 1,
+                        StopLoss = 1,
+                        TakeProfit = 1,
+                        Volume = 1,
+                        Created = DateTime.Now
+                    },
+                new Position()
+                    {
+                        EntryPrice = 1,
+                        ClosePrice = 2,
+                        StopLoss = 1,
+                        TakeProfit = 1,
+                        Volume = 1,
+                        Created = DateTime.Now
+                    }
+            };
         }
     }
 }

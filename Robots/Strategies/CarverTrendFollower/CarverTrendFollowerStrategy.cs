@@ -8,6 +8,7 @@ using Application.Business.Market;
 using Application.Business.Positioning;
 using Application.Business.Positioning.Validation;
 using Application.Interfaces;
+using Application.Business.Positioning.Instructions;
 
 namespace Robots.Strategies.CarverTrendFollower
 {
@@ -55,7 +56,6 @@ namespace Robots.Strategies.CarverTrendFollower
                     var position = new Position();
                     position.SymbolName = wp.Instrument.InstrumentName;
                     position.StopLoss = Convert.ToDouble(wp.StopLossInPips);
-                    position.SymbolName = market.SymbolName;
                     position.EntryPrice = market.Ask;
                     position.Volume = GetVolume(wp);
                     position.PositionType = GetTradeType(wp);

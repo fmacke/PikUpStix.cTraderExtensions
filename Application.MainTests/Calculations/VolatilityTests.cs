@@ -1,7 +1,7 @@
 ﻿using Application.Business.Volatility;
 using Domain.Entities;
 
-namespace Application.MainTests
+namespace Application.MainTests.Calculations
 {
     [TestFixture]
     public class VolatilityTests

@@ -32,7 +32,7 @@ namespace FXProBridge.Robots
         protected override void OnBar()
         {
             var changeInstructions = new CarverTrendFollowerStrategy(ResultsCapture.TestParams);
-
+            var exchangeRate = 1;
             ManagePositions(changeInstructions.Run(
                 new List<IMarketInfo> {
                     new MarketInfo(Bars.OpenTimes.LastValue,
@@ -43,7 +43,7 @@ namespace FXProBridge.Robots
                     SymbolName,
                     SymbolName,
                     Account.Equity,
-                    Symbol.PipSize)}));
+                    Symbol.PipSize, exchangeRate)}));
             base.OnBar();
         }
     }

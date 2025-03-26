@@ -1,6 +1,6 @@
 using Application.Business.Calculations;
 
-namespace PikUpStix.Trading.NTests
+namespace Application.MainTests.Calculations
 {
     [TestFixture]
     public class MaxLossTests

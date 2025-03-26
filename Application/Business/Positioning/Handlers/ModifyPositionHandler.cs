@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace TradeSimulator.Business
+namespace Application.Business.Positioning.Handlers
 {
     internal class ModifyPositionHandler
     {

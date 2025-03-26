@@ -1,7 +1,7 @@
 using Application.Business.Calculations;
 using Domain.Entities;
 
-namespace PikUpStix.Trading.NTests
+namespace Application.MainTests.Calculations
 {
     [TestFixture]
     class AnnualReturnTests

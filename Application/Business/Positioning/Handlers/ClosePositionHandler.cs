@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 
-namespace TradeSimulator.Business
+namespace Application.Business.Positioning.Handlers
 {
     internal class ClosePositionHandler
     {

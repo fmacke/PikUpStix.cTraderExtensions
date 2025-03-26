@@ -12,8 +12,9 @@ namespace Application.Business.Market
         public List<HistoricalData> Bars { get; private set; }
         public string SymbolName { get; private set; }
         public double AccountBalance { get; private set; }
-        public double PipSize { get; private set; }
         public string Currency { get; private set; }
+        public double ExchangeRate { get; private set; }
+        public double ContractUnit { get; private set; }
 
         public double Balance => throw new NotImplementedException();
 
@@ -25,7 +26,7 @@ namespace Application.Business.Market
 
         public MarketInfo(DateTime cursorDate, double bid, double ask, List<Position> positions,
             List<HistoricalData> bars, string symbolName, string currency, double accountBalance,
-            double pipSize)
+            double contractUnit, double exchangeRate)
         {
             CursorDate = cursorDate;
             Bid = bid;
@@ -35,7 +36,8 @@ namespace Application.Business.Market
             SymbolName = symbolName;
             Currency = currency;
             AccountBalance = accountBalance;
-            PipSize = pipSize;
+            ExchangeRate = exchangeRate;
+            ContractUnit = contractUnit;
         }
     }
 }

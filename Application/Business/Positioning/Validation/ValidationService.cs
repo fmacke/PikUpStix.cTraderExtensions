@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Application.Business.Positioning.Instructions;
+using System.Reflection;
 
 namespace Application.Business.Positioning.Validation
 {
