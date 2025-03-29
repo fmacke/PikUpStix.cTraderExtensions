@@ -2,7 +2,7 @@
 //using QuandlCS.Requests;
 //using QuandlCS.Types;
 
-namespace PikUpStix.Trading.Data.Quandl
+namespace DataImports.Quandl
 {
     public enum CurrencyPair
     {

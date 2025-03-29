@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Tests", "Inf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataServices", "DataServices\DataServices.csproj", "{14B6731C-7DCF-4647-9419-1444A0F27485}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.MainTests", "Application.MainTests\Application.MainTests.csproj", "{FD1F5355-BE8C-49A8-B0A2-52F23B99EFD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application.Tests", "Application.MainTests\Application.Tests.csproj", "{FD1F5355-BE8C-49A8-B0A2-52F23B99EFD7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FXProBridge", "FXProBridge\FXProBridge.csproj", "{B6E2570E-ABE7-43D9-B223-ADF69EB7B763}"
 EndProject
@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunRobot", "..\..\..\..\One
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Simulation", "Simulation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeSimulateTests", "TradeSimulateTests\TradeSimulateTests.csproj", "{245FC54E-95B6-4C7D-B1C6-B8B21F263B54}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeSimulate.Tests", "TradeSimulateTests\TradeSimulate.Tests.csproj", "{245FC54E-95B6-4C7D-B1C6-B8B21F263B54}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TradeSimulator", "TradeSimulator\TradeSimulator.csproj", "{66C8ABB1-9A58-433F-A75E-5D01E8ADADA9}"
 EndProject

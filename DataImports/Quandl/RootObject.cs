@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PikUpStix.Trading.Data.Quandl
+namespace DataImports.Quandl
 {
     public class RootObject
     {

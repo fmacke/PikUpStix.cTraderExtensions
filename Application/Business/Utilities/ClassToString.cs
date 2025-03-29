@@ -7,12 +7,9 @@ namespace Application.Business.Utilities
         public static string FormatProperties(object obj)
         {
             if (obj == null)
-            {
                 throw new ArgumentNullException(nameof(obj));
-            }
 
-            var type = obj.GetType();
-            var properties = type.GetProperties();
+            var properties = obj.GetType().GetProperties();
             var stringBuilder = new StringBuilder();
 
             foreach (var property in properties)

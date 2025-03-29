@@ -37,59 +37,8 @@ namespace FXProBridge.Capture
             instrument.PriceQuotation = "Pips";
             instrument.MinimumPriceFluctuation = Symbol.PipSize;
             instrument.HistoricalDatas = BarConvert.ConvertBars(Bars);
-            Capture(instrument);
+            DataService.InstrumentCaller.AddOrUpdateInstrument(instrument);
         }
-        public void Capture(Instrument instrument)
-        {
-            var existingInstrumentData = new Instrument();
-            var instruments = DataService.InstrumentCaller.GetAllInstrumentsCachedAsync();
-            
-            var config = new MapperConfiguration(cfg => cfg.AddProfile<InstrumentProfile>());
-            var mapper = config.CreateMapper(); 
-            if (instruments.Any(x => x.InstrumentName == instrument.InstrumentName 
-                && x.DataSource == instrument.DataSource
-                && x.Frequency == instrument.Frequency))
-            {
-                existingInstrumentData = mapper.Map<Instrument>(instruments.First(x => x.InstrumentName == instrument.InstrumentName
-                    && x.DataSource == instrument.DataSource
-                    && x.Frequency == instrument.Frequency));
-                AddAnyNewDataToDb(existingInstrumentData, instrument);
-            }
-            else
-            {
-                var addInstrumentCommand = mapper.Map<CreateInstrumentCommand>(instrument);
-                DataService.InstrumentCaller.AddInstrument(addInstrumentCommand);
-            }
-        }
-
-        private void AddAnyNewDataToDb(Instrument existingInstrumentData, Instrument instrument)
-        {
-            var rangeToAdd = new CreateHistoricalDataRangeCommand();
-            foreach (var bar in instrument.HistoricalDatas)
-            {
-                if(!existingInstrumentData.HistoricalDatas.Any(x => x.Date.Value.Year == bar.Date.Value.Year
-                    && x.Date.Value.Month == bar.Date.Value.Month
-                    && x.Date.Value.Day == bar.Date.Value.Day
-                    && x.Date.Value.Hour == bar.Date.Value.Hour
-                    && x.Date.Value.Minute == bar.Date.Value.Minute
-                    && x.Date.Value.Second == bar.Date.Value.Second))
-                {
-                    // Add this new data to db
-                    rangeToAdd.Add(new CreateHistoricalDataCommand()
-                    {
-                        Date = bar.Date,
-                        OpenPrice = bar.OpenPrice,
-                        ClosePrice = bar.ClosePrice,
-                        LowPrice = bar.LowPrice,
-                        HighPrice = bar.HighPrice,
-                        Volume = bar.Volume,
-                        Settle = bar.Settle,
-                        OpenInterest = bar.OpenInterest,
-                        InstrumentId = existingInstrumentData.Id
-                    });
-                }
-            }
-            DataService.HistoricalDataCaller.AddHistoricalDataRange(rangeToAdd);
-        }
+        
     }
 }

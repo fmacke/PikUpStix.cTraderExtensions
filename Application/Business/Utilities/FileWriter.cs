@@ -1,11 +1,12 @@
-﻿namespace Application.Business.Utilities
+﻿using System.Diagnostics;
+
+namespace Application.Business.Utilities
 {
     public class FileWriter
     {
-        public static void WriteToTextFile(string[] lines, string path)
+        public static void Write(string[] lines, string path)
         {
             if (!File.Exists(path))
-            {
                 // Create a file to write to.
                 using (StreamWriter sw = File.CreateText(path))
                 {
@@ -13,22 +14,22 @@
                     sw.WriteLine("And");
                     sw.WriteLine("Welcome");
                 }
-            }
-
             // This text is always added, making the file longer over time
             // if it is not deleted.
             using (StreamWriter sw = File.AppendText(path))
             {
                 foreach (var line in lines)
                     sw.WriteLine(line);
-            }
-
-            // Open the file to read from.
+            }            
+        }
+        public static void Read(string path)
+        {
             using (StreamReader sr = File.OpenText(path))
             {
                 string s = "";
                 while ((s = sr.ReadLine()) != null)
                 {
+                    Debug.WriteLine(s);
                     Console.WriteLine(s);
                 }
             }

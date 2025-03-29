@@ -5,7 +5,6 @@ using Domain.Entities;
 using Application.BackTest;
 using Domain.Enums;
 using Application.Business.Market;
-using Application.Business.Positioning;
 using Application.Business.Positioning.Validation;
 using Application.Interfaces;
 using Application.Business.Positioning.Instructions;

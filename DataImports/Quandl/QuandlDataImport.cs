@@ -1,9 +1,7 @@
 ﻿using Application.Business.Error;
 using Domain.Entities;
-using PikUpStix.Trading.Data;
-using PikUpStix.Trading.Data.Quandl;
 
-namespace Application.Business.Utilities.Quandl
+namespace DataImports.Quandl
 {
     public class QuandlDataImport //: IDataImport
     {
