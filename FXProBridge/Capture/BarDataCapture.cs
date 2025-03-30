@@ -1,8 +1,4 @@
-﻿using Application.Features.HistoricalDatas.Commands.Create;
-using Application.Features.Instruments.Commands.Create;
-using Application.Mappings;
-using AutoMapper;
-using cAlgo.API;
+﻿using cAlgo.API;
 using DataServices;
 using Domain.Entities;
 using FXProBridge.DataConversions;

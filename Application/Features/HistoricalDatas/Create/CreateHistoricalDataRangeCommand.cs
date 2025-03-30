@@ -2,10 +2,10 @@
 using MediatR;
 using Application.Common.Results;
 using Application.Common.Interfaces;
-using Domain.Entities;
 using Application.Interfaces.Repositories;
+using Domain.Entities;
 
-namespace Application.Features.HistoricalDatas.Commands.Create
+namespace Application.Features.HistoricalDatas.Create
 {
     public partial class CreateHistoricalDataRangeCommand : List<CreateHistoricalDataCommand>, IRequest<Result<int>>
     {

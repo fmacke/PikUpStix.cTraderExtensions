@@ -1,8 +1,8 @@
 ﻿using Application.Common.Results;
-using Application.Features.HistoricalDatas.Commands.Create;
-using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Application.Features.HistoricalDatas.GetAllCached;
+using Application.Features.HistoricalDatas.Create;
 
 namespace DataServices.Calls
 {
@@ -14,21 +14,26 @@ namespace DataServices.Calls
         {
             this.serviceProvider = serviceProvider;
         }
-
+        public List<GetAllHistoricalDataCachedResponse> GetAllHistoricalDataCachedAsync()
+        {
+            var result = serviceProvider.GetRequiredService<IHistoricalDataService>().GetAllHistoricalDataCachedAsync();
+            return result.Result.Data;
+        }
         public int AddHistoricalData(CreateHistoricalDataCommand model)
         {
             var id = serviceProvider.GetRequiredService<IHistoricalDataService>().AddHistoricalData(model).Result.Data;
             return id;
         }
 
-        public int AddHistoricalDataRange(CreateHistoricalDataRangeCommand historicalDatas)
+        public int AddHistoricalDataRange(CreateHistoricalDataRangeCommand historicalData)
         {
-            var result = serviceProvider.GetRequiredService<IHistoricalDataService>().AddHistoricalDataRange(historicalDatas).Result.Data;
+            var result = serviceProvider.GetRequiredService<IHistoricalDataService>().AddHistoricalDataRange(historicalData).Result.Data;
             return result;
         }
     }
     public interface IHistoricalDataService
     {
+        Task<Result<List<GetAllHistoricalDataCachedResponse>>> GetAllHistoricalDataCachedAsync();
         Task<Result<int>> AddHistoricalData(CreateHistoricalDataCommand model);
         Task<Result<int>> AddHistoricalDataRange(CreateHistoricalDataRangeCommand model);
     }
@@ -40,7 +45,11 @@ namespace DataServices.Calls
         {
             _mediator = mediator;
         }
-
+        public async Task<Result<List<GetAllHistoricalDataCachedResponse>>> GetAllHistoricalDataCachedAsync()
+        {
+            var query = new GetAllHistoricalDataCachedQuery();
+            return await _mediator.Send(query);
+        }
         public async Task<Result<int>> AddHistoricalData(CreateHistoricalDataCommand model)
         {
             var result = await _mediator.Send(model);

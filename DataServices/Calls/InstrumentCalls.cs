@@ -1,5 +1,5 @@
 ﻿using Application.Common.Results;
-using Application.Features.HistoricalDatas.Commands.Create;
+using Application.Features.HistoricalDatas.Create;
 using Application.Features.Instruments.Commands.Create;
 using Application.Features.Instruments.Queries.GetAllCached;
 using Application.Mappings;

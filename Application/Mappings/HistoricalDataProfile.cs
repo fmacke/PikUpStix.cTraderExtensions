@@ -1,4 +1,4 @@
-﻿using Application.Features.HistoricalDatas.Commands.Create;
+﻿using Application.Features.HistoricalDatas.Create;
 using AutoMapper;
 using Domain.Entities;
 

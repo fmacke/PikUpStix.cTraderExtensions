@@ -6,7 +6,7 @@ using Domain.Abstractions;
 using Domain.Entities;
 using MediatR;
 
-namespace Application.Features.HistoricalDatas.Commands.Create
+namespace Application.Features.HistoricalDatas.Create
 {
     public partial class CreateHistoricalDataCommand : IRequest<Result<int>>
     {
