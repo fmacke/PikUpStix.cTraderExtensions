@@ -1,5 +1,5 @@
 ﻿using Domain.Entities;
-using TradeSimulator;
+using Application.Business.Simulate;
 using Robots.Strategies.CarverTrendFollower;
 
 namespace TradeSimulateTests

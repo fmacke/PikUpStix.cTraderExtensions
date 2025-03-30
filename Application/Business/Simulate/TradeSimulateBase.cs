@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace TradeSimulator
+namespace Application.Business.Simulate
 {
     public abstract class TradeSimulateBase
     {

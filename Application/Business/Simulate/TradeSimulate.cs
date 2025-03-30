@@ -6,7 +6,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using System.Diagnostics;
 
-namespace TradeSimulator
+namespace Application.Business.Simulate
 {
     public class TradeSimulate : TradeSimulateBase
     {
