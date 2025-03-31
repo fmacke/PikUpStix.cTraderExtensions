@@ -1,8 +1,8 @@
 ﻿using Application.Common.Results;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Application.Features.HistoricalDatas.GetAllCached;
 using Application.Features.HistoricalDatas.Create;
+using Application.Features.HistoricalDatas.Queries.GetAllCached;
 
 namespace DataServices.Calls
 {

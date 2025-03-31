@@ -11,7 +11,6 @@ namespace Application.Features.Instruments.Queries.GetAllCached
         {
         }
     }
-
     public class GetAllInstrumentCachedQueryHandler : IRequestHandler<GetAllInstrumentsCachedQuery, Result<List<GetAllInstrumentsCachedResponse>>>
     {
         private readonly IInstrumentCacheRepository _instrumentCache;

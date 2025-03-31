@@ -3,7 +3,7 @@ using MediatR;
 using Application.Common.Results;
 using Application.Interfaces.CacheRepositories;
 
-namespace Application.Features.HistoricalDatas.GetAllCached
+namespace Application.Features.HistoricalDatas.Queries.GetAllCached
 {
     public class GetAllHistoricalDataCachedQuery : IRequest<Result<List<GetAllHistoricalDataCachedResponse>>>
     {

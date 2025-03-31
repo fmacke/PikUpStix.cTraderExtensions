@@ -1,7 +1,7 @@
 ﻿using Application.Common.Results;
 using MediatR;
 
-namespace Application.Features.HistoricalDatas.GetAllCached
+namespace Application.Features.HistoricalDatas.Queries.GetAllCached
 {
     public class GetAllHistoricalDataCachedResponse : IRequest<Result<int>>
     {

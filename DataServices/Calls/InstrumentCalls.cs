@@ -2,6 +2,8 @@
 using Application.Features.HistoricalDatas.Create;
 using Application.Features.Instruments.Commands.Create;
 using Application.Features.Instruments.Queries.GetAllCached;
+using Application.Features.Instruments.Queries.GetById;
+using Application.Features.Tests.Queries.GetById;
 using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;
@@ -21,6 +23,11 @@ namespace DataServices.Calls
         public List<GetAllInstrumentsCachedResponse> GetAllInstrumentsCachedAsync()
         {
             var result = serviceProvider.GetRequiredService<IInstrumentService>().GetAllInstrumentsCachedAsync();
+            return result.Result.Data;
+        }
+        public GetInstrumentByIdResponse GetInstrument(int id)
+        {
+            var result = serviceProvider.GetRequiredService<IInstrumentService>().GetInstrument(id);
             return result.Result.Data;
         }
         public int AddInstrument(CreateInstrumentCommand model)
@@ -50,7 +57,6 @@ namespace DataServices.Calls
                 AddInstrument(addInstrumentCommand);
             }
         }
-
         private void AddAnyNewDataToDb(Instrument existingInstrumentData, Instrument instrument)
         {
             var rangeToAdd = new CreateHistoricalDataRangeCommand();
@@ -84,6 +90,7 @@ namespace DataServices.Calls
     public interface IInstrumentService
     {
         Task<Result<List<GetAllInstrumentsCachedResponse>>> GetAllInstrumentsCachedAsync();
+        Task<Result<GetInstrumentByIdResponse>> GetInstrument(int id);
         Task<Result<int>> AddInstrument(CreateInstrumentCommand model);
     }
     public class InstrumentService : IInstrumentService
@@ -104,6 +111,12 @@ namespace DataServices.Calls
         {
             var result = await _mediator.Send(model);
             return result;
+        }
+        public async Task<Result<GetInstrumentByIdResponse>> GetInstrument(int id)
+        {
+            var query = new GetInstrumentByIdQuery();
+            query.Id = id;
+            return await _mediator.Send(query);
         }
     }
 }
