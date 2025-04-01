@@ -15,18 +15,12 @@ namespace Application.Business.Market
         public string Currency { get; private set; }
         public double ExchangeRate { get; private set; }
         public double ContractUnit { get; private set; }
-
-        public double Balance => throw new NotImplementedException();
-
-        public double Maximumrisk => throw new NotImplementedException();
-
-        public ConfirmingSignals Signals => throw new NotImplementedException();
-
-        public List<IIndicator> Indicators => throw new NotImplementedException();
+        public ConfirmingSignals Signals { get; private set; }
+        public List<IIndicator> Indicators { get; private set; }
 
         public MarketInfo(DateTime cursorDate, double bid, double ask, List<Position> positions,
             List<HistoricalData> bars, string symbolName, string currency, double accountBalance,
-            double contractUnit, double exchangeRate)
+            double contractUnit, double exchangeRate, ConfirmingSignals signals, List<IIndicator> indicators)
         {
             CursorDate = cursorDate;
             Bid = bid;
@@ -38,6 +32,8 @@ namespace Application.Business.Market
             AccountBalance = accountBalance;
             ExchangeRate = exchangeRate;
             ContractUnit = contractUnit;
+            Signals = signals;
+            Indicators = indicators;
         }
     }
 }

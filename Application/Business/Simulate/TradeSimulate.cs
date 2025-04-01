@@ -5,6 +5,8 @@ using Application.Business.Positioning.Handlers;
 using Application.Interfaces;
 using Domain.Entities;
 using System.Diagnostics;
+using Application.Business.Indicator.Signal;
+using Application.Business.Indicator;
 
 namespace Application.Business.Simulate
 {
@@ -42,11 +44,15 @@ namespace Application.Business.Simulate
         }
         private List<IMarketInfo> GetMarketInfo()
         {
+            List<ISignal> signals = new List<ISignal>();
+            // THIS NEEDS TO BE IMPLETMENTED PROPERLY - TAKE OUT THE HARDCODING
             return new List<IMarketInfo>() { 
                 new MarketInfo(Convert.ToDateTime(CurrentBar.Date), 
                 CurrentBar.OpenPrice, CurrentBar.OpenPrice, 
                 OpenPositions, CurrentBars, 
-                "EURUSD", "GBPUSD", 10000, 1, 1) };
+                "EURUSD", "GBPUSD", 10000, 1, 1, 
+                new ConfirmingSignals(signals), new List<IIndicator>()
+                ) };
         }
     }
 }

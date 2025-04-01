@@ -3,7 +3,6 @@ using Application.Business.Indicator;
 using Application.Business.Market;
 using Application.Business.Risk;
 using Domain.Enums;
-using Application.Business.Positioning;
 using Application.Business.Positioning.Validation;
 using Application.Interfaces;
 using Application.Business.Positioning.Instructions;
@@ -31,56 +30,41 @@ namespace Robots.Strategies.PivotPointBounce
         {           
             foreach (var marketInfo in marketInfos)
             {
-                MaximumRisk = marketInfo.Maximumrisk;
                 var confirmingSignalsPositive = false;
                 if (marketInfo.Signals.Count == 0)
-                {
                     confirmingSignalsPositive = true; // no confirming signal filter
-                }
                 if (marketInfo.Signals.Count > 0 && ForecastExceedsMinimumThreshold(marketInfo.Signals.AggregatedForecast, confirmingSignalsForecastTreshhold))
-                {
-                    confirmingSignalsPositive = true;
-                }
-                if (confirmingSignalsPositive)
-                {
-                    NewMethod(marketInfo);
-
-                }
+                    CalculateNewInstructions(marketInfo);
             }
             return _positionInstructions;
         }
-
-        private void NewMethod(IMarketInfo marketInfo)
+        private void CalculateNewInstructions(IMarketInfo marketInfo)
         {
-            foreach (var indicator in marketInfo.Indicators)
+            PivotPoints = marketInfo.Indicators.OfType<PivotPoints>().FirstOrDefault();
+            if (PivotPoints != null)
             {
-                if (indicator is PivotPoints)
+                StrategySignal = CaculateStrategySignal(marketInfo);
+                if (ForecastExceedsMinimumThreshold(StrategySignal, thresholdForTrade))
                 {
-                    PivotPoints = (PivotPoints)indicator;
-
-                    StrategySignal = CaculateStrategySignal(marketInfo);
-                    if (ForecastExceedsMinimumThreshold(StrategySignal, thresholdForTrade))
+                    var stopLoss = StrategySignal > 0 ?
+                            CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
+                            CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
+                    var pricePoint = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid;
+                    var riskmanager = new RiskManager(StrategySignal, MaximumRisk, marketInfo.AccountBalance, marketInfo.ContractUnit, stopLoss, pricePoint);
+                    var position = new Position()
                     {
-                        var stopLoss = StrategySignal > 0 ?
-                                CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
-                                CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
-                        var pricePoint = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid;
-                        var riskmanager = new RiskManager(StrategySignal, MaximumRisk, marketInfo.AccountBalance, marketInfo.ContractUnit, stopLoss, pricePoint);
-                        var position = new Position()
-                        {
-                            SymbolName = marketInfo.SymbolName,
-                            PositionType = StrategySignal > 0 ? PositionType.BUY : PositionType.SELL,
-                            EntryPrice = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid,
-                            StopLoss = stopLoss,
-                            TakeProfit = StrategySignal > 0 ?
-                                CalculatePips(PivotPoints.Pivot - PivotPoints.Support1) :
-                                CalculatePips(PivotPoints.Resistance1 - PivotPoints.Pivot),
-                            Volume = riskmanager.LotSize,
-                            Created = marketInfo.CursorDate,
-                            ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 0, 0)
-                        };
-                        _positionInstructions.Add(new OpenInstruction(position, ValidationService));
-                    }
+                        SymbolName = marketInfo.SymbolName,
+                        PositionType = StrategySignal > 0 ? PositionType.BUY : PositionType.SELL,
+                        EntryPrice = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid,
+                        StopLoss = stopLoss,
+                        TakeProfit = StrategySignal > 0 ?
+                            CalculatePips(PivotPoints.Pivot - PivotPoints.Support1) :
+                            CalculatePips(PivotPoints.Resistance1 - PivotPoints.Pivot),
+                        Volume = riskmanager.LotSize,
+                        Created = marketInfo.CursorDate,
+                        ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 0, 0)
+                    };
+                    _positionInstructions.Add(new OpenInstruction(position, ValidationService));
                 }
             }
         }

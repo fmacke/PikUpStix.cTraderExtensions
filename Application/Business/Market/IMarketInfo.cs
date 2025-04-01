@@ -14,8 +14,6 @@ namespace Application.Business.Market
         double AccountBalance { get; }
         double ContractUnit { get; }
         double ExchangeRate { get; }
-        double Balance { get; }
-        double Maximumrisk { get; }
         List<HistoricalData> Bars { get; }
         List<Position> Positions { get; }
         ConfirmingSignals Signals { get; }
