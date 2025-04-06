@@ -156,8 +156,8 @@ namespace Application.Business.Reports
                     return shortMarginSum;
                 return shortMarginSum / shortLossSum;
             }}
-        public double MaxAdverseExcursion { get; private set; }
-        public double StartingAccountBalance { get; private set; }
+        public double MaxAdverseExcursion { get; private set; } = 0.0;
+        public double StartingAccountBalance { get; private set; } = 0.0;
         public double SharpeRatio { get {
                 return new SharpeRatio(Positions.ToList()).Value;
             }}
@@ -259,13 +259,12 @@ namespace Application.Business.Reports
             get
             {
                 var returns = Positions.Select(t => t.Margin).ToList();
+                if (returns.Count == 0) return 0;
                 double averageReturn = returns.Average();
                 double downsideDeviation = CalculateDownsideDeviation(returns);
 
                 if (downsideDeviation == 0)
-                {
                     return double.PositiveInfinity;
-                }
 
                 return (averageReturn - RiskFreeRate) / downsideDeviation;
             }

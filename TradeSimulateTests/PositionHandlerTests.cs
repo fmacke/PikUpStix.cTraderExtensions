@@ -1,9 +1,12 @@
-﻿using Application.Business.Market;
+﻿using Application.Business.Indicator;
+using Application.Business.Indicator.Signal;
+using Application.Business.Market;
 using Application.Business.Positioning.Handlers;
 using Application.Business.Positioning.Instructions;
 using Application.Business.Positioning.Validation;
 using Domain.Entities;
 using Domain.Enums;
+using System.Collections.Generic;
 
 namespace TradeSimulateTests
 {
@@ -20,7 +23,8 @@ namespace TradeSimulateTests
         {
             _validationService = new ValidationService();
             _marketInfo = new List<IMarketInfo>{
-                new MarketInfo(DateTime.Now, 2,2,new List<Position>(),new List<HistoricalData>(),"Test", "GBP", 10000, 0.0001, 1)
+                new MarketInfo(DateTime.Now, 2,2,new List<Position>(),new List<HistoricalData>(),"Test", "GBP", 10000, 0.0001, 1,
+                    new ConfirmingSignals(new List<ISignal>()), new List<IIndicator>())
             };
             LoadPositions();
         }

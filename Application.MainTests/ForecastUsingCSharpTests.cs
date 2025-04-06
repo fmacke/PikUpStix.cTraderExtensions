@@ -1,5 +1,7 @@
 using Application.Business;
 using Application.Business.Forecasts.CarverTrendFollower;
+using Application.Business.Indicator;
+using Application.Business.Indicator.Signal;
 using Application.Business.Market;
 using Domain.Entities;
 
@@ -18,7 +20,7 @@ namespace Application.MainTests
             LoadData();
             LoadExcelData();
             currentMarketInfo = new MarketInfo(new DateTime(2017, 1, 20), 1.2345, 1.2346, new List<Position>(),
-                data, "CME BP FUTURE MINI", "GBP", 10000, 0.0001, 1);
+                data, "CME BP FUTURE MINI", "GBP", 10000, 0.0001, 1, new ConfirmingSignals(new List<ISignal>()), new List<IIndicator>());
         }
         [Test]
         public void Calculate_Single_Unscaled_Forecast()
