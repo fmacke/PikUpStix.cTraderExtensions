@@ -4,76 +4,42 @@ using Application.Business.Indicator;
 using Application.Business.Indicator.Signal;
 using Application.Business.Market;
 using Domain.Entities;
+using System.Diagnostics;
 
-namespace Application.MainTests
+namespace Application.Tests
 {
     [TestFixture]
     public class ForecastUsingCSharpTests
     {
         private MarketInfo currentMarketInfo;
         private List<HistoricalData> data;
-        private List<HistoricalData> excelData;
 
         [OneTimeSetUp]
         public void Init()
         {
             LoadData();
-            LoadExcelData();
             currentMarketInfo = new MarketInfo(new DateTime(2017, 1, 20), 1.2345, 1.2346, new List<Position>(),
-                data, "CME BP FUTURE MINI", "GBP", 10000, 0.0001, 1, new ConfirmingSignals(new List<ISignal>()), new List<IIndicator>());
+                data, "Test Instrument", "currency", 10000, 0.0001, 1, new ConfirmingSignals(new List<ISignal>()), new List<IIndicator>());
         }
         [Test]
         public void Calculate_Single_Unscaled_Forecast()
         {
-            if (data == null)
-                LoadData();
             var ewmacCSharpForecastValue = new EwmacForecastValue(currentMarketInfo, new List<Test_Parameter>());
             var forecast16_64 = ewmacCSharpForecastValue.GetUnscaledForecast(16, 64, 36, 3.75);
             var forecastToCheck = forecast16_64.Last();
+            foreach (var forecast in forecast16_64)
+            {
+                Debug.WriteLine(forecast.Return);
+            }
             Assert.AreEqual(Convert.ToDouble(6.3998), Math.Round(forecastToCheck.Forecast, 4));
         }
         [Test]
         public void Calculate_Combined_Scaled_Capped_Forecast()
         {
-            if (excelData == null)
-                LoadExcelData();
             var ewmacCSharpForecastValue = new EwmacForecastValue(currentMarketInfo, new List<Test_Parameter>());
             //Assert.AreEqual(-13.320916565243922m, ewmacCSharpForecastValue.CalculateForecast());
             // Note this is a slightly different number to the Python version because it calculates forecast starting with less priming data
             Assert.AreEqual(-12.736708587895151m, ewmacCSharpForecastValue.CalculateForecast());
-        }
-
-        //private void DebugPrint(List<ForecastElement> forecastElements)
-        //{
-        //    var str = new StringBuilder();
-        //    var foreCastScaling = new ForecastScaling();
-        //    Console.Write(foreCastScaling.WriteOutData(forecastElements));
-        //}
-
-        private void LoadExcelData()
-        {
-            //excelData = new List<HistoricalData>();
-            //var dat = ExcelConnector.GethHistoricalPrices(@"C:\dev\PikUpStix.Trading\PikUpStix.Trading.NTests\CsvData\CME_BP1 - British Pound Futures (Front Month) to 20170122 - SMALL.xlsx");
-            //foreach (var historicalData in dat)
-            //{
-            //    if (historicalData.Date.Value.Year == 2014 && historicalData.Date.Value.Month == 1)
-            //    {
-            //        if (historicalData.Date.Value.Day > 14)
-            //        {
-            //            var dataItem = historicalData;
-            //            dataItem.InstrumentId = 1; //CME BP FUTURE MINI
-            //            dataItem.Instrument = new Instrument() { MinimumPriceFluctuation = 0.0001) };
-            //            excelData.Add(dataItem);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        var dataItem = historicalData;
-            //        dataItem.InstrumentId = 1; //CME BP FUTURE MINI
-            //        dataItem.Instrument = new Instrument() { MinimumPriceFluctuation = 0.0001) };
-            //        excelData.Add(dataItem);
-            //    }
-            //}
         }
 
         private void LoadData()

@@ -1,17 +1,17 @@
 ﻿namespace PikUpStix.Trading.NTests
 {
-    [TestFixture]
+    [TestClass]
     [Ignore("Don't call IB Data Import tests during routine unit testing")]
     public class ImportIBDataTests
     {
-        [Test]
+        [TestMethod]
         public void Import_Recent_Historical_Data_From_InteractiveBrokers_ToSql_Test()
         {
             //var x = new QuandlDataImport();
 
            // x.ImportLatestData(new List<Instrument>()); /// TODO: Populate instrument list
         }
-        [Test]
+        [TestMethod]
         public void Import_Historical_Data_From_InteractiveBrokers_ToSql_Test()
         {
             var reImportDataFromQuandlToSqlServer = true;
@@ -26,7 +26,7 @@
                // finished here!!!!!!!!!!! untested
             }
         }
-        [Test]
+        [TestMethod]
         public void Get_Exchange_Rate_From_Quandl_ToSql_Test()
         {
             //  var x = QuandlConnector.GetCurrentExchangeRate(DateTime.Now.AddDays(-50), CurrencyPair.GBPUSD);

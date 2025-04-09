@@ -1,6 +1,6 @@
 using Application.Business.Calculations;
 
-namespace Application.MainTests.Calculations
+namespace Application.Tests.Calculations
 {
     [TestFixture]
     public class MaxLossTests

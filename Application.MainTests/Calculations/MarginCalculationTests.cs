@@ -3,7 +3,7 @@ using Domain.Entities;
 using Domain.Enums;
 using System.Diagnostics;
 
-namespace Application.MainTests.Calculations
+namespace Application.Tests.Calculations
 {
     [TestFixture]
     public class MarginCalculationTests

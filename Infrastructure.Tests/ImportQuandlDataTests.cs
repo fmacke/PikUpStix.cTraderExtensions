@@ -1,10 +1,10 @@
 ﻿namespace PikUpStix.Trading.NTests
 {
-    [TestFixture]
+    [TestClass]
     [Ignore("Don't call Quandl during routine unit testing")]
     public class ImportQuandlDataTests
     {
-        [Test]
+        [TestMethod]
         public void Import_Recent_Historical_Data_From_Quandl_ToSql_Test()
         {
             //var x = new QuandlDataImport();
@@ -13,7 +13,7 @@
             //var instruments = db.Instruments.Where(xe => xe.Provider == "QUANDL");
             //x.ImportLatestData(instruments.ToList(), pullDataFrom); /// TODO: Populate instrument list
         }
-        [Test]
+        [TestMethod]
         public void Import_Historical_Data_From_Quandl_ToSql_Test()
         {
             //var reImportDataFromQuandlToSqlServer = false;
@@ -25,7 +25,7 @@
             //    x.ClearExistingAndImportNewData(false);
             //}
         }
-        [Test]
+        [TestMethod]
         public void Get_Exchange_Rate_From_Quandl_ToSql_Test()
         {
             //  var x = QuandlConnector.GetCurrentExchangeRate(DateTime.Now.AddDays(-50), CurrencyPair.GBPUSD);

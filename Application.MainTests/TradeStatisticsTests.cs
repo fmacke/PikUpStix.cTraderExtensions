@@ -1,4 +1,4 @@
-﻿namespace PikUpStix.Trading.NTests
+﻿namespace Application.Tests
 {
     [TestFixture]
     public class TradeStatisticsTests

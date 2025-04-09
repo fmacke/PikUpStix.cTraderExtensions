@@ -21,7 +21,7 @@ namespace DataImports.ForexSb
             foreach (var file in csvFiles)
             {
                 var records = ReadCsvFile(file);
-                var frequency = file.Split('_')[1].Split('.')[0];
+                var frequency = GetFrequency(file);
                 string instrumentName = Path.GetFileNameWithoutExtension(file).Split('_')[0];
 
                 var x = 1;
@@ -41,6 +41,13 @@ namespace DataImports.ForexSb
                     PriceQuotation = "CHECK",
                 });
             }
+        }
+
+        private string GetFrequency(string filePath)
+        {
+            int lastDotIndex = filePath.LastIndexOf('.');
+            string beforeExtension = filePath.Substring(0, lastDotIndex);
+            return beforeExtension.Substring(beforeExtension.Length - 2);
         }
 
         private List<HistoricalData> ReadCsvFile(string filePath)

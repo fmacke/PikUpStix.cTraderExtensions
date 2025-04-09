@@ -1,7 +1,7 @@
 ﻿using Application.Business;
 using Application.RiskControl;
 using Domain.Enums;
-namespace Application.MainTests
+namespace Application.Tests
 {
     [TestFixture]
     public class TrailingStopLossTests

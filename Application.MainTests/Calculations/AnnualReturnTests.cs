@@ -1,7 +1,7 @@
 using Application.Business.Calculations;
 using Domain.Entities;
 
-namespace Application.MainTests.Calculations
+namespace Application.Tests.Calculations
 {
     [TestFixture]
     class AnnualReturnTests

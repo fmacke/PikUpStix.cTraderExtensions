@@ -1,6 +1,6 @@
 ﻿using Application.Business.Indicator;
 
-namespace PikUpStix.Trading.NTests
+namespace Application.Tests
 {
     [TestFixture]
     public class EwmacTests

@@ -2,10 +2,10 @@
 using Domain.Entities;
 namespace Application.MainTests
 {
-    [TestFixture]
+    [TestClass]
     public class ImportDukasCopyExcelTests
     {
-        [Test]
+        [TestMethod]
         [Ignore("For data import only")]
         public void Import_DukasCopy_Data_from_Excel()
         {

@@ -31,11 +31,11 @@ namespace Robots.Strategies.PivotPointBounce
             foreach (var marketInfo in marketInfos)
             {
                 // THIS METHOD NEEDS REVIEW - why isn't it creating any instructions?
-                var confirmingSignalsPositidve = false;
-                if (marketInfo.Signals.Count == 0)
-                    confirmingSignalsPositive = true; // no confirming signal filter
-                if (marketInfo.Signals.Count > 0
-                    && ForecastExceedsMinimumThreshold(marketInfo.Signals.AggregatedForecast, confirmingSignalsForecastTreshhold))
+                //var confirmingSignalsPositidve = false;
+                //if (marketInfo.Signals.Count == 0)
+                //    confirmingSignalsPositive = true; // no confirming signal filter
+                //if (marketInfo.Signals.Count > 0
+                //    && ForecastExceedsMinimumThreshold(marketInfo.Signals.AggregatedForecast, confirmingSignalsForecastTreshhold))
                     CalculateNewInstructions(marketInfo);
             }
             return _positionInstructions;

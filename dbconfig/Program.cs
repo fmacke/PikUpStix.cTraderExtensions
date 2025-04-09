@@ -2,47 +2,87 @@
 using Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using DataImports.ForexSb;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
+public class DatabaseService
+{
+    private readonly IConfiguration _configuration;
+
+    public DatabaseService(IConfiguration configuration)
+    {
+        _configuration = configuration;
+    }
+
+    public string GetPassword()
+    {
+        return _configuration["SqlPassword"];
+    }
+    public string GetDbName() {
+        return _configuration["DbName"];
+    }
+    
+}
 internal class Program
 {
+    private static string Password { get; set; }
+    private static string DbName { get; set; } = "TradingBE";
 
     private static void Main(string[] args)
-    {
-        Console.Write("Option 1:  Update Forex Data from files");
-        Console.Write("Option 99:  NUKE Database forever");
+    {  
+        Console.WriteLine("Option 1:  Update Forex Data from files");
+        Console.WriteLine("Option 99:  NUKE Database forever");
         var inputText = Console.ReadLine();
 
         if (inputText.Equals("1"))
         {
-            ImportForexDataFromFile();
-            Console.Write("new instrument data imported.");
+            Console.WriteLine("Please enter the folder path to import data from:");
+            var folderPath = Console.ReadLine(); //"C:\Users\finnmackenzie\Downloads\OneDrive_2_09-04-2025"
+            ImportForexDataFromFile(folderPath);
+            Console.WriteLine("new instrument data imported.");
         }
         if (inputText.Equals("99"))
         {
             NukeDatabase();
-            Console.Write("db has been deleted and rebuilt");
+            Console.WriteLine("db has been deleted and rebuilt");
         }
 
-        Console.Write("All works complete - press any key to exit...");
+        Console.WriteLine("All works complete - press any key to exit...");
     }
 
-    private static void ImportForexDataFromFile()
+    private static void ImportForexDataFromFile(string folderPath)
     {
+
         DataService dataService = new DataService();
-        string folderPath = @"C:\Users\finn\OneDrive\Documents\Money\Business\trading\DataImports\ForexSb";
         var historicalDataProcessor = new HistoricalDataProcessor(folderPath);
         historicalDataProcessor.ProcessFiles();
     }
 
     private static void NukeDatabase()
     {
-        string DBName = "TradingBE";
-        string connString = @"Server=localhost;Database=" + DBName + ";User Id=sa;Password=Gogogo123!;Encrypt=True;TrustServerCertificate=True;";
+        var builder = new ConfigurationBuilder()
+           .SetBasePath(AppContext.BaseDirectory)
+           .AddUserSecrets<Program>()
+           .AddEnvironmentVariables();
+
+        var configuration = builder.Build();
+
+        var services = new ServiceCollection();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddTransient<DatabaseService>();
+
+        var serviceProvider = services.BuildServiceProvider();
+
+        var myService = serviceProvider.GetService<DatabaseService>();
+
+        Password = myService.GetPassword();
+        DbName = myService.GetDbName();
+        string connString = @"Server=localhost;Database=" + DbName + ";User Id=sa;Password=" + Password + ";Encrypt=True;TrustServerCertificate=True;";
         DbContextOptionsBuilder optionsBuilder = new DbContextOptionsBuilder();
-        
+
         using (ApplicationDbContext db = new ApplicationDbContext())
         {
-            Console.Write("Are you FUCKING CERTAIN you want to nuke " + DBName + " db and start again? (y or n)");
+            Console.Write("Are you FUCKING CERTAIN you want to nuke " + DbName + " db and start again? (y or n)");
             var name = Console.ReadLine();
 
             if (name.Equals("y"))

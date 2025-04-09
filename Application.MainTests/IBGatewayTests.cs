@@ -1,5 +1,5 @@
 ﻿
-namespace Application.MainTests
+namespace Application.Tests
 {
     [TestFixture]
     [Ignore("Only useful when connected to Interactive Brokers")]

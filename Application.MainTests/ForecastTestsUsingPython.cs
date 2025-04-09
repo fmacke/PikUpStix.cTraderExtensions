@@ -5,7 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 
 
-namespace PikUpStix.Trading.NTests
+namespace Application.Tests
 {
     //[TestFixture]
     //public class ForecastTestsUsingPython

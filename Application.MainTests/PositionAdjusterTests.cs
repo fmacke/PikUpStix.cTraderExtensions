@@ -2,7 +2,7 @@
 using Domain.Enums;
 using PikUpStix.Trading.Forecast;
 
-namespace PikUpStix.Trading.NTests
+namespace Application.Tests
 {
     [TestFixture]
     public class PositionAdjusterTests

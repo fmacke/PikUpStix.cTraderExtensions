@@ -1,6 +1,8 @@
 ﻿using Application;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Contexts
 {
@@ -8,7 +10,19 @@ namespace Infrastructure.Contexts
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connString = @"Server=localhost;Database=TradingBE;User Id=sa;Password=Gogogo123!;Encrypt=True;TrustServerCertificate=True;";
+            var builder = new ConfigurationBuilder()
+          .SetBasePath(AppContext.BaseDirectory)
+          .AddUserSecrets<ApplicationDbContext>();
+
+            var configuration = builder.Build();
+
+            var services = new ServiceCollection();
+            services.AddSingleton<IConfiguration>(configuration);
+            services.AddTransient<DatabaseService>();
+            var serviceProvider = services.BuildServiceProvider();
+            var myService = serviceProvider.GetService<DatabaseService>();
+
+            string connString = @"Server=localhost;Database=" + myService.GetDbName() + ";User Id=sa;Password=" + myService.GetPassword() + ";Encrypt=True;TrustServerCertificate=True;";
             optionsBuilder.UseSqlServer(connString);
         }
         public virtual DbSet<ErrorMessage> ErrorMessages { get; set; }
@@ -35,6 +49,24 @@ namespace Infrastructure.Contexts
                 .HasForeignKey(e => e.PortfolioId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();          
+        }
+    }
+    public class DatabaseService
+    {
+        private readonly IConfiguration _configuration;
+
+        public DatabaseService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
+        public string GetPassword()
+        {
+            return _configuration["SqlPassword"];
+        }
+        public string GetDbName()
+        {
+            return _configuration["DbName"];
         }
     }
 }
