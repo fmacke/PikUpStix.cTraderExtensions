@@ -1,4 +1,5 @@
 ﻿using Application.Business.Extensions;
+using Application.Business.Indicator.Signal;
 using Application.Business.Market;
 using cAlgo.API;
 using cAlgo.API.Internals;
@@ -43,7 +44,7 @@ namespace FXProBridge.Robots
                     SymbolName,
                     SymbolName,
                     Account.Equity,
-                    Symbol.PipSize, exchangeRate)}));
+                    Symbol.PipSize, exchangeRate, new ConfirmingSignals(new List<ISignal>()), new List<Application.Business.Indicator.IIndicator>())}));
             base.OnBar();
         }
     }

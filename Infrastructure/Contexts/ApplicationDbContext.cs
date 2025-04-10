@@ -10,21 +10,25 @@ namespace Infrastructure.Contexts
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var builder = new ConfigurationBuilder()
-          .SetBasePath(AppContext.BaseDirectory)
-          .AddUserSecrets<ApplicationDbContext>();
-
-            var configuration = builder.Build();
-
-            var services = new ServiceCollection();
-            services.AddSingleton<IConfiguration>(configuration);
-            services.AddTransient<DatabaseService>();
-            var serviceProvider = services.BuildServiceProvider();
-            var myService = serviceProvider.GetService<DatabaseService>();
-
-            string connString = @"Server=localhost;Database=" + myService.GetDbName() + ";User Id=sa;Password=" + myService.GetPassword() + ";Encrypt=True;TrustServerCertificate=True;";
+            DBCredentialsService? dbCredentialsService = GetCredentials();
+            string connString = @"Server=localhost;Database=" + dbCredentialsService.GetDbName() + ";User Id=sa;Password=" + dbCredentialsService.GetPassword() + ";Encrypt=True;TrustServerCertificate=True;";
             optionsBuilder.UseSqlServer(connString);
         }
+
+        private static DBCredentialsService? GetCredentials()
+        {
+            var builder = new ConfigurationBuilder()
+                          .SetBasePath(AppContext.BaseDirectory)
+                          .AddUserSecrets<ApplicationDbContext>();
+
+            var configuration = builder.Build();
+            var services = new ServiceCollection();
+            services.AddSingleton<IConfiguration>(configuration);
+            services.AddTransient<DBCredentialsService>();
+            var serviceProvider = services.BuildServiceProvider();
+            return  serviceProvider.GetService<DBCredentialsService>();
+        }
+
         public virtual DbSet<ErrorMessage> ErrorMessages { get; set; }
         public virtual DbSet<HistoricalData> HistoricalData { get; set; }
         public virtual DbSet<Instrument> Instruments { get; set; }
@@ -51,15 +55,13 @@ namespace Infrastructure.Contexts
                 .IsRequired();          
         }
     }
-    public class DatabaseService
+    public class DBCredentialsService
     {
         private readonly IConfiguration _configuration;
-
-        public DatabaseService(IConfiguration configuration)
+        public DBCredentialsService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-
         public string GetPassword()
         {
             return _configuration["SqlPassword"];

@@ -3,11 +3,9 @@ using FXProBridge.DataConversions;
 using Robots.Strategies.PivotPointBounce;
 using cAlgo.API;
 using Indicators;
-using Application.Business.Indicator;
-using cAlgo.API.Indicators;
-using Application.Business;
-using Application.Business.Indicator.Signal;
 using Application.Business.Market;
+using cAlgo.API.Indicators;
+using Application.Business.Indicator.Signal;
 using Application.Business.Extensions;
 
 namespace FXProBridge.Robots
@@ -80,7 +78,7 @@ namespace FXProBridge.Robots
                 SymbolName,
                 SymbolName,
                 Account.Equity,
-                Symbol.PipSize, exchangeRate);
+                Symbol.PipSize, exchangeRate, new ConfirmingSignals(new List<ISignal>()), new List<Application.Business.Indicator.IIndicator>());
 
             var signals = new List<ISignal>();
             if(EnableMA)

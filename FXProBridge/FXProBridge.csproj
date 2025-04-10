@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\DataServices\DataServices.csproj" />
+    <ProjectReference Include="..\Indicators\Indicators.csproj" />
     <ProjectReference Include="..\Robots\Robots.csproj" />
   </ItemGroup>
 
