@@ -1,6 +1,6 @@
-﻿using Application.Business.Indicator;
-using Application.Business.Indicator.Signal;
+﻿using Application.Business.Indicator.Signal;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace Application.Business.Market
 {
@@ -17,6 +17,6 @@ namespace Application.Business.Market
         List<HistoricalData> Bars { get; }
         List<Position> Positions { get; }
         ConfirmingSignals Signals { get; }
-        List<IIndicator> Indicators { get; }
+        TimeFrame TimeFrame { get; }
     }
 }

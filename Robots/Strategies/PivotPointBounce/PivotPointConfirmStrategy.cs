@@ -30,19 +30,19 @@ namespace Robots.Strategies.PivotPointBounce
         {           
             foreach (var marketInfo in marketInfos)
             {
-                // THIS METHOD NEEDS REVIEW - why isn't it creating any instructions?
+                // TODO:  THIS METHOD NEEDS REVIEW - why isn't it creating any instructions?
                 //var confirmingSignalsPositidve = false;
                 //if (marketInfo.Signals.Count == 0)
                 //    confirmingSignalsPositive = true; // no confirming signal filter
                 //if (marketInfo.Signals.Count > 0
                 //    && ForecastExceedsMinimumThreshold(marketInfo.Signals.AggregatedForecast, confirmingSignalsForecastTreshhold))
-                    CalculateNewInstructions(marketInfo);
+                    CalculateNewInstructions(marketInfo, marketInfos);
             }
             return _positionInstructions;
         }
-        private void CalculateNewInstructions(IMarketInfo marketInfo)
+        private void CalculateNewInstructions(IMarketInfo marketInfo, List<IMarketInfo> marketInfos)
         {
-            PivotPoints = marketInfo.Indicators.OfType<PivotPoints>().FirstOrDefault();
+            PivotPoints = GetPivotPointData(marketInfo.TimeFrame, marketInfos);
             if (PivotPoints != null)
             {
                 StrategySignal = CaculateStrategySignal(marketInfo);
@@ -68,6 +68,55 @@ namespace Robots.Strategies.PivotPointBounce
                     };
                     _positionInstructions.Add(new OpenInstruction(position, ValidationService));
                 }
+            }
+            else
+            {
+                LogMessages.Add($"PivotPoints not found for {marketInfo.SymbolName}");
+            }
+        }
+
+        private PivotPoints GetPivotPointData(TimeFrame timeFrame, List<IMarketInfo> marketInfos)
+        {
+            var pivotTimeFrame = GetPivotTimeFrame(timeFrame);
+            if (marketInfos.Any(x => x.TimeFrame == pivotTimeFrame))
+            {
+                var pivotMarketInfo = marketInfos.First(x => x.TimeFrame == pivotTimeFrame);
+                if (pivotMarketInfo.Bars.Count > 0)
+                {
+                    var pivotPoint = new PivotPoints(pivotMarketInfo.Bars[0].HighPrice, pivotMarketInfo.Bars[0].LowPrice, pivotMarketInfo.Bars[0].ClosePrice);
+                    return pivotPoint;
+                }
+                else
+                {
+                    LogMessages.Add($"No bars found for {pivotTimeFrame}");
+                    return null;
+                }
+            }
+            else
+            {
+                LogMessages.Add($"No market info found for {pivotTimeFrame}");
+                return null;
+            }
+        }
+
+        private TimeFrame GetPivotTimeFrame(TimeFrame timeFrame)
+        {
+            switch (timeFrame)
+            {
+                case TimeFrame.M1:
+                    return TimeFrame.H1;
+                case TimeFrame.M5:
+                    return TimeFrame.H1;
+                case TimeFrame.M15:
+                    return TimeFrame.H1;
+                case TimeFrame.M30:
+                    return TimeFrame.H4;
+                case TimeFrame.H1:
+                    return TimeFrame.D1;
+                case TimeFrame.H4:
+                    return TimeFrame.D1;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(timeFrame), timeFrame, null);
             }
         }
 

@@ -1,6 +1,6 @@
-﻿using Application.Business.Indicator;
-using Application.Business.Indicator.Signal;
+﻿using Application.Business.Indicator.Signal;
 using Domain.Entities;
+using Domain.Enums;
 namespace Application.Business.Market
 {
     public class MarketInfo : IMarketInfo
@@ -16,11 +16,11 @@ namespace Application.Business.Market
         public double ExchangeRate { get; private set; }
         public double ContractUnit { get; private set; }
         public ConfirmingSignals Signals { get; private set; }
-        public List<IIndicator> Indicators { get; private set; }
+        public TimeFrame TimeFrame { get; private set; }
 
         public MarketInfo(DateTime cursorDate, double bid, double ask, List<Position> positions,
             List<HistoricalData> bars, string symbolName, string currency, double accountBalance,
-            double contractUnit, double exchangeRate, ConfirmingSignals signals, List<IIndicator> indicators)
+            double contractUnit, double exchangeRate, ConfirmingSignals signals, TimeFrame timeFrame)
         {
             CursorDate = cursorDate;
             Bid = bid;
@@ -33,7 +33,7 @@ namespace Application.Business.Market
             ExchangeRate = exchangeRate;
             ContractUnit = contractUnit;
             Signals = signals;
-            Indicators = indicators;
+            TimeFrame = timeFrame;
         }
     }
 }

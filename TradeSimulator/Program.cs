@@ -9,17 +9,23 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var instrumentId = 2;
+        var marketData = GetMarketData(1);
+        var pivotPointData = GetMarketData(2); // the timeframe of the instrument to be used for pivot point calculation
+        var strategy = new PivotPointConfirmStrategy(GetPivotPointParams());
+        var tradeSimulator = new TradeSimulate(marketData, strategy, 10000);
+        tradeSimulator.Run();
+    }
+
+    private static List<HistoricalData> GetMarketData(int instrumentId)
+    {
         DataService dataServices = new DataService();
         var instrument = dataServices.InstrumentCaller.GetInstrument(instrumentId);
         var config = new MapperConfiguration(cfg => cfg.AddProfile<HistoricalDataProfile>());
         var mapper = config.CreateMapper();
-        var Bars = instrument.HistoricalDatas.ToList();
-        var historicalTrades = mapper.Map<List<HistoricalData>>(Bars);
-        var strategy = new PivotPointConfirmStrategy(GetPivotPointParams());
-        var tradeSimulator = new TradeSimulate(historicalTrades, strategy, 10000);
-        tradeSimulator.Run();
+        var marketData = mapper.Map<List<HistoricalData>>(instrument.HistoricalDatas.ToList());
+        return marketData;
     }
+
     private static List<Test_Parameter> GetPivotPointParams()
     {
         return new List<Test_Parameter>()
