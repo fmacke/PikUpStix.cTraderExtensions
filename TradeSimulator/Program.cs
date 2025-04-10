@@ -9,8 +9,9 @@ internal class Program
 {
     private static void Main(string[] args)
     {
+        var instrumentId = 2;
         DataService dataServices = new DataService();
-        var instrument = dataServices.InstrumentCaller.GetInstrument(1);
+        var instrument = dataServices.InstrumentCaller.GetInstrument(instrumentId);
         var config = new MapperConfiguration(cfg => cfg.AddProfile<HistoricalDataProfile>());
         var mapper = config.CreateMapper();
         var Bars = instrument.HistoricalDatas.ToList();

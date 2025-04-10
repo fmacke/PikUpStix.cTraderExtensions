@@ -1,6 +1,6 @@
 ﻿using Domain.Enums;
 
-namespace Application.Business
+namespace Application.Business.Risk
 {
     public class StopLossCalculator
     {

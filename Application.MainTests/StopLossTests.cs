@@ -1,5 +1,4 @@
-﻿using Application.Business;
-using Application.RiskControl;
+﻿using Application.Business.Risk;
 using Domain.Enums;
 namespace Application.Tests
 {
