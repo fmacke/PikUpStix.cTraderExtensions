@@ -4,6 +4,7 @@ using Application.Business.Indicator;
 using Application.Business.Indicator.Signal;
 using Application.Business.Market;
 using Domain.Entities;
+using Domain.Enums;
 using System.Diagnostics;
 
 namespace Application.Tests
@@ -19,7 +20,7 @@ namespace Application.Tests
         {
             LoadData();
             currentMarketInfo = new MarketInfo(new DateTime(2017, 1, 20), 1.2345, 1.2346, new List<Position>(),
-                data, "Test Instrument", "currency", 10000, 0.0001, 1, new ConfirmingSignals(new List<ISignal>()), new List<IIndicator>());
+                data, "Test Instrument", "currency", 10000, 0.0001, 1, new ConfirmingSignals(new List<ISignal>()), TimeFrame.D1);
         }
         [Test]
         public void Calculate_Single_Unscaled_Forecast()

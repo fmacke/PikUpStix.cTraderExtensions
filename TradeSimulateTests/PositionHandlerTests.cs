@@ -24,7 +24,7 @@ namespace TradeSimulateTests
             _validationService = new ValidationService();
             _marketInfo = new List<IMarketInfo>{
                 new MarketInfo(DateTime.Now, 2,2,new List<Position>(),new List<HistoricalData>(),"Test", "GBP", 10000, 0.0001, 1,
-                    new ConfirmingSignals(new List<ISignal>()), new List<IIndicator>())
+                    new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.W1)
             };
             LoadPositions();
         }

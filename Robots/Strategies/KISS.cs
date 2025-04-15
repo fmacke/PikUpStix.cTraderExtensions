@@ -17,7 +17,7 @@ namespace Robots.Strategies
 
         public List<IPositionInstruction> Run(List<IMarketInfo> marketInfos)
         {
-            foreach (var marketInfo in marketInfos)
+            foreach (var marketInfo in marketInfos)this is messy. something needs to populate the marketinf.ask and cursordate etc
             {
                 if (!marketInfo.Positions.Any())
                 {

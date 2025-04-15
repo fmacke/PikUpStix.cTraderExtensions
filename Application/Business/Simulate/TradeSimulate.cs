@@ -5,8 +5,6 @@ using Application.Business.Positioning.Handlers;
 using Application.Interfaces;
 using Domain.Entities;
 using System.Diagnostics;
-using Application.Business.Indicator.Signal;
-using Application.Business.Indicator;
 
 namespace Application.Business.Simulate
 {
@@ -14,20 +12,20 @@ namespace Application.Business.Simulate
     {
         List<Position> OpenPositions = new List<Position>();
         List<Position> ClosedTrades = new List<Position>();
+        List<IMarketInfo> MarketInfo = new List<IMarketInfo>();
 
         public IStrategy Strategy { get; private set; }
 
-        public TradeSimulate(List<HistoricalData> bars, IStrategy strategy, double initialCapital) : base(initialCapital, bars) 
-        { 
+        public TradeSimulate(IMarketInfo runData, IStrategy strategy, double initialCapital) : base(initialCapital, runData.Bars) 
+        {
+            MarketInfo.Add(runData);
             Strategy = strategy;
         }
-
         protected internal override void OnBar()
         {
-            var marketInfo = GetMarketInfo();
-            new StopLossHandler(CurrentBar.Date, CurrentBar.OpenPrice, ref OpenPositions, ref ClosedTrades, marketInfo).CloseOutStops();            
-            var positionInstructions = Strategy.Run(marketInfo);
-            new PositionHandler(positionInstructions, ref OpenPositions, ref ClosedTrades, marketInfo).ExecuteInstructions();
+            new StopLossHandler(CurrentBar.Date, CurrentBar.OpenPrice, ref OpenPositions, ref ClosedTrades, MarketInfo).CloseOutStops();            
+            var positionInstructions = Strategy.Run(MarketInfo);
+            new PositionHandler(positionInstructions, ref OpenPositions, ref ClosedTrades, MarketInfo).ExecuteInstructions();
         }        
         protected internal override void OnStart()
         {
@@ -41,18 +39,6 @@ namespace Application.Business.Simulate
             Debug.WriteLine("OnStop");
             var report = new TradeStatistics(ClosedTrades, InitialCapital, 20);
             Debug.WriteLine(ClassToString.FormatProperties(report));
-        }
-        private List<IMarketInfo> GetMarketInfo()
-        {
-            List<ISignal> signals = new List<ISignal>();
-            // THIS NEEDS TO BE IMPLETMENTED PROPERLY - TAKE OUT THE HARDCODING
-            return new List<IMarketInfo>() { 
-                new MarketInfo(Convert.ToDateTime(CurrentBar.Date), 
-                CurrentBar.OpenPrice, CurrentBar.OpenPrice, 
-                OpenPositions, CurrentBars, 
-                "EURUSD", "GBPUSD", 10000, 1, 1, 
-                new ConfirmingSignals(signals), new List<IIndicator>()
-                ) };
-        }
+        }        
     }
 }

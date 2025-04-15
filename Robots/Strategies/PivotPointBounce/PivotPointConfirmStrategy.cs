@@ -83,7 +83,7 @@ namespace Robots.Strategies.PivotPointBounce
                 var pivotMarketInfo = marketInfos.First(x => x.TimeFrame == pivotTimeFrame);
                 if (pivotMarketInfo.Bars.Count > 0)
                 {
-                    var pivotPoint = new PivotPoints(pivotMarketInfo.Bars[0].HighPrice, pivotMarketInfo.Bars[0].LowPrice, pivotMarketInfo.Bars[0].ClosePrice);
+                    var pivotPoint = new PivotPoints(Convert.ToDateTime(pivotMarketInfo.Bars[0].Date), pivotMarketInfo.Bars[0].HighPrice, pivotMarketInfo.Bars[0].LowPrice, pivotMarketInfo.Bars[0].ClosePrice);
                     return pivotPoint;
                 }
                 else

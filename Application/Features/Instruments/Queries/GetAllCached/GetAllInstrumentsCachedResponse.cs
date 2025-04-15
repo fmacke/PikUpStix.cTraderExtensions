@@ -14,10 +14,10 @@ namespace Application.Features.Instruments.Queries.GetAllCached
         public string Format { get; set; }
         public string Frequency { get; set; }
         public string Sort { get; set; }
-        public decimal ContractUnit { get; set; }
+        public double ContractUnit { get; set; }
         public string ContractUnitType { get; set; }
         public string PriceQuotation { get; set; }
-        public decimal MinimumPriceFluctuation { get; set; }
+        public double MinimumPriceFluctuation { get; set; }
         public string Currency { get; set; }
         public virtual ICollection<HistoricalData> HistoricalDatas { get; set; }
         public virtual ICollection<PortfolioInstrument> PortfolioInstruments { get; set; }

@@ -3,6 +3,7 @@ using Application.Business.Indicator.Signal;
 using Application.Business.Market;
 using cAlgo.API;
 using cAlgo.API.Internals;
+using Domain.Enums;
 using FXProBridge.Common;
 using FXProBridge.DataConversions;
 using Robots.Strategies.CarverTrendFollower;
@@ -44,7 +45,7 @@ namespace FXProBridge.Robots
                     SymbolName,
                     SymbolName,
                     Account.Equity,
-                    Symbol.PipSize, exchangeRate, new ConfirmingSignals(new List<ISignal>()), new List<Application.Business.Indicator.IIndicator>())}));
+                    Symbol.PipSize, exchangeRate, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.D1)}));
             base.OnBar();
         }
     }

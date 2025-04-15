@@ -1,13 +1,15 @@
 ﻿using Domain.Entities;
 using Application.Business.Simulate;
 using Robots.Strategies.CarverTrendFollower;
+using Application.Business.Market;
+using Application.Business.Indicator.Signal;
 
 namespace TradeSimulateTests
 {
     [TestClass]
     public sealed class TestSimulation
     {
-        List<HistoricalData> Bars;
+        IMarketInfo MarketInfo;
         List<Test_Parameter> TestParameters;    
 
         [TestInitialize]
@@ -21,7 +23,7 @@ namespace TradeSimulateTests
         public void RunSimulation()
         {
             var strategy = new CarverTrendFollowerStrategy(TestParameters);
-            var tradeSimulator = new TradeSimulate(Bars, strategy, 10000);
+            var tradeSimulator = new TradeSimulate(MarketInfo, strategy, 10000);
             tradeSimulator.Run();
             Assert.IsNotNull(tradeSimulator.CurrentBar.HighPrice);
         }
@@ -63,14 +65,27 @@ namespace TradeSimulateTests
         private void LoadBars()
         {
             DateTime startDate = new DateTime(2000, 1, 1);
-
-            Bars = new List<HistoricalData>();
+            MarketInfo = new MarketInfo(
+                startDate,
+                0,
+                0,
+                new List<Position>(),
+                new List<HistoricalData>(),
+                "EURUSD",
+                "USD",
+                10000,
+                100000,
+                1,
+                new ConfirmingSignals(new List<ISignal>()),
+                Domain.Enums.TimeFrame.H1
+            );
+            var data = new List<HistoricalData>();
             int expander = 1;
             int direction = 1;
             int subCounter = 6;
             for (int x = 0; x < 200; x++)
             {
-                Bars.Add(new HistoricalData()
+                MarketInfo.Bars.Add(new HistoricalData()
                 {
                     Date = startDate.AddDays(x),
                     OpenPrice = subCounter,

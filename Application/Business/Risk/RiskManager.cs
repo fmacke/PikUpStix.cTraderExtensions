@@ -4,6 +4,7 @@
     {
         public RiskManager(double forecast, double maximumRisk, double accountBalance, double pipSize, double stopLoss, double entryPrice)
         {
+            Forecast = forecast;
             if (forecast > 1)
                 Forecast = 1.0;
             if(forecast < -1)

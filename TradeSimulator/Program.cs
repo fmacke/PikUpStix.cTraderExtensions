@@ -1,32 +1,53 @@
-﻿using Application.Business.Simulate;
+﻿using Application.Business.Indicator.Signal;
+using Application.Business.Market;
+using Application.Business.Simulate;
+using Application.Interfaces;
 using Application.Mappings;
 using AutoMapper;
 using DataServices;
 using Domain.Entities;
-using Robots.Strategies.PivotPointBounce;
+using Robots.Strategies;
 
 internal class Program
 {
+    //public static List<HistoricalData> BarData { get; set; }
+    public static IStrategy Strategy { get; set; }
+    public static IMarketInfo MarketInfo { get; set; }
     private static void Main(string[] args)
     {
-        var marketData = GetMarketData(1);
-        var pivotPointData = GetMarketData(2); // the timeframe of the instrument to be used for pivot point calculation
-        var strategy = new PivotPointConfirmStrategy(GetPivotPointParams());
-        var tradeSimulator = new TradeSimulate(marketData, strategy, 10000);
+        Strategy = new KISS();
+        GetMarketData(6);
+        //var pivotPointData = GetMarketData(5); // the timeframe of the instrument to be used for pivot point calculation
+        //marketData.AddRange(pivotPointData);
+        //var strategy = new PivotPointConfirmStrategy(GetPivotPointParams());
+        var tradeSimulator = new TradeSimulate(MarketInfo, Strategy, 10000);
         tradeSimulator.Run();
     }
 
-    private static List<HistoricalData> GetMarketData(int instrumentId)
+    private static void GetMarketData(int instrumentId)
     {
         DataService dataServices = new DataService();
         var instrument = dataServices.InstrumentCaller.GetInstrument(instrumentId);
         var config = new MapperConfiguration(cfg => cfg.AddProfile<HistoricalDataProfile>());
         var mapper = config.CreateMapper();
         var marketData = mapper.Map<List<HistoricalData>>(instrument.HistoricalDatas.ToList());
-        return marketData;
+        MarketInfo = new MarketInfo(
+            new DateTime(),
+            0,
+            0,
+            new List<Position>(),
+            marketData,
+            instrument.InstrumentName,
+            instrument.Currency,
+            10000,
+            instrument.ContractUnit,
+            1,
+            new ConfirmingSignals(new List<ISignal>()),
+            Domain.Enums.TimeFrame.H1
+        );
     }
 
-    private static List<Test_Parameter> GetPivotPointParams()
+private static List<Test_Parameter> GetPivotPointParams()
     {
         return new List<Test_Parameter>()
         {
