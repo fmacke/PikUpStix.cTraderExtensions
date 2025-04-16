@@ -3,7 +3,7 @@ namespace Domain.Entities
 {
     public partial class HistoricalData : BaseEntity
     {
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
         public double OpenPrice { get; set; }
         public double ClosePrice { get; set; }
         public double LowPrice { get; set; }

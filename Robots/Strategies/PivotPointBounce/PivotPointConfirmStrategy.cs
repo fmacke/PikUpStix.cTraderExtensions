@@ -52,7 +52,7 @@ namespace Robots.Strategies.PivotPointBounce
                             CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
                     var pricePoint = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid;
-                    var riskmanager = new RiskManager(StrategySignal, MaximumRisk, marketInfo.AccountBalance, marketInfo.ContractUnit, stopLoss, pricePoint);
+                    var riskmanager = new RiskManager(StrategySignal, MaximumRisk, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, pricePoint);
                     var position = new Position()
                     {
                         SymbolName = marketInfo.SymbolName,
@@ -83,7 +83,7 @@ namespace Robots.Strategies.PivotPointBounce
                 var pivotMarketInfo = marketInfos.First(x => x.TimeFrame == pivotTimeFrame);
                 if (pivotMarketInfo.Bars.Count > 0)
                 {
-                    var pivotPoint = new PivotPoints(Convert.ToDateTime(pivotMarketInfo.Bars[0].Date), pivotMarketInfo.Bars[0].HighPrice, pivotMarketInfo.Bars[0].LowPrice, pivotMarketInfo.Bars[0].ClosePrice);
+                    var pivotPoint = new PivotPoints(pivotMarketInfo.Bars[0].Date, pivotMarketInfo.Bars[0].HighPrice, pivotMarketInfo.Bars[0].LowPrice, pivotMarketInfo.Bars[0].ClosePrice);
                     return pivotPoint;
                 }
                 else

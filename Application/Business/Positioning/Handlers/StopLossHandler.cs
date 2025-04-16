@@ -5,39 +5,51 @@ using Domain.Enums;
 namespace Application.Business.Positioning.Handlers
 {
     public class StopLossHandler
-    {
-        private double openPrice;
+    { 
         private List<Position> openPositions;
         private List<Position> closePositions;
-        private DateTime? cursorDate;
+        private DateTime cursorDate;
+        private List<IMarketInfo> marketInfos;
 
-        private List<IMarketInfo> marketInfo;
-
-        public StopLossHandler(DateTime? cursorDate, double openPrice, ref List<Position> openPositions, ref List<Position> closedTrades, List<IMarketInfo> marketInfo)
+        public StopLossHandler(DateTime cursorDate, ref List<Position> openPositions, ref List<Position> closedTrades, List<IMarketInfo> marketInfos)
         {
-            this.openPrice = openPrice;
             this.openPositions = openPositions;
             closePositions = closedTrades;
             this.cursorDate = cursorDate;
-            this.marketInfo = marketInfo;
+            this.marketInfos = marketInfos;
         }
         public void CloseOutStops()
         {
-            var positionsToClose = openPositions.FindAll(p => p.StopLoss.HasValue && StopLossHit(p, openPrice));
-            foreach (var position in positionsToClose)
+            foreach (var marketInfo in marketInfos)
             {
-                var exchangeRate = marketInfo.Find(m => m.SymbolName == positionsToClose[0].SymbolName).ExchangeRate;
-                var contractUnit = marketInfo.Find(m => m.SymbolName == positionsToClose[0].SymbolName).ContractUnit;
-                new ClosePositionHandler(ref openPositions, ref closePositions).ClosePosition(position, Convert.ToDouble(position.StopLoss), Convert.ToDateTime(cursorDate), contractUnit, exchangeRate);
+                var positionsToClose = openPositions
+                    .FindAll(
+                    p => p.StopLoss.HasValue
+                    && StopLossHit(p, marketInfo)
+                    && p.SymbolName == marketInfo.SymbolName);
+                foreach (var position in positionsToClose)
+                    new ClosePositionHandler(ref openPositions, ref closePositions).ClosePosition(position, Convert.ToDouble(position.StopLoss), Convert.ToDateTime(cursorDate), marketInfo.ContractUnit, marketInfo.ExchangeRate);
             }
+            
         }
-        private bool StopLossHit(Position position, double currentPrice)
+        private bool StopLossHit(Position position, IMarketInfo marketInfo)
         {
-            if (position.PositionType == PositionType.BUY && currentPrice <= position.StopLoss)
+            var maxPriceExcursion = GetMaxPriceExcursion(position, marketInfo);
+            if (position.PositionType == PositionType.BUY && maxPriceExcursion <= position.StopLoss)
                 return true;
-            if (position.PositionType == PositionType.SELL && currentPrice >= position.StopLoss)
+            if (position.PositionType == PositionType.SELL && maxPriceExcursion >= position.StopLoss)
                 return true;
             return false;
+        }
+
+        private double? GetMaxPriceExcursion(Position position, IMarketInfo marketInfo)
+        {
+            if (position.Created < marketInfo.CursorDate) //  Position created at some point during the last bar - tricky to know if the stop loss was hit without looking at more refined timeframes/tick data
+                return marketInfo.CurrentBar.OpenPrice;
+            if (position.PositionType == PositionType.BUY)                
+                return marketInfo.CurrentBar.OpenPrice < marketInfo.LastBar.LowPrice ? marketInfo.CurrentBar.OpenPrice : marketInfo.LastBar.LowPrice;  // FOR BUY POSITIONS
+            return marketInfo.CurrentBar.OpenPrice < marketInfo.LastBar.LowPrice ? marketInfo.CurrentBar.OpenPrice : marketInfo.LastBar.LowPrice;  // FOR SELL POSITIONS
+
         }
     }
 }

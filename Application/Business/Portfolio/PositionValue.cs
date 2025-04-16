@@ -113,7 +113,7 @@ namespace Application.Business.Portfolio
                 HistoricalData currentData =
                     HistoricalPriceSet.First(
                         x =>
-                            x.Date.Value.Date == currentPeriodDate.Date);
+                            x.Date == currentPeriodDate.Date);
 
                 int index = HistoricalPriceSet.ToList().IndexOf(currentData);
                 if (SufficientPreviousDataToCalculateVolatility(index, periodsToCheck, HistoricalPriceSet.Count - 1))
@@ -138,7 +138,7 @@ namespace Application.Business.Portfolio
             return
                 HistoricalPriceSet.Any(
                     x =>
-                        x.Date.Value.Date == currentPeriodDate.Date);
+                        x.Date == currentPeriodDate.Date);
         }
 
         public double GetForecastDiversificationMultiplier()

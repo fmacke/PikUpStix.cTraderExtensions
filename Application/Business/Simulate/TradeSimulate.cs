@@ -12,20 +12,20 @@ namespace Application.Business.Simulate
     {
         List<Position> OpenPositions = new List<Position>();
         List<Position> ClosedTrades = new List<Position>();
-        List<IMarketInfo> MarketInfo = new List<IMarketInfo>();
 
         public IStrategy Strategy { get; private set; }
 
-        public TradeSimulate(IMarketInfo runData, IStrategy strategy, double initialCapital) : base(initialCapital, runData.Bars) 
+        public TradeSimulate(IMarketInfo runData, IStrategy strategy, double initialCapital) : base(initialCapital, runData) 
         {
-            MarketInfo.Add(runData);
             Strategy = strategy;
         }
         protected internal override void OnBar()
         {
-            new StopLossHandler(CurrentBar.Date, CurrentBar.OpenPrice, ref OpenPositions, ref ClosedTrades, MarketInfo).CloseOutStops();            
-            var positionInstructions = Strategy.Run(MarketInfo);
-            new PositionHandler(positionInstructions, ref OpenPositions, ref ClosedTrades, MarketInfo).ExecuteInstructions();
+            List<IMarketInfo> marketInfos = new List<IMarketInfo>();
+            marketInfos.Add(CurrentMarketInfo);  // this works for now for testing purposes, where a strategy only deals with a single market instrument.
+            new StopLossHandler(CurrentMarketInfo.CursorDate, ref OpenPositions, ref ClosedTrades, marketInfos).CloseOutStops();            
+            var positionInstructions = Strategy.Run(marketInfos);
+            new PositionHandler(positionInstructions, ref OpenPositions, ref ClosedTrades, marketInfos).ExecuteInstructions();
         }        
         protected internal override void OnStart()
         {

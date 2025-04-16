@@ -5,18 +5,20 @@ namespace Application.Business.Market
 {
     public class MarketInfo : IMarketInfo
     {
-        public DateTime CursorDate { get; private set; }
-        public double Bid { get; private set; }
-        public double Ask { get; private set; }
-        public List<Position> Positions { get; private set; }
-        public List<HistoricalData> Bars { get; private set; }
+        public DateTime CursorDate { get; set; }
+        public double Bid { get; set; }
+        public double Ask { get; set; }
+        public List<Position> Positions { get; set; }
+        public List<HistoricalData> Bars { get; set; }
         public string SymbolName { get; private set; }
-        public double AccountBalance { get; private set; }
+        public double CurrentCapital { get; set; }
         public string Currency { get; private set; }
         public double ExchangeRate { get; private set; }
         public double ContractUnit { get; private set; }
         public ConfirmingSignals Signals { get; private set; }
         public TimeFrame TimeFrame { get; private set; }
+        public HistoricalData CurrentBar { get; set; }
+        public HistoricalData LastBar { get; set; }
 
         public MarketInfo(DateTime cursorDate, double bid, double ask, List<Position> positions,
             List<HistoricalData> bars, string symbolName, string currency, double accountBalance,
@@ -29,7 +31,7 @@ namespace Application.Business.Market
             Bars = bars;
             SymbolName = symbolName;
             Currency = currency;
-            AccountBalance = accountBalance;
+            CurrentCapital = accountBalance;
             ExchangeRate = exchangeRate;
             ContractUnit = contractUnit;
             Signals = signals;

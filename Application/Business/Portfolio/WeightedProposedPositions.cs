@@ -16,7 +16,7 @@ namespace Application.Business.Portfolio
                     if (forecast.SymbolName == marketInfo.SymbolName)
                     {
                         var pos = new PositionValue(forecast, stopLossPercent, exchangeRate, 
-                            targetVolatility, marketInfo.Bars, marketInfo.AccountBalance, marketInfo.SymbolName);
+                            targetVolatility, marketInfo.Bars, marketInfo.CurrentCapital, marketInfo.SymbolName);
                         Add(pos);
                     }
                 }

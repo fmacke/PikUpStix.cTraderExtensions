@@ -62,12 +62,12 @@ namespace DataServices.Calls
             var rangeToAdd = new CreateHistoricalDataRangeCommand();
             foreach (var bar in instrument.HistoricalDatas)
             {
-                if (!existingInstrumentData.HistoricalDatas.Any(x => x.Date.Value.Year == bar.Date.Value.Year
-                    && x.Date.Value.Month == bar.Date.Value.Month
-                    && x.Date.Value.Day == bar.Date.Value.Day
-                    && x.Date.Value.Hour == bar.Date.Value.Hour
-                    && x.Date.Value.Minute == bar.Date.Value.Minute
-                    && x.Date.Value.Second == bar.Date.Value.Second))
+                if (!existingInstrumentData.HistoricalDatas.Any(x => x.Date.Year == bar.Date.Year
+                    && x.Date.Month == bar.Date.Month
+                    && x.Date.Day == bar.Date.Day
+                    && x.Date.Hour == bar.Date.Hour
+                    && x.Date.Minute == bar.Date.Minute
+                    && x.Date.Second == bar.Date.Second))
                 {
                     // Add this new data to db
                     rangeToAdd.Add(new CreateHistoricalDataCommand()
