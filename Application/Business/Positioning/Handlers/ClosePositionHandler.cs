@@ -6,22 +6,24 @@ namespace Application.Business.Positioning.Handlers
 {
     internal class ClosePositionHandler
     {
-        private List<Position> openPositions;
-        private List<Position> closedTrades;
-        public ClosePositionHandler(ref List<Position> openPositions, ref List<Position> closedTrades)
+        private List<Position> _positions;
+        public ClosePositionHandler(ref List<Position> positions)
         {
-            this.openPositions = openPositions;
-            this.closedTrades = closedTrades;
+            this._positions = positions;
         }
         public void ClosePosition(Position position, double closePrice, DateTime closedAt, double contractUnit, double exchangeRate)
         {
-            position.ClosePrice = closePrice;
-            position.Status = PositionStatus.CLOSED;
-            position.ClosedAt = closedAt;
-            position.Margin = Margin.Calculate(contractUnit, exchangeRate, position, closePrice, position.Volume);
-            closedTrades.Add(position);
-            openPositions.Remove(position);
-            return;
+            if (position.ClosedAt == null)
+            {
+                _positions.Find(p => p.Equals(position)).ClosedAt = closedAt; ;
+                _positions.Find(p => p.Equals(position)).Status = PositionStatus.CLOSED;
+                _positions.Find(p => p.Equals(position)).ClosePrice = closePrice;
+                _positions.Find(p => p.Equals(position)).Margin = Margin.Calculate(contractUnit, exchangeRate, position, closePrice, position.Volume);
+            }
+            else
+            {
+                throw new Exception("Position already closed");
+            }
         }
     }
 }

@@ -301,7 +301,7 @@ namespace Application.Business.Reports
 
         public TradeStatistics(List<Position> testTrades, double startingAccountBalance, double maximumAdverseExcursion)
         {
-            Positions = testTrades;
+            Positions = testTrades.Where(t => t.ClosedAt != null).ToList();
             MaxAdverseExcursion = maximumAdverseExcursion;
             StartingAccountBalance = startingAccountBalance;
             RiskFreeRate = 2.0;

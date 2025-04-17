@@ -11,7 +11,7 @@ namespace Application.Business.Simulate
     public class TradeSimulate : TradeSimulateBase
     {
         List<Position> OpenPositions = new List<Position>();
-        List<Position> ClosedTrades = new List<Position>();
+        //List<Position> ClosedTrades = new List<Position>();
 
         public IStrategy Strategy { get; private set; }
 
@@ -23,21 +23,18 @@ namespace Application.Business.Simulate
         {
             List<IMarketInfo> marketInfos = new List<IMarketInfo>();
             marketInfos.Add(CurrentMarketInfo);  // this works for now for testing purposes, where a strategy only deals with a single market instrument.
-            new StopLossHandler(CurrentMarketInfo.CursorDate, ref OpenPositions, ref ClosedTrades, marketInfos).CloseOutStops();            
+            new StopLossHandler(CurrentMarketInfo.CursorDate, ref OpenPositions, marketInfos).CloseOutStops();            
             var positionInstructions = Strategy.Run(marketInfos);
-            new PositionHandler(positionInstructions, ref OpenPositions, ref ClosedTrades, marketInfos).ExecuteInstructions();
+            new PositionHandler(positionInstructions, ref OpenPositions, marketInfos).ExecuteInstructions();
         }        
         protected internal override void OnStart()
         {
-            foreach(var position in ClosedTrades)
-            {
-                Debug.WriteLine($"Closed Trade: {position.SymbolName} {position.PositionType} {position.Volume} {position.StopLoss}");
-            }
+                Debug.WriteLine($"TradeSimulate OnStart()");
         }
         protected internal override void OnStop()
         {
             Debug.WriteLine("OnStop");
-            var report = new TradeStatistics(ClosedTrades, InitialCapital, 20);
+            var report = new TradeStatistics(OpenPositions, InitialCapital, 20);
             Debug.WriteLine(ClassToString.FormatProperties(report));
         }        
     }

@@ -6,17 +6,19 @@ using Application.Mappings;
 using AutoMapper;
 using DataServices;
 using Domain.Entities;
+using Domain.Enums;
 using Robots.Strategies;
 
 internal class Program
 {
+    //public static List<HistoricalData> marketData { get; set; } = new List<HistoricalData>();
     //public static List<HistoricalData> BarData { get; set; }
-    public static IStrategy Strategy { get; set; }
+    public static IStrategy Strategy { get; set; } = new KISS();  // set IStrategy here
+    public static int InstrumentId { get; set; } = 2; // the instrument id to be used for testing
     public static IMarketInfo MarketInfo { get; set; }
     private static void Main(string[] args)
     {
-        Strategy = new KISS();
-        GetMarketData(6);
+        GetMarketData(InstrumentId);
         //var pivotPointData = GetMarketData(5); // the timeframe of the instrument to be used for pivot point calculation
         //marketData.AddRange(pivotPointData);
         //var strategy = new PivotPointConfirmStrategy(GetPivotPointParams());
@@ -43,11 +45,21 @@ internal class Program
             instrument.ContractUnit,
             1,
             new ConfirmingSignals(new List<ISignal>()),
-            Domain.Enums.TimeFrame.H1
+            ConvertToTimeFrame(instrument.Frequency)
         );
     }
 
-private static List<Test_Parameter> GetPivotPointParams()
+    private static TimeFrame ConvertToTimeFrame(string frequency)
+    {
+        TimeFrame timeFrame = new TimeFrame();
+        if (Enum.TryParse(frequency, true, out timeFrame))
+        {
+            return timeFrame;
+        }
+        throw new Exception("Frequency does not match with any known TimeFrame");
+    }
+
+    private static List<Test_Parameter> GetPivotPointParams()
     {
         return new List<Test_Parameter>()
         {

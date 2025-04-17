@@ -25,7 +25,7 @@ namespace TradeSimulateTests
             var strategy = new CarverTrendFollowerStrategy(TestParameters);
             var tradeSimulator = new TradeSimulate(MarketInfo, strategy, 10000);
             tradeSimulator.Run();
-            Assert.IsNotNull(tradeSimulator.CurrentBar.HighPrice);
+            Assert.IsNotNull(tradeSimulator.CurrentMarketInfo.CurrentBar.HighPrice);
         }
 
         private void LoadTestParameters()

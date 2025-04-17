@@ -6,15 +6,13 @@ namespace Application.Business.Positioning.Handlers
 {
     public class StopLossHandler
     { 
-        private List<Position> openPositions;
-        private List<Position> closePositions;
+        private List<Position> positions;
         private DateTime cursorDate;
         private List<IMarketInfo> marketInfos;
 
-        public StopLossHandler(DateTime cursorDate, ref List<Position> openPositions, ref List<Position> closedTrades, List<IMarketInfo> marketInfos)
+        public StopLossHandler(DateTime cursorDate, ref List<Position> positions, List<IMarketInfo> marketInfos)
         {
-            this.openPositions = openPositions;
-            closePositions = closedTrades;
+            this.positions = positions;;
             this.cursorDate = cursorDate;
             this.marketInfos = marketInfos;
         }
@@ -22,13 +20,13 @@ namespace Application.Business.Positioning.Handlers
         {
             foreach (var marketInfo in marketInfos)
             {
-                var positionsToClose = openPositions
+                var positionsToClose = positions
                     .FindAll(
                     p => p.StopLoss.HasValue
                     && StopLossHit(p, marketInfo)
-                    && p.SymbolName == marketInfo.SymbolName);
+                    && p.SymbolName == marketInfo.SymbolName && p.ClosedAt == null);
                 foreach (var position in positionsToClose)
-                    new ClosePositionHandler(ref openPositions, ref closePositions).ClosePosition(position, Convert.ToDouble(position.StopLoss), Convert.ToDateTime(cursorDate), marketInfo.ContractUnit, marketInfo.ExchangeRate);
+                    new ClosePositionHandler(ref positions).ClosePosition(position, Convert.ToDouble(position.StopLoss), Convert.ToDateTime(cursorDate), marketInfo.ContractUnit, marketInfo.ExchangeRate);
             }
             
         }
