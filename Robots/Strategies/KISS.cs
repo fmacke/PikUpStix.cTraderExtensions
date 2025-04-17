@@ -17,13 +17,13 @@ namespace Robots.Strategies
 
         public List<IPositionInstruction> Run(List<IMarketInfo> marketInfos)
         {
-            foreach (var marketInfo in marketInfos)this is messy. something needs to populate the marketinf.ask and cursordate etc
+            foreach (var marketInfo in marketInfos)
             {
                 if (!marketInfo.Positions.Any())
                 {
                     var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
                     var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation
-                    var risk = new RiskManager(1, 2, marketInfo.AccountBalance, marketInfo.ContractUnit, stopLoss, marketInfo.Ask);
+                    var risk = new RiskManager(1, 2, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, marketInfo.Ask);
                     var position = new Position()
                     {
                         SymbolName = marketInfo.SymbolName,

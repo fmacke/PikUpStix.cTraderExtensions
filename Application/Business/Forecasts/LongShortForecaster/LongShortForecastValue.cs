@@ -17,13 +17,10 @@ namespace Application.Business.Forecasts.LongShortForecaster
         public new double CalculateForecast()
         {
             Forecast = 0;
-            if (CursorDatePriceData.Date.HasValue)
-            {
-                if (Convert.ToDateTime(CursorDatePriceData.Date).DayOfWeek.Equals(DayOfWeek.Monday))
+                if (CursorDatePriceData.Date.DayOfWeek.Equals(DayOfWeek.Monday))
                     Forecast = 20;
-                if (Convert.ToDateTime(CursorDatePriceData.Date).DayOfWeek.Equals(DayOfWeek.Friday))
+                if (CursorDatePriceData.Date.DayOfWeek.Equals(DayOfWeek.Friday))
                     Forecast = -20;
-            }
             return Forecast;
         }
     }
