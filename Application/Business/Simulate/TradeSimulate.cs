@@ -23,13 +23,8 @@ namespace Application.Business.Simulate
         }
         protected internal override void OnBar()
         {
-            var currentMarketInfo = new MarketInfo(Convert.ToDateTime(CurrentBar.Date), CurrentBar.OpenPrice, CurrentBar.OpenPrice, OpenPositions, CurrentBars, 
-                MarketInfo.First().SymbolName, MarketInfo.First().Currency, MarketInfo.First().AccountBalance, MarketInfo.First().ContractUnit,
-                MarketInfo.First().ExchangeRate, MarketInfo.First().Signals, MarketInfo.First().TimeFrame);
-            new StopLossHandler(CurrentBar.Date, CurrentBar.OpenPrice, ref OpenPositions, ref ClosedTrades, MarketInfo).CloseOutStops();  
-            var listed = new List<IMarketInfo>();
-            listed.Add(currentMarketInfo);
-            var positionInstructions = Strategy.Run(listed);
+            new StopLossHandler(CurrentBar.Date, CurrentBar.OpenPrice, ref OpenPositions, ref ClosedTrades, MarketInfo).CloseOutStops();            
+            var positionInstructions = Strategy.Run(MarketInfo);
             new PositionHandler(positionInstructions, ref OpenPositions, ref ClosedTrades, MarketInfo).ExecuteInstructions();
         }        
         protected internal override void OnStart()
