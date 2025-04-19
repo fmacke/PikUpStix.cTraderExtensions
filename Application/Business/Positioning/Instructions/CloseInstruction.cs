@@ -14,6 +14,7 @@ namespace Application.Business.Positioning.Instructions
         [ValidateCloseInstruction]
         public DateTime ClosedAt { get; set; }
 
+
         public CloseInstruction(Position pos, double closePrice, DateTime closedAt, IValidationService validationService) : base(pos, InstructionType.Close)
         {
             

@@ -22,7 +22,8 @@ namespace Application.Business.Positioning.Handlers
             {
                 var positionsToClose = positions
                     .FindAll(
-                    p => p.StopLoss.HasValue
+                    p => p.Status == PositionStatus.OPEN
+                    && p.StopLoss.HasValue
                     && StopLossHit(p, marketInfo)
                     && p.SymbolName == marketInfo.SymbolName && p.ClosedAt == null);
                 foreach (var position in positionsToClose)

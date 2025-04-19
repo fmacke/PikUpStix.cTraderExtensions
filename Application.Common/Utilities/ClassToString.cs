@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Application.Business.Utilities
+namespace Application.Common.Utilities
 {
     public static class ClassToString
     {

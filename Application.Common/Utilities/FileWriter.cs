@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace Application.Business.Utilities
+namespace Application.Common.Utilities
 {
     public class FileWriter
     {

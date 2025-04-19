@@ -1,5 +1,7 @@
 ﻿using Application.Business.Market;
+using Application.Common.Utilities;
 using Domain.Entities;
+using System;
 
 namespace Application.Business.Simulate
 {
@@ -13,7 +15,7 @@ namespace Application.Business.Simulate
         {
             CurrentMarketInfo = baseMarketInfo;
             TestSet = CurrentMarketInfo.Bars.OrderBy(bar => bar.Date).ToList();
-            CurrentMarketInfo.Bars = new List<HistoricalData>(TestSet);
+            CurrentMarketInfo.Bars = new List<HistoricalData>();
             CurrentMarketInfo.CursorDate = TestSet.First().Date;
             CurrentMarketInfo.CurrentCapital = initialcapital;
             InitialCapital = initialcapital;
@@ -23,18 +25,23 @@ namespace Application.Business.Simulate
             OnStart();
             for (int x=0; x<TestSet.Count; x++)
             {
-                CurrentMarketInfo.Bars.Add(TestSet[x]);
-                CurrentMarketInfo.CursorDate = TestSet[x].Date;
-                CurrentMarketInfo.CurrentBar = TestSet[x];
-                CurrentMarketInfo.Ask = TestSet[x].OpenPrice;
-                CurrentMarketInfo.Bid = TestSet[x].OpenPrice;
-
-                if (x > 0)
-                    CurrentMarketInfo.LastBar = TestSet[x - 1];
+                LoadCurrentMarketData(x);
                 OnBar();
             }
             OnStop();
         }
+
+        private void LoadCurrentMarketData(int x)
+        {
+            CurrentMarketInfo.Bars.Add(TestSet[x]);
+            CurrentMarketInfo.CursorDate = TestSet[x].Date;
+            CurrentMarketInfo.CurrentBar = TestSet[x];
+            CurrentMarketInfo.Ask = TestSet[x].OpenPrice;
+            CurrentMarketInfo.Bid = TestSet[x].OpenPrice;
+            if (x > 0)
+                CurrentMarketInfo.LastBar = TestSet[x - 1];
+        }
+
         protected internal virtual void OnBar()
         {
             throw new NotImplementedException();  // This method should be overridden in the derived class

@@ -11,18 +11,14 @@ using Robots.Strategies;
 
 internal class Program
 {
-    //public static List<HistoricalData> marketData { get; set; } = new List<HistoricalData>();
-    //public static List<HistoricalData> BarData { get; set; }
     public static IStrategy Strategy { get; set; } = new KISS();  // set IStrategy here
-    public static int InstrumentId { get; set; } = 2; // the instrument id to be used for testing
-    public static IMarketInfo MarketInfo { get; set; }
+    public static int InstrumentId { get; set; } = 3; // the instrument id to be used for testing
+    public static IMarketInfo TestInfo { get; set; }
+    
     private static void Main(string[] args)
     {
         GetMarketData(InstrumentId);
-        //var pivotPointData = GetMarketData(5); // the timeframe of the instrument to be used for pivot point calculation
-        //marketData.AddRange(pivotPointData);
-        //var strategy = new PivotPointConfirmStrategy(GetPivotPointParams());
-        var tradeSimulator = new TradeSimulate(MarketInfo, Strategy, 10000);
+        var tradeSimulator = new TradeSimulate(TestInfo, Strategy, 10000);
         tradeSimulator.Run();
     }
 
@@ -33,7 +29,7 @@ internal class Program
         var config = new MapperConfiguration(cfg => cfg.AddProfile<HistoricalDataProfile>());
         var mapper = config.CreateMapper();
         var marketData = mapper.Map<List<HistoricalData>>(instrument.HistoricalDatas.ToList());
-        MarketInfo = new MarketInfo(
+        TestInfo = new MarketInfo(
             new DateTime(),
             0,
             0,
