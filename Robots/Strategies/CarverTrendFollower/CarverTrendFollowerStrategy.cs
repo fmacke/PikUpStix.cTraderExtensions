@@ -2,7 +2,6 @@
 using Application.Business.Portfolio;
 using Application.Business.Forecasts.CarverTrendFollower;
 using Domain.Entities;
-using Application.BackTest;
 using Domain.Enums;
 using Application.Business.Market;
 using Application.Business.Positioning.Validation;
@@ -33,7 +32,7 @@ namespace Robots.Strategies.CarverTrendFollower
         {
             _positionInstructions = new List<IPositionInstruction>();
             MarketInfos = marketInfos;
-            var forecasts = CarverTrendFollowerForecasts.GetForecasts(MarketInfos, new Logger(false), TestParameters);
+            var forecasts = CarverTrendFollowerForecasts.GetForecasts(MarketInfos, TestParameters);
             var weightedPositions = new WeightedProposedPositions(forecasts, StopLossMax, 1, TargetVolatility, MarketInfos);
 
             foreach (var market in MarketInfos)

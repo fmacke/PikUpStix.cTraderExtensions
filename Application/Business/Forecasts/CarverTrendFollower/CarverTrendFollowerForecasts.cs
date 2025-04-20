@@ -1,5 +1,4 @@
-﻿using Application.BackTest;
-using Application.Business.Market;
+﻿using Application.Business.Market;
 using Domain.Entities;
 
 namespace Application.Business.Forecasts.CarverTrendFollower
@@ -9,7 +8,7 @@ namespace Application.Business.Forecasts.CarverTrendFollower
         /// <summary>
         /// This is Robert Carver's trend following strategy, plain and simple.
         /// </summary>
-        public static List<IForecastValue> GetForecasts(IEnumerable<IMarketInfo> marketInfos, Logger logger, List<Test_Parameter> testParameters)
+        public static List<IForecastValue> GetForecasts(IEnumerable<IMarketInfo> marketInfos, List<Test_Parameter> testParameters)
         {
             var forecasts = new List<IForecastValue>();
             foreach (var forecast in from marketInfo in marketInfos

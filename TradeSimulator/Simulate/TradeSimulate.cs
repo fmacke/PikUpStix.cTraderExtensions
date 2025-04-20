@@ -33,6 +33,7 @@ namespace TradeSimulator.Simulate
             CurrentMarketInfo.Positions = Positions;
             marketInfos.Add(CurrentMarketInfo);  // this works for now for testing purposes, where a strategy only deals with a single market instrument.            
             new StopLossHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutStops();
+            new TakeProfitHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutTakeProfits();
             PositionInstructions = Strategy.Run(marketInfos);
             new PositionHandler(PositionInstructions, ref Positions, marketInfos).ExecuteInstructions();
         }
@@ -70,6 +71,10 @@ namespace TradeSimulator.Simulate
                         ClosedAt = tr.ClosedAt,
                         ClosePrice = tr.ClosePrice,
                         InstrumentId = 1,
+                        StopLoss = tr.StopLoss,
+                        TakeProfit = tr.TakeProfit,
+                        TrailingStop = tr.TrailingStop,
+                        ExpirationDate = tr.ExpirationDate,
                         SymbolName = tr.SymbolName,
                         Status = PositionStatus.CLOSED,
                         Margin = tr.Margin

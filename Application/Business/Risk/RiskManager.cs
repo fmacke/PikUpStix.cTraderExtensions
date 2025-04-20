@@ -4,6 +4,10 @@
     {
         public RiskManager(double forecast, double maximumRisk, double accountBalance, double pipSize, double stopLoss, double entryPrice)
         {
+            if (maximumRisk > 0.5)
+            {
+                throw new Exception("Maximum Risk is set at over 50% of account balance! check this is correct?");
+            }
             Forecast = forecast;
             if (forecast > 1)
                 Forecast = 1.0;
@@ -17,7 +21,6 @@
             PipSize = pipSize;
             StopLoss = stopLoss;
             EntryPrice = entryPrice;
-            CalculateLotSize();
         }
         public double Forecast { get; private set; } = 0.0;
         public double RiskPerTrade { get; private set; } = 0.0;
@@ -26,10 +29,11 @@
         public double StopLoss { get; private set; } = 0.0;
         public double EntryPrice { get; private set; } = 0.0;
         public double LotSize { get; private set; } = 0.0;
-        private void CalculateLotSize()
+        public double CalculateLotSize()
         {
             var risk = AccountBalance * RiskPerTrade / (StopLoss * EntryPrice);
-            LotSize = risk * (1/PipSize);  
+            LotSize = risk * (1/PipSize);
+            return LotSize;
         }
     }
 

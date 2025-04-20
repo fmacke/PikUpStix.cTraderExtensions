@@ -1,14 +1,13 @@
-﻿using Application.BackTest;
-using Application.Business.Forecasts;
+﻿using Application.Business.Forecasts;
 using Application.Business.Forecasts.SimpleTestForecaster;
 using Application.Business.Market;
 using Domain.Entities;
 
 namespace PikUpStix.Trading.Forecast.SimpleTestForecaster
 {
-    public class SimpleTestForecast : IForecastHandler
+    public class SimpleTestForecast 
     {
-        public List<IForecastValue> GetForecasts(List<IMarketInfo> marketInfos,Logger logger, 
+        public List<IForecastValue> GetForecasts(List<IMarketInfo> marketInfos,
            List<Test_Parameter> testParameters)
         {
             var forecasts = new List<IForecastValue>();

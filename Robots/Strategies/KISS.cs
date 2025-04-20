@@ -24,7 +24,7 @@ namespace Robots.Strategies
                 {
                     var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
                     var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation
-                    var risk = new RiskManager(1, 2, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, marketInfo.Ask);
+                    var lotSize = new RiskManager(1, 0.02, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, marketInfo.Ask).CalculateLotSize();
                     var position = new Position()
                     {
                         SymbolName = marketInfo.SymbolName,
@@ -32,7 +32,7 @@ namespace Robots.Strategies
                         EntryPrice = marketInfo.Ask,
                         StopLoss = stopLoss,
                         TakeProfit = takeProfit,
-                        Volume = risk.LotSize,
+                        Volume = lotSize,
                         Created = marketInfo.CursorDate,
                         ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
                     };
