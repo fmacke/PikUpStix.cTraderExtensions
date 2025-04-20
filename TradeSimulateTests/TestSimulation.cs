@@ -1,8 +1,8 @@
 ﻿using Domain.Entities;
-using Application.Business.Simulate;
 using Robots.Strategies.CarverTrendFollower;
 using Application.Business.Market;
 using Application.Business.Indicator.Signal;
+using TradeSimulator.Simulate;
 
 namespace TradeSimulateTests
 {
@@ -23,7 +23,7 @@ namespace TradeSimulateTests
         public void RunSimulation()
         {
             var strategy = new CarverTrendFollowerStrategy(TestParameters);
-            var tradeSimulator = new TradeSimulate(MarketInfo, strategy, 10000);
+            var tradeSimulator = new TradeSimulate(MarketInfo, strategy, 10000, false);
             tradeSimulator.Run();
             Assert.IsNotNull(tradeSimulator.CurrentMarketInfo.CurrentBar.HighPrice);
         }

@@ -6,7 +6,6 @@ using Domain.Entities;
 using Domain.Enums;
 using Application.Interfaces.Repositories;
 
-
 namespace Application.Features.Positions.Commands.Create
     {
         public partial class CreatePositionCommand : IRequest<Result<int>>
@@ -21,7 +20,7 @@ namespace Application.Features.Positions.Commands.Create
             public double? StopLoss { get; set; }
             public double Commission { get; set; } = 0;
             public DateTime Created { get; set; }
-            public string Comment { get; set; }
+            public string? Comment { get; set; }
             public double? ClosePrice { get; set; }
             public double? TrailingStop { get; set; }
             public double Margin { get; set; } = 0;

@@ -17,9 +17,10 @@ namespace Robots.Strategies
 
         public List<IPositionInstruction> Run(List<IMarketInfo> marketInfos)
         {
+            _positionInstructions.Clear();
             foreach (var marketInfo in marketInfos)
             {
-                if (!marketInfo.Positions.Any())
+                if (!marketInfo.Positions.Where(p => p.Status == PositionStatus.OPEN).Any())
                 {
                     var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
                     var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation

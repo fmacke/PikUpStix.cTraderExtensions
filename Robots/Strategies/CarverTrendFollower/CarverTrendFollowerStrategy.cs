@@ -20,7 +20,7 @@ namespace Robots.Strategies.CarverTrendFollower
         public double StopLossMax { get; private set; }
         public double TargetVolatility { get; private set; }
         public double TrailStopAtPips { get; private set; }
-        public List<Test_Parameter> TestParameters { get; private set; }
+        public List<Test_Parameter> TestParameters { get; set; }
         public IValidationService ValidationService { get; set; } = new ValidationService();
 
         public CarverTrendFollowerStrategy(List<Test_Parameter>? testParameters)

@@ -15,21 +15,30 @@ namespace Application.Business.Positioning.Handlers
             this.positions = positions;;
             this.cursorDate = cursorDate;
             this.marketInfos = marketInfos;
-        }
+        }   
         public void CloseOutStops()
         {
             foreach (var marketInfo in marketInfos)
             {
                 var positionsToClose = positions
-                    .FindAll(
-                    p => p.Status == PositionStatus.OPEN
-                    && p.StopLoss.HasValue
-                    && StopLossHit(p, marketInfo)
-                    && p.SymbolName == marketInfo.SymbolName && p.ClosedAt == null);
+                    .Where(p => p.Status == PositionStatus.OPEN
+                        && p.StopLoss.HasValue
+                        && StopLossHit(p, marketInfo)
+                        && p.SymbolName == marketInfo.SymbolName
+                        && p.ClosedAt == null);
+
+                var closeHandler = new ClosePositionHandler(ref positions); 
+
                 foreach (var position in positionsToClose)
-                    new ClosePositionHandler(ref positions).ClosePosition(position, Convert.ToDouble(position.StopLoss), Convert.ToDateTime(cursorDate), marketInfo.ContractUnit, marketInfo.ExchangeRate);
+                {
+                    closeHandler.ClosePosition(
+                        position,
+                        position.StopLoss.GetValueOrDefault(),
+                        Convert.ToDateTime(cursorDate),
+                        marketInfo.ContractUnit,
+                        marketInfo.ExchangeRate);
+                }
             }
-            
         }
         private bool StopLossHit(Position position, IMarketInfo marketInfo)
         {
@@ -40,7 +49,6 @@ namespace Application.Business.Positioning.Handlers
                 return true;
             return false;
         }
-
         private double? GetMaxPriceExcursion(Position position, IMarketInfo marketInfo)
         {
             if (position.Created < marketInfo.CursorDate) //  Position created at some point during the last bar - tricky to know if the stop loss was hit without looking at more refined timeframes/tick data

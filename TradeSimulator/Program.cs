@@ -1,6 +1,5 @@
 ﻿using Application.Business.Indicator.Signal;
 using Application.Business.Market;
-using Application.Business.Simulate;
 using Application.Interfaces;
 using Application.Mappings;
 using AutoMapper;
@@ -8,17 +7,23 @@ using DataServices;
 using Domain.Entities;
 using Domain.Enums;
 using Robots.Strategies;
+using TradeSimulator.Simulate;
 
 internal class Program
 {
     public static IStrategy Strategy { get; set; } = new KISS();  // set IStrategy here
     public static int InstrumentId { get; set; } = 3; // the instrument id to be used for testing
     public static IMarketInfo TestInfo { get; set; }
-    
+    public static bool SaveTestResult { get; set; } = true;
+
     private static void Main(string[] args)
     {
         GetMarketData(InstrumentId);
-        var tradeSimulator = new TradeSimulate(TestInfo, Strategy, 10000);
+        Strategy.TestParameters = new List<Test_Parameter>()
+        {
+            new Test_Parameter() { Name = "ForecastThreshold[Double]", Value = "1" }
+        };
+        var tradeSimulator = new TradeSimulate(TestInfo, Strategy, 10000, SaveTestResult);
         tradeSimulator.Run();
     }
 

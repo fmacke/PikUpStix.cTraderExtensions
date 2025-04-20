@@ -1,5 +1,10 @@
-﻿using cAlgo.API;
+﻿using Application.Business.Calculations;
+using Application.Features.Positions.Commands.Create;
+using cAlgo.API;
 using DataServices;
+using Domain.Enums;
+using Domain.Entities;
+using Robots.Results;
 
 namespace FXProBridge.Capture
 {
@@ -27,13 +32,14 @@ namespace FXProBridge.Capture
         }
         protected override void OnTick()
         {
-            CalculateMaxExcursion();
+            _maximumAdverseExcursion = MaxExcursion.Get(new List<Domain.Entities.Position>(), 0);
         }
         protected override void OnStop()
         {
             if (IsTestRun)
             {
-                LogTestEnd(History);
+                //db.Instruments.First(x => x.InstrumentName.Equals(tr.SymbolName) && x.DataSource == "FXPRO").Id,
+                LogTestEnd(History, 1);//REMOVE HARD CODING
             }
             base.OnStop();
         }
@@ -43,24 +49,43 @@ namespace FXProBridge.Capture
             if (IsTestRun)
                 ResultsCapture = new TestResultsCapture("test begun at " + DateTime.Now.ToString(), startBalance, TestParams, DataService);
         }
-        private string LogTestEnd(History history)
+        private string LogTestEnd(History history, int instrumentId)
         {            
             if (IsTestRun && ResultsCapture != null)
             {
-                return ResultsCapture.Capture("onStop", history.ToList(), DataService, _maximumAdverseExcursion);
+                var tts = new CreatePositionRangeCommand();
+                foreach (var tr in history.ToList())
+                {
+                    tts.Add(new CreatePositionCommand
+                    {
+                        TestId = ResultsCapture.TestId,
+                        Comment = tr.ClosingDealId.ToString() + " || " + tr.Label,
+                        Created = tr.EntryTime,
+                        Volume = tr.VolumeInUnits,
+                        PositionType = GetPositionType(tr.TradeType),
+                        EntryPrice = tr.EntryPrice,
+                        Commission = tr.Commissions,
+                        ClosedAt = tr.ClosingTime,
+                        ClosePrice = tr.ClosingPrice,
+                        InstrumentId = 1,
+                        Status = PositionStatus.CLOSED,
+                        Margin = tr.NetProfit
+                    });
+                }
+                return ResultsCapture.Capture("onStop", tts, DataService, _maximumAdverseExcursion);
             }
             return "Not a test run.";
         }
-        private void CalculateMaxExcursion()
+        
+        private PositionType GetPositionType(TradeType tradeType)
         {
-            foreach (var position in Positions)
+            if (tradeType.GetType().Name == "BUY")
             {
-                // Calculate the adverse excursion for each open position
-                double adverseExcursion = (position.EntryPrice - Bars.LowPrices.LastValue) / position.EntryPrice * 100;
-                if (adverseExcursion > _maximumAdverseExcursion)
-                {
-                    _maximumAdverseExcursion = adverseExcursion;
-                }
+                return PositionType.BUY;
+            }
+            else
+            {
+                return PositionType.SELL;
             }
         }
     }

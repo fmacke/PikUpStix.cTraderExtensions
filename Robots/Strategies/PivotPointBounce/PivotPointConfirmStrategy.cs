@@ -18,7 +18,7 @@ namespace Robots.Strategies.PivotPointBounce
         public double thresholdForTrade = 0.5;
         public double confirmingSignalsForecastTreshhold = 0.5;
         public IValidationService ValidationService { get; } = new ValidationService();
-        public List<Test_Parameter> TestParameters{ get; }
+        public List<Test_Parameter> TestParameters{ get; set;  }
 
         private List<IPositionInstruction> _positionInstructions = new List<IPositionInstruction>();
 

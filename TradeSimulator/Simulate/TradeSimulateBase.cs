@@ -1,12 +1,12 @@
 ﻿using Application.Business.Market;
-using Application.Common.Utilities;
 using Domain.Entities;
-using System;
+using Robots.Results;
 
-namespace Application.Business.Simulate
+namespace TradeSimulator.Simulate
 {
     public abstract class TradeSimulateBase
     {
+        public TestResultsCapture ResultsCapture { get; set; }
         private List<HistoricalData> TestSet { get;  set; }
         public double InitialCapital { get; private set; }
         public IMarketInfo CurrentMarketInfo { get; set; }

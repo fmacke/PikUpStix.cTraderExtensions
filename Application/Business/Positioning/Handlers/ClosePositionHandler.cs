@@ -6,17 +6,20 @@ namespace Application.Business.Positioning.Handlers
 {
     internal class ClosePositionHandler
     {
-        private List<Position> _positions;
+        private Dictionary<Position, Position> _positionLookup;
         public ClosePositionHandler(ref List<Position> positions)
         {
-            this._positions = positions;
+            _positionLookup = positions.ToDictionary(p => p);
         }
         public void ClosePosition(Position position, double closePrice, DateTime closedAt, double contractUnit, double exchangeRate)
         {
-            _positions.Find(p => p.Equals(position)).ClosedAt = closedAt; ;
-            _positions.Find(p => p.Equals(position)).Status = PositionStatus.CLOSED;
-            _positions.Find(p => p.Equals(position)).ClosePrice = closePrice;
-            _positions.Find(p => p.Equals(position)).Margin = Margin.Calculate(contractUnit, exchangeRate, position, closePrice, position.Volume);
+            if (_positionLookup.TryGetValue(position, out var pos))
+            {
+                pos.ClosedAt = closedAt;
+                pos.Status = PositionStatus.CLOSED;
+                pos.ClosePrice = closePrice;
+                pos.Margin = Margin.Calculate(contractUnit, exchangeRate, pos, closePrice, pos.Volume);
+            }
         }
     }
 }

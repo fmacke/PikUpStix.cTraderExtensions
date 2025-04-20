@@ -13,7 +13,7 @@ namespace Domain.Entities
         public double? StopLoss { get; set; }
         public double Commission { get; set; } = 0;
         public DateTime Created { get; set; }
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
         public double? ClosePrice { get; set; }
         public double? TrailingStop { get; set; }
         public double Margin { get; set; } = 0;

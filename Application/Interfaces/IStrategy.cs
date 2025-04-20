@@ -8,7 +8,7 @@ namespace Application.Interfaces
     public interface IStrategy
     {
         List<string> LogMessages { get; set; }
-        List<Test_Parameter> TestParameters { get; }
+        List<Test_Parameter> TestParameters { get; set; }
         List<IPositionInstruction> Run(List<IMarketInfo> marketInfos);
         public IValidationService ValidationService { get; }
     }
