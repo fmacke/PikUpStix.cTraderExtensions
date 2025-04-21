@@ -1,5 +1,4 @@
-﻿using Application.Business.Volatility;
-using Domain.Entities;
+﻿using Domain.Entities;
 
 namespace Application.Business.Calculations
 {
@@ -21,7 +20,7 @@ namespace Application.Business.Calculations
         private void CalculateStdDeviationOfPnL(IReadOnlyCollection<Position> results)
         {
             var dailyPnL = results.Select(result => Convert.ToDouble(result.Margin)).ToList();
-            StandardDeviationOfPnL = StandardDeviation.Calculate(dailyPnL);
+            StandardDeviationOfPnL = new StandardDeviation(dailyPnL.ToArray()).Calculate();
         }
 
         public double AveragePnL { get; private set; } = 0;

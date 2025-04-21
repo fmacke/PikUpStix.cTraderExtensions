@@ -1,20 +1,27 @@
-﻿namespace Application.Business.Volatility
+﻿namespace Application.Business.Calculations
 {
-    public static class StandardDeviation
+    public class StandardDeviation : ICalculate
     {
-        public static double Calculate(IEnumerable<double> values)
-        {
-            double ret = 0;
-            if (values.Count() > 0)
-            {
-                //Compute the Average      
-                double avg = values.Average();
-                //Perform the Sum of (value-avg)_2_2      
-                double sum = values.Sum(d => Math.Pow(d - avg, 2)) / values.Count();
-                //Put it all together      
-                ret = Math.Sqrt(sum);
-            }
-            return ret;
+        private double[] values;
+        public StandardDeviation(double[] values) { 
+            this.values = values ?? throw new ArgumentNullException(nameof(values));
         }
+        public double Calculate()
+        {
+            double average = values.Average();
+            double sumOfSquaresOfDifferences = values.Select(val => (val - average) * (val - average)).Sum();
+            double sd = Math.Sqrt(sumOfSquaresOfDifferences / values.Length);
+            return sd;
+        }
+        //public static class StandardDeviation
+        //{
+        //    public static double Calculate(double[] values)
+        //    {
+        //        double average = values.Average();
+        //        double sumOfSquaresOfDifferences = values.Select(val => (val - average) * (val - average)).Sum();
+        //        double sd = Math.Sqrt(sumOfSquaresOfDifferences / values.Length);
+        //        return sd;
+        //    }
+        //}
     }
 }

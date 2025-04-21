@@ -1,5 +1,4 @@
 ﻿using Application.Business.Forecasts;
-using Application.Business.Volatility;
 using Application.Business.PositionSize;
 using Domain.Entities;
 using Domain.Enums;
@@ -122,10 +121,24 @@ namespace Application.Business.Portfolio
                         .GetRange(index, periodsToCheck).Where(x => x.ClosePrice != 0);
             
                     //InstrumentPriceVolatility = PriceVolatility.Calculate(recentData.ToList(), periodsToCheck);
-                    return PriceVolatility.OfClosePrices(recentData.ToList(), periodsToCheck);
+                    return new VolatilityAsPercentage(GetClosePrices(recentData.ToList(), periodsToCheck), periodsToCheck).Calculate();
                 }
             }
             return 0;
+        }
+
+        private double[] GetClosePrices(List<HistoricalData> prices, int numberOfPeriods)
+        {
+            var mostRecentPrices = prices
+                .Where(historicalPrice => historicalPrice.ClosePrice != 0)
+                .OrderByDescending(x => x.Date)
+                .Take(numberOfPeriods)
+                .OrderBy(x => x.Date)
+                .Select(historicalPrice => Convert.ToDouble(historicalPrice.ClosePrice))
+                .ToArray();
+            if (mostRecentPrices.Length < numberOfPeriods)
+                throw new Exception("PriceVolatility.GetPricesHistorical close price should not be zero");
+            return mostRecentPrices;
         }
 
         private bool SufficientPreviousDataToCalculateVolatility(int index, int periodsToCheck, int maxCount)
