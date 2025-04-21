@@ -18,7 +18,7 @@ namespace Application.Business.Positioning.Handlers
                 pos.ClosedAt = closedAt;
                 pos.Status = PositionStatus.CLOSED;
                 pos.ClosePrice = closePrice;
-                pos.Margin = Margin.Calculate(contractUnit, exchangeRate, pos, closePrice, pos.Volume);
+                pos.Margin = new Margin(contractUnit, exchangeRate, pos, closePrice, pos.Volume).Calculate();
             }
         }
     }

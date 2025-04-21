@@ -23,7 +23,7 @@ namespace Application.Tests.Calculations
             trade.PositionType = PositionType.BUY;
             trade.Volume = noOfContracts;
 
-            var margin = Margin.Calculate(contractUnit, exchangeRate, trade, closePrice, trade.Volume);
+            var margin = new Margin(contractUnit, exchangeRate, trade, closePrice, trade.Volume).Calculate();
             Debug.Write("Margin Anticipated: £1463, Margin Actual: £" + margin);
             Assert.AreEqual(1463, Math.Round(margin,0));
         }

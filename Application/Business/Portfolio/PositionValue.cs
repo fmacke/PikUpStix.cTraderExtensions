@@ -4,6 +4,7 @@ using Application.Business.PositionSize;
 using Domain.Entities;
 using Domain.Enums;
 using Application.Business.Risk;
+using Application.Business.Calculations;
 
 namespace Application.Business.Portfolio
 {
@@ -74,14 +75,14 @@ namespace Application.Business.Portfolio
 
             if (proposedWeightedPosition != 0)
             {
-                var sl = new StopLossCalculator(AvailableTradingCapital, StopLossPercent,
+                var sl = new StopLossAtPrice(AvailableTradingCapital, StopLossPercent,
                     Instrument.ContractUnit,
                     proposedWeightedPosition,
                     ExchangeRate,
                     positionType, askingPrice, biddingPrice,
                     Instrument.MinimumPriceFluctuation);
                 StopLossInPips = sl.StopLossInPips();
-                return sl.StopLossInCurrency();
+                return sl.Calculate();
             }
             return 0;
         }

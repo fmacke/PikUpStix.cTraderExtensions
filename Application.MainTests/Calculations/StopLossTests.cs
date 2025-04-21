@@ -1,6 +1,7 @@
-﻿using Application.Business.Risk;
+﻿using Application.Business.Calculations;
+using Application.Business.Risk;
 using Domain.Enums;
-namespace Application.Tests
+namespace Application.Tests.Calculations
 {
     [TestFixture]
     public class TrailingStopLossTests
@@ -115,7 +116,7 @@ namespace Application.Tests
 
     {
         [Test]
-        public void CalculateStopLossInCurrency()
+        public void CalculateStopLossPrice()
         {
             var existingMargin = 100;
             var stopLossMaxPercent = 0.02;
@@ -126,21 +127,19 @@ namespace Application.Tests
             var purchasePrice = 10;
             var minimumPriceFluctuation = 0.0001;
 
-            var stopLoss = new StopLossCalculator(existingMargin, stopLossMaxPercent, contractUnit,
+            var stopLossCalc = new StopLossAtPrice(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
-            var stopLossInCurrency = stopLoss.StopLossInCurrency();
-            Assert.AreEqual(8, stopLossInCurrency);
+            var stopLossPrice = stopLossCalc.Calculate();
+            Assert.AreEqual(8, stopLossPrice);
 
             posType = PositionType.SELL;
-            volume = -1;
-
-            stopLoss = new StopLossCalculator(existingMargin, stopLossMaxPercent, contractUnit,
+            stopLossCalc = new StopLossAtPrice(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
-            stopLossInCurrency = stopLoss.StopLossInCurrency();
-            Assert.AreEqual(12, stopLossInCurrency);
+            stopLossPrice = stopLossCalc.Calculate();
+            Assert.AreEqual(12, stopLossPrice);
         }
         [Test]
-        public void CalculateStopLossInCurrencyUsingRealValues()
+        public void CalculateStopLossPriceUsingRealValues()
         {
             var existingMargin = 2000;
             var stopLossMaxPercent = 0.02;
@@ -151,17 +150,16 @@ namespace Application.Tests
             var purchasePrice = 1;
             var minimumPriceFluctuation = 0.0001;
 
-            var stopLoss = new StopLossCalculator(existingMargin, stopLossMaxPercent, contractUnit,
+            var stopLoss = new StopLossAtPrice(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
-            var stopLossInCurrency = stopLoss.StopLossInCurrency();
-            Assert.AreEqual(0.9936, stopLossInCurrency);
+            var stopLossInCurrency = stopLoss.Calculate();
+            Assert.AreEqual(Convert.ToDouble(0.9954), Convert.ToDouble(Math.Round(stopLossInCurrency, 4)));
 
             posType = PositionType.SELL;
-            volume = -1;
-            stopLoss = new StopLossCalculator(existingMargin, stopLossMaxPercent, contractUnit,
+            stopLoss = new StopLossAtPrice(existingMargin, stopLossMaxPercent, contractUnit,
                 volume, exchangeRate, posType, purchasePrice, purchasePrice, minimumPriceFluctuation);
-            stopLossInCurrency = stopLoss.StopLossInCurrency();
-            Assert.AreEqual(1.0064, stopLossInCurrency);
+            stopLossInCurrency = stopLoss.Calculate();
+            Assert.AreEqual(1.0046, stopLossInCurrency);
         }
     }
 }

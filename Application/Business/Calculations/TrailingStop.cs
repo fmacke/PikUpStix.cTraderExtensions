@@ -1,6 +1,6 @@
 ﻿using Domain.Enums;
 
-namespace Application.Business.Risk
+namespace Application.Business.Calculations
 {
     public class TrailingStop
     {

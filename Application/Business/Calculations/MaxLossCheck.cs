@@ -6,7 +6,6 @@
         {
             ClosePosition = false || currentPositionValue < 0 && currentPositionValue * -1 / capital > maxLossPercent;
         }
-
         public bool ClosePosition { get; set; }
     }
 }

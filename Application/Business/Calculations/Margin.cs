@@ -1,20 +1,31 @@
+using DocumentFormat.OpenXml.Bibliography;
 using Domain.Enums;
 
 namespace Application.Business.Calculations
 {
-    public static class Margin
+    public class Margin : ICalculate
     {
-        public static double Calculate(double contractUnit, 
-            double exchangeRate, 
-            Domain.Entities.Position trade,
-            double currentPriceData, double volume)
+        private double contractUnit;
+        private double exchangeRate;
+        private double volume;
+        private Domain.Entities.Position trade;
+        private double closePrice;
+        public Margin(double contractUnit, double exchangeRate, Domain.Entities.Position trade, double closePrice, double volume)
+        {
+            this.contractUnit = contractUnit;
+            this.exchangeRate = exchangeRate;
+            this.trade = trade;
+            this.closePrice = closePrice;
+            this.volume = volume;
+        }
+
+        public double Calculate()
         {
             var priceMovement = 0.0;
             if (trade.PositionType == PositionType.BUY)
-                priceMovement = currentPriceData - trade.EntryPrice;
+                priceMovement = closePrice - trade.EntryPrice;
             else
-                priceMovement = trade.EntryPrice - currentPriceData;
-
+                priceMovement = trade.EntryPrice - closePrice;
             return contractUnit * exchangeRate * priceMovement * EnsurePositive(volume);
         }
 
