@@ -1,7 +1,7 @@
 ﻿using Application.Business.Market;
 using Application.Business.Positioning.Instructions;
 using Application.Business.Positioning.Validation;
-using Application.Business.Risk;
+using Application.Business.Calculations;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
@@ -24,7 +24,7 @@ namespace Robots.Strategies
                 {
                     var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
                     var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation
-                    var lotSize = new RiskManager(1, 0.02, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, marketInfo.Ask).CalculateLotSize();
+                    var lotSize = new LotSize(1, 0.02, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, marketInfo.Ask).Calculate();
                     var position = new Position()
                     {
                         SymbolName = marketInfo.SymbolName,

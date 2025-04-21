@@ -1,7 +1,7 @@
 ﻿using Domain.Entities;
 using Application.Business.Indicator;
 using Application.Business.Market;
-using Application.Business.Risk;
+using Application.Business.Calculations;
 using Domain.Enums;
 using Application.Business.Positioning.Validation;
 using Application.Interfaces;
@@ -52,7 +52,7 @@ namespace Robots.Strategies.PivotPointBounce
                             CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
                     var pricePoint = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid;
-                    var riskmanager = new RiskManager(StrategySignal, MaximumRisk, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, pricePoint);
+                    var lotSize = new LotSize(StrategySignal, MaximumRisk, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, pricePoint).Calculate();
                     var position = new Position()
                     {
                         SymbolName = marketInfo.SymbolName,
@@ -62,7 +62,7 @@ namespace Robots.Strategies.PivotPointBounce
                         TakeProfit = StrategySignal > 0 ?
                             CalculatePips(PivotPoints.Pivot - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Pivot),
-                        Volume = riskmanager.LotSize,
+                        Volume = lotSize,
                         Created = marketInfo.CursorDate,
                         ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 0, 0)
                     };

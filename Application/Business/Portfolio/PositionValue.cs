@@ -3,7 +3,6 @@ using Application.Business.Volatility;
 using Application.Business.PositionSize;
 using Domain.Entities;
 using Domain.Enums;
-using Application.Business.Risk;
 using Application.Business.Calculations;
 
 namespace Application.Business.Portfolio

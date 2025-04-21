@@ -1,5 +1,4 @@
 ﻿using Application.Business.Calculations;
-using Application.Business.Risk;
 using Domain.Enums;
 namespace Application.Tests.Calculations
 {
