@@ -1,8 +1,12 @@
-﻿namespace Domain.Enums
+﻿using System.ComponentModel;
+
+namespace Domain.Enums
 {
     public enum PositionType
     {
-        BUY,
-        SELL
+        [Description("BUY")]
+        BUY = 1,
+        [Description("SELL")]
+        SELL = 2
     }
 }

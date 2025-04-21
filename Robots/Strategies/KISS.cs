@@ -23,7 +23,7 @@ namespace Robots.Strategies
                 if (!marketInfo.Positions.Where(p => p.Status == PositionStatus.OPEN).Any())
                 {
                     var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
-                    var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation
+                    var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation                    
                     var lotSize = new LotSize(1, 0.02, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, marketInfo.Ask).Calculate();
                     var position = new Position()
                     {

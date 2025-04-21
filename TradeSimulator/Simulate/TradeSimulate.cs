@@ -21,7 +21,6 @@ namespace TradeSimulator.Simulate
         public bool SaveTestResult { get; }
         public DataService DataService { get; set; } = new DataService();
 
-
         public TradeSimulate(IMarketInfo runData, IStrategy strategy, double initialCapital, bool saveTestResult) : base(initialCapital, runData) 
         {
             Strategy = strategy;
@@ -34,8 +33,10 @@ namespace TradeSimulator.Simulate
             marketInfos.Add(CurrentMarketInfo);  // this works for now for testing purposes, where a strategy only deals with a single market instrument.            
             new StopLossHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutStops();
             new TakeProfitHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutTakeProfits();
+            CurrentMarketInfo.CurrentCapital = Positions.Where(p => p.Status == PositionStatus.CLOSED).Sum(p => p.Margin) + InitialCapital;
             PositionInstructions = Strategy.Run(marketInfos);
             new PositionHandler(PositionInstructions, ref Positions, marketInfos).ExecuteInstructions();
+            
         }
         protected internal override void OnStart()
         {

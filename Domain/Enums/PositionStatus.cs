@@ -1,9 +1,12 @@
+using System.ComponentModel;
+
 namespace Domain.Enums
 {
     public enum PositionStatus
     {
-        //ORDER,
-        OPEN,
-        CLOSED
+        [Description("Open")]
+        OPEN = 0,
+        [Description("Closed")]
+        CLOSED = 1
     }
 }
