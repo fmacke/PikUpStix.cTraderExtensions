@@ -34,7 +34,7 @@ namespace TradeSimulateTests
                 {
                     new Test_Parameter {
                         Name = "MaxStopLoss[Double]",
-                        Value = "2"
+                        Value = "0.2"
                     },
                     new Test_Parameter
                     {

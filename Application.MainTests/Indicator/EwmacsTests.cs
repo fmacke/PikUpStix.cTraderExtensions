@@ -1,6 +1,6 @@
 ﻿using Application.Business.Indicator;
 
-namespace Application.Tests
+namespace Application.Tests.Indicator
 {
     [TestFixture]
     public class EwmacTests

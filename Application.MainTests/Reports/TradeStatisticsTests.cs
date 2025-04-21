@@ -1,4 +1,4 @@
-﻿namespace Application.Tests
+﻿namespace Application.Tests.Reports
 {
     [TestFixture]
     public class TradeStatisticsTests

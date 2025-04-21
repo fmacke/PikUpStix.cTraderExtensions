@@ -1,6 +1,6 @@
 ﻿using Application.Business.PositionSize;
 
-namespace Application.Tests
+namespace Application.Tests.Positioning
 {
     [TestFixture]
     public class PositionSizeTests

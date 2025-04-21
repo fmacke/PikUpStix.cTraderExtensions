@@ -5,7 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 
 
-namespace Application.Tests
+namespace Application.Tests.Forecast
 {
     //[TestFixture]
     //public class ForecastTestsUsingPython
