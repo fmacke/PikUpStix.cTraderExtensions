@@ -2,7 +2,7 @@
 
 namespace Application.Business.Calculations
 {
-    public class StopLossAtPrice
+    public class StopLossAtPrice : ICalculate
     {
         public double ExistingMargin { get; private set; }
         public double StopLossMaxPercent { get; private set; }

@@ -1,4 +1,3 @@
-using DocumentFormat.OpenXml.Bibliography;
 using Domain.Enums;
 
 namespace Application.Business.Calculations

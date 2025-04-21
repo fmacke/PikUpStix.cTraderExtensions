@@ -159,7 +159,7 @@ namespace Application.Business.Reports
         public double MaxAdverseExcursion { get; private set; } = 0.0;
         public double StartingAccountBalance { get; private set; } = 0.0;
         public double SharpeRatio { get {
-                return new SharpeRatio(Positions.ToList()).Value;
+                return new SharpeRatio(Positions.ToList()).Calculate();
             }}
 
         public double MaxBalanceDrawdown

@@ -1,6 +1,4 @@
-﻿using Domain.Entities;
-
-namespace Application.Business.Calculations
+﻿namespace Application.Business.Calculations
 {
     /// <summary>
     /// Calculates the volatility of a given list of datapoint values over a specified period.

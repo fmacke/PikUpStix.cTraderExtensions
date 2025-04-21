@@ -2,30 +2,34 @@
 
 namespace Application.Business.Calculations
 {
-    public class SharpeRatio
+    public class SharpeRatio : ICalculate
     {
+        private IReadOnlyCollection<Position> Results { get; set; }
+        private double AveragePnL { get;  set; } = 0;
+        private double StandardDeviationOfPnL { get;  set; }
+        private double Value { get; set; } = 0;
+
         public SharpeRatio(IReadOnlyCollection<Position> results)
         {
-            if (results.Count > 0)
+            Results = results ?? throw new ArgumentNullException(nameof(results));            
+        }
+        private void CalculateStdDeviationOfPnL()
+        {
+            var dailyPnL = Results.Select(result => Convert.ToDouble(result.Margin)).ToList();
+            StandardDeviationOfPnL = new StandardDeviation(dailyPnL.ToArray()).Calculate();
+        }
+        public double Calculate()
+        {
+            if (Results.Count > 0)
             {
-                AveragePnL = results.Average(x => x.Margin);
-                CalculateStdDeviationOfPnL(results);
+                AveragePnL = Results.Average(x => x.Margin);
+                CalculateStdDeviationOfPnL();
                 if (StandardDeviationOfPnL != 0)
                 {
                     Value = Math.Round(AveragePnL / StandardDeviationOfPnL, 4);
                 }
             }
+            return Value;
         }
-
-        private void CalculateStdDeviationOfPnL(IReadOnlyCollection<Position> results)
-        {
-            var dailyPnL = results.Select(result => Convert.ToDouble(result.Margin)).ToList();
-            StandardDeviationOfPnL = new StandardDeviation(dailyPnL.ToArray()).Calculate();
-        }
-
-        public double AveragePnL { get; private set; } = 0;
-        public double StandardDeviationOfPnL { get; private set; }
-        public double Value { get; private set; } = 0;
     }
-
 }
