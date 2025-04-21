@@ -6,21 +6,31 @@ namespace Application.Business.Calculations
     {
         public DailyExcursions(IReadOnlyCollection<Position> results)
         {
-            Excursions = new List<decimal>();
-            foreach (Position result in results.OrderBy(x => x.ClosedAt))
+            Excursions = new List<double>();
+            var orderedResults = results.OrderBy(x => x.ClosedAt).ToList();
+            for (int i = 0; i < orderedResults.Count; i++)
             {
-                var cumulativeMargin = results.Where(x => x.ClosedAt < result.ClosedAt).Sum(x => x.Margin);
-                Excursions.Add(Convert.ToDecimal(result.Margin / cumulativeMargin));
+                var cumulativeMargin = orderedResults.Take(i).Sum(x => x.Margin);
+                if (cumulativeMargin == 0)
+                    continue;
+                Excursions.Add(orderedResults[i].Margin / cumulativeMargin);
             }
 
-            if (results.Count > 0)
+            if (Excursions.Count > 0)
             {
                 MaxFavourableExcursion = Math.Round(Excursions.Max(), 2);
                 MaxAdverseExcursion = Math.Round(Excursions.Min(), 2);
             }
+            else
+            {
+                MaxFavourableExcursion = 0;
+                MaxAdverseExcursion = 0;
+            }
         }
-        public decimal MaxAdverseExcursion { get; private set; }
-        public decimal MaxFavourableExcursion { get; private set; }
-        public List<decimal> Excursions { get; private set; }
+
+        public double MaxAdverseExcursion { get; private set; }
+        public double MaxFavourableExcursion { get; private set; }
+        public List<double> Excursions { get; private set; }
     }
+
 }
