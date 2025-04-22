@@ -17,8 +17,16 @@ namespace Infrastructure.Contexts
 
         private static DBCredentialsService? GetCredentials()
         {
+            var directory = "C:\\Users\\finn\\source\\repos\\fmacke\\PikUpStix.cTraderExtensions\\TradeSimulator\\bin\\Debug\\net9.0\\";
+            //Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) ?? string.Empty;
+            
+            if (!string.IsNullOrEmpty(AppContext.BaseDirectory))
+            {
+                directory = AppContext.BaseDirectory;
+            }
+
             var builder = new ConfigurationBuilder()
-                          .SetBasePath(AppContext.BaseDirectory)
+                          .SetBasePath(directory)
                           .AddUserSecrets<ApplicationDbContext>();
 
             var configuration = builder.Build();
