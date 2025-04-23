@@ -2,7 +2,6 @@
 using Application.Business.Market;
 using FXProBridge.Common;
 using FXProBridge.DataConversions;
-using Robots.Strategies.PivotPointBounce;
 
 namespace FXProBridge.Robots
 {
@@ -10,11 +9,12 @@ namespace FXProBridge.Robots
     {
        protected override void OnBar()
         {
+            var bars = BarConvert.ConvertBars(Bars);
             var marketInfo = new MarketInfo(Bars.OpenTimes.LastValue,
                 Symbol.Bid,
                 Symbol.Ask,
                 PositionConvert.ConvertPosition(Positions),
-                BarConvert.ConvertBars(Bars),
+                bars,
                 SymbolName,
                 SymbolName,
                 Account.Equity,
