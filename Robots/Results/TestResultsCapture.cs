@@ -73,12 +73,16 @@ namespace Robots.Results
 
                 dataService.PositionCaller.AddPositionRange(tts);
                 var test = dataService.TestCaller.GetTest(TestId);
+                var endingCaptial = tts.Count == 0 ? 0 : tts.Sum(x => x.Margin) + test.StartingCapital;
+                var fromDate = tts.Count == 0 ? new DateTime(1900, 1, 1) : tts.Min(x => x.Created).AddDays(-1);
+                var toDate = tts.Count == 0 ? new DateTime(1900, 1, 1) : Convert.ToDateTime(tts.Max(x => x.ClosedAt)).AddDays(1);
+
                 dataService.TestCaller.UpdateTest(new UpdateTestCommand()
                 {
                     Id = TestId,
-                    FromDate = tts.Min(x => x.Created).AddDays(-1),
-                    ToDate = Convert.ToDateTime(tts.Max(x => x.ClosedAt)).AddDays(1),
-                    EndingCapital = tts.Sum(x => x.Margin) + test.StartingCapital,
+                    FromDate = fromDate,
+                    ToDate = toDate,
+                    EndingCapital = endingCaptial,
                     TestEndAt = DateTime.Now,
                     MaxAdverseExcursion = tradeStatistics.MaxAdverseExcursion,
                     SharpeRatio = tradeStatistics.SharpeRatio,
@@ -122,6 +126,7 @@ namespace Robots.Results
             }
             catch (Exception ex)
             {
+                
                 return ex.Message.ToString();
             }
             return "pass captured";

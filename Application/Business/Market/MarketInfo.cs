@@ -36,6 +36,16 @@ namespace Application.Business.Market
             ContractUnit = contractUnit;
             Signals = signals;
             TimeFrame = timeFrame;
+            if (bars != null && bars.Count > 0)
+            {
+                CurrentBar = bars.LastOrDefault();
+                LastBar = bars[bars.Count - 2];
+            }
+            else
+            {
+                CurrentBar = new HistoricalData();
+                LastBar = new HistoricalData();
+            }
         }
     }
 }

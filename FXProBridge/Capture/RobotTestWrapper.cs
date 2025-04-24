@@ -12,7 +12,7 @@ namespace FXProBridge.Capture
     /// Robot Wrapper that deals with recording test results.
     /// </summary>
     [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.FullAccess)]
-    public class RobotTestWrapper : BarDataCapture
+    public class RobotTestWrapper : Robot
     {
         public bool IsTestRun { get; set; } = true;
         public TestResultsCapture? ResultsCapture { get; set; }
