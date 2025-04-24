@@ -2,7 +2,6 @@
 using Application.Business.Market;
 using FXProBridge.Common;
 using FXProBridge.DataConversions;
-using Robots.Strategies.PivotPointBounce;
 
 namespace FXProBridge.Robots
 {
@@ -22,9 +21,7 @@ namespace FXProBridge.Robots
 
             var strategy = new VolumePriceAnalysis();
             ManagePositions(strategy.Run(new List<IMarketInfo> { marketInfo }));
-
             base.OnBar();
-
         }
     }
 }

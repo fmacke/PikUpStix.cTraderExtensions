@@ -41,8 +41,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FXProBridge", "FXProBridge\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Indicators", "Indicators\Indicators.csproj", "{00F26DF2-A698-68FE-1004-CCE3367EFE1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RunRobot", "..\..\..\..\OneDrive\Documents\cAlgo\Sources\Robots\RunRobot\RunRobot\RunRobot.csproj", "{0EDA68B0-F7AD-AA73-9416-EC8708819F2E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -105,10 +103,6 @@ Global
 		{00F26DF2-A698-68FE-1004-CCE3367EFE1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00F26DF2-A698-68FE-1004-CCE3367EFE1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00F26DF2-A698-68FE-1004-CCE3367EFE1C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0EDA68B0-F7AD-AA73-9416-EC8708819F2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0EDA68B0-F7AD-AA73-9416-EC8708819F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0EDA68B0-F7AD-AA73-9416-EC8708819F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0EDA68B0-F7AD-AA73-9416-EC8708819F2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
