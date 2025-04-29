@@ -32,7 +32,7 @@ namespace Application.Business.Positioning.Handlers
 
         private void HandleClose<T>(T update) where T : CloseInstruction
         {
-            var contractUnit = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).ContractUnit;
+            var contractUnit = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).PipSize;
             var exchangeRate = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).ExchangeRate;
             new ClosePositionHandler(ref _positions).ClosePosition(update.Position, update.ClosePrice, update.ClosedAt, contractUnit, exchangeRate);
         }

@@ -1,14 +1,15 @@
 ﻿namespace Application.Business.Calculations
 {
-    public class LotSize : ICalculate
+    public class PositionSize : ICalculate
     {
         public double Forecast { get; private set; } = 0.0;
         public double RiskPerTrade { get; private set; } = 0.0;
         public double AccountBalance { get; private set; } = 0.0;
         public double PipSize { get; private set; } = 0.0;
+        public double LotSize { get; private set; } = 0.0;
         public double StopLossPrice { get; private set; } = 0.0;
         public double EntryPrice { get; private set; } = 0.0;
-        public LotSize(double forecast, double maximumRisk, double accountBalance, double pipSize, double stopLossPrice, double entryPrice)
+        public PositionSize(double forecast, double maximumRisk, double accountBalance, double lotSize, double pipSize, double stopLossPrice, double entryPrice)
         {
             if (maximumRisk > 0.5)
             {
@@ -25,15 +26,16 @@
                 RiskPerTrade = maximumRisk * Forecast;
             AccountBalance = accountBalance;
             PipSize = pipSize;
+            LotSize = lotSize;
             StopLossPrice = stopLossPrice;
             EntryPrice = entryPrice;
         }        
         public double Calculate()
-        {            
-            double stopLossAmount = Math.Abs(EntryPrice - StopLossPrice);
-            double dollarRiskPerTrade = AccountBalance * RiskPerTrade;
-            double lotSize = dollarRiskPerTrade / (stopLossAmount * PipSize);
-            return lotSize;
+        {
+            double stopLossDistance = EntryPrice - StopLossPrice;
+            double pipValue = LotSize * PipSize;
+            double positionSize = (AccountBalance * RiskPerTrade) / (stopLossDistance * pipValue);
+            return positionSize;
         }
     }
 

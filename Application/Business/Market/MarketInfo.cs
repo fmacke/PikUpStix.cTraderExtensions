@@ -14,7 +14,8 @@ namespace Application.Business.Market
         public double CurrentCapital { get; set; }
         public string Currency { get; private set; }
         public double ExchangeRate { get; private set; }
-        public double ContractUnit { get; private set; }
+        public double PipSize { get; private set; }
+        public double LotSize { get; private set; }
         public ConfirmingSignals Signals { get; private set; }
         public TimeFrame TimeFrame { get; private set; }
         public HistoricalData CurrentBar { get; set; }
@@ -22,7 +23,7 @@ namespace Application.Business.Market
 
         public MarketInfo(DateTime cursorDate, double bid, double ask, List<Position> positions,
             List<HistoricalData> bars, string symbolName, string currency, double accountBalance,
-            double contractUnit, double exchangeRate, ConfirmingSignals signals, TimeFrame timeFrame)
+            double pipSize, double lotSize, double exchangeRate, ConfirmingSignals signals, TimeFrame timeFrame)
         {
             CursorDate = cursorDate;
             Bid = bid;
@@ -33,7 +34,8 @@ namespace Application.Business.Market
             Currency = currency;
             CurrentCapital = accountBalance;
             ExchangeRate = exchangeRate;
-            ContractUnit = contractUnit;
+            PipSize = pipSize;
+            LotSize = lotSize;
             Signals = signals;
             TimeFrame = timeFrame;
             if (bars != null && bars.Count > 0)

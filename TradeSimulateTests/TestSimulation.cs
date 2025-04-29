@@ -74,6 +74,7 @@ namespace TradeSimulateTests
                 "EURUSD",
                 "USD",
                 10000,
+                0.0001,
                 100000,
                 1,
                 new ConfirmingSignals(new List<ISignal>()),

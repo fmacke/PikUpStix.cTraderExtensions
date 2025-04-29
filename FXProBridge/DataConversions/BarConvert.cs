@@ -18,7 +18,7 @@ namespace FXProBridge.DataConversions
         private static List<HistoricalData> MapBars(Bars historicalData, int instrumentId)
         {
             var histoData = new List<HistoricalData>();
-            for (var x = historicalData.ClosePrices.Count - 1; x >= 0; x--)
+            for (var x = 0; x <= historicalData.ClosePrices.Count - 1; x++)
             {
                 histoData.Add(new HistoricalData()
                 {

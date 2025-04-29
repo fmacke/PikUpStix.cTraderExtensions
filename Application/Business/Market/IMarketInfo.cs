@@ -14,7 +14,8 @@ namespace Application.Business.Market
         double CurrentCapital { get; set; }
         public HistoricalData CurrentBar { get;  set; }
         public HistoricalData LastBar { get;  set; }
-        double ContractUnit { get; }
+        double PipSize { get; }
+        double LotSize { get;  }
         double ExchangeRate { get; }
         List<HistoricalData> Bars { get; set; }
         List<Position> Positions { get; set; }

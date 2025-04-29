@@ -18,7 +18,8 @@ namespace FXProBridge.Robots
                 SymbolName,
                 SymbolName,
                 Account.Equity,
-                Symbol.PipSize, 1, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.H1);
+                Symbol.PipSize, Symbol.LotSize,
+                1, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.H1);
 
             var strategy = new VolumePriceAnalysis();
             ManagePositions(strategy.Run(new List<IMarketInfo> { marketInfo }));

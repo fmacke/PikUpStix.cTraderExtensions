@@ -3,7 +3,6 @@ using Application.Features.Positions.Commands.Create;
 using cAlgo.API;
 using DataServices;
 using Domain.Enums;
-using Domain.Entities;
 using Robots.Results;
 
 namespace FXProBridge.Capture
@@ -28,7 +27,6 @@ namespace FXProBridge.Capture
         {
             if (IsTestRun)
                 LogTestStart(this);
-            //base.OnStart();
         }
         protected override void OnTick()
         {
@@ -62,11 +60,12 @@ namespace FXProBridge.Capture
                         Comment = tr.ClosingDealId.ToString() + " || " + tr.Label,
                         Created = tr.EntryTime,
                         Volume = tr.VolumeInUnits,
-                        PositionType = GetPositionType(tr.TradeType),
+                        PositionType = tr.TradeType.GetType().Name == "BUY" ? PositionType.BUY : PositionType.SELL,
                         EntryPrice = tr.EntryPrice,
                         Commission = tr.Commissions,
                         ClosedAt = tr.ClosingTime,
                         ClosePrice = tr.ClosingPrice,
+                        SymbolName = tr.SymbolName,
                         InstrumentId = 1,
                         Status = PositionStatus.CLOSED,
                         Margin = tr.NetProfit
@@ -75,18 +74,6 @@ namespace FXProBridge.Capture
                 return ResultsCapture.Capture("onStop", tts, DataService, _maximumAdverseExcursion);
             }
             return "Not a test run.";
-        }
-        
-        private PositionType GetPositionType(TradeType tradeType)
-        {
-            if (tradeType.GetType().Name == "BUY")
-            {
-                return PositionType.BUY;
-            }
-            else
-            {
-                return PositionType.SELL;
-            }
         }
     }
 }

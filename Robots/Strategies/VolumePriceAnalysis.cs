@@ -24,7 +24,9 @@ public class VolumePriceAnalysis : IStrategy
                 break;
             }
             double meanVolume = CalculateAverageElements(marketInfo.Bars.Select(b => b.Volume).ToArray(), 20); // Calculate the mean volume over the last 20 bars            
-            double standardDeviation = new StandardDeviation(marketInfo.Bars.Select(b => b.Volume).ToArray()).Calculate(); // Calculate the standard deviation of volume
+            double standardDeviation = new StandardDeviation(
+                GetLastResults(marketInfo.Bars.Select(b => b.Volume).ToArray(), 20))
+                .Calculate(); // Calculate the standard deviation of volume
             double volumeThreshold = meanVolume + (2 * standardDeviation); // Define a threshold for significant volume change
 
             var volume = marketInfo.LastBar.Volume;
@@ -34,17 +36,18 @@ public class VolumePriceAnalysis : IStrategy
             if (volume > volumeThreshold && price > previousPrice)
             {
                 // Strong buying interest, potential uptrend continuation
-                var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
-                var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation                    
-                var lotSize =  new LotSize(1, 0.04, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, marketInfo.Ask).Calculate();
+                var stopLoss = marketInfo.Ask - (marketInfo.Ask - 0.001); // Example stop loss calculation
+                var stopLossPrice = marketInfo.Ask - stopLoss;
+                var takeProfit = marketInfo.Ask - (marketInfo.Ask - 0.001); // Example stop loss calculation                    
+                var positionSize =  new PositionSize(1, 0.04, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLossPrice, marketInfo.Ask).Calculate();
                 var position = new Position()
                 {
                     SymbolName = marketInfo.SymbolName,
                     PositionType = PositionType.BUY,
                     EntryPrice = marketInfo.Ask,
                     StopLoss = stopLoss,
-                    //TakeProfit = takeProfit,
-                    Volume = lotSize,
+                    TakeProfit = stopLoss,
+                    Volume = positionSize,
                     Created = marketInfo.CursorDate,
                     ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
                 };
@@ -56,7 +59,7 @@ public class VolumePriceAnalysis : IStrategy
                 // Strong selling pressure, potential downtrend continuation
                 var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
                 var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation                    
-                var lotSize = new LotSize(1, 0.02, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, marketInfo.Ask).Calculate();
+                var positionSize = new PositionSize(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, marketInfo.Ask).Calculate();
                 var position = new Position()
                 {
                     SymbolName = marketInfo.SymbolName,
@@ -64,7 +67,7 @@ public class VolumePriceAnalysis : IStrategy
                     EntryPrice = marketInfo.Ask,
                     StopLoss = stopLoss,
                     //TakeProfit = takeProfit,
-                    Volume = lotSize,
+                    Volume = positionSize,
                     Created = marketInfo.CursorDate,
                     ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
                 };
@@ -92,6 +95,14 @@ public class VolumePriceAnalysis : IStrategy
         }
         return _positionInstructions;
     }
+
+    private double[] GetLastResults(double[] values, int numberOfPeriods)
+    {
+        if (numberOfPeriods > values.Length)
+            numberOfPeriods = values.Length;
+        return values.Skip(values.Length - (1+numberOfPeriods)).ToArray();  // Get the last N periods but not current period (i.e. last value)
+    }
+
     public double CalculateAverageElements(double[] values, int numberOfPeriods)
     {
         if (values == null || values.Length == 0 || numberOfPeriods <= 0)

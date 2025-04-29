@@ -78,7 +78,8 @@ namespace FXProBridge.Robots
                 SymbolName,
                 SymbolName,
                 Account.Equity,
-                Symbol.PipSize, exchangeRate, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.H1);
+                Symbol.PipSize, Symbol.LotSize,
+                exchangeRate, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.H1);
 
             var signals = new List<ISignal>();
             if(EnableMA)

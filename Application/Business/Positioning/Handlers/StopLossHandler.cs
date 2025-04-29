@@ -35,7 +35,7 @@ namespace Application.Business.Positioning.Handlers
                         position,
                         position.StopLoss.GetValueOrDefault(),
                         Convert.ToDateTime(cursorDate),
-                        marketInfo.ContractUnit,
+                        marketInfo.PipSize,
                         marketInfo.ExchangeRate);
                 }
             }
@@ -90,7 +90,7 @@ namespace Application.Business.Positioning.Handlers
                         position,
                         position.TakeProfit.GetValueOrDefault(),
                         Convert.ToDateTime(cursorDate),
-                        marketInfo.ContractUnit,
+                        marketInfo.PipSize,
                         marketInfo.ExchangeRate);
                 }
             }

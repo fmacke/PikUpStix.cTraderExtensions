@@ -52,7 +52,7 @@ namespace Robots.Strategies.PivotPointBounce
                             CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
                     var pricePoint = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid;
-                    var lotSize = new LotSize(StrategySignal, MaximumRisk, marketInfo.CurrentCapital, marketInfo.ContractUnit, stopLoss, pricePoint).Calculate();
+                    var positionSize = new PositionSize(StrategySignal, MaximumRisk, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, pricePoint).Calculate();
                     var position = new Position()
                     {
                         SymbolName = marketInfo.SymbolName,
@@ -62,7 +62,7 @@ namespace Robots.Strategies.PivotPointBounce
                         TakeProfit = StrategySignal > 0 ?
                             CalculatePips(PivotPoints.Pivot - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Pivot),
-                        Volume = lotSize,
+                        Volume = positionSize,
                         Created = marketInfo.CursorDate,
                         ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 0, 0)
                     };
