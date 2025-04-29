@@ -6,13 +6,12 @@ using AutoMapper;
 using DataServices;
 using Domain.Entities;
 using Domain.Enums;
-using Robots.Strategies;
 using TradeSimulator.Simulate;
 
 internal class Program
 {
     public static IStrategy Strategy { get; set; } = new VolumePriceAnalysis();  // set IStrategy here
-    public static int InstrumentId { get; set; } = 3; // the instrument id to be used for testing
+    public static int InstrumentId { get; set; } = 1; // the instrument id to be used for testing
     public static IMarketInfo TestInfo { get; set; }
     public static bool SaveTestResult { get; set; } = true;
 
