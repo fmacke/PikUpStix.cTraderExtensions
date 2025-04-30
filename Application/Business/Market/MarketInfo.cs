@@ -17,7 +17,8 @@ namespace Application.Business.Market
         public double PipSize { get; private set; }
         public double LotSize { get; private set; }
         public ConfirmingSignals Signals { get; private set; }
-        public TimeFrame TimeFrame { get; private set; }
+        public TimeFrame TickTimeFrame { get; private set; }
+        public TimeFrame BarTimeFrame { get; private set; }
         public HistoricalData CurrentBar { get; set; }
         public HistoricalData LastBar { get; set; }
 
@@ -37,7 +38,7 @@ namespace Application.Business.Market
             PipSize = pipSize;
             LotSize = lotSize;
             Signals = signals;
-            TimeFrame = timeFrame;
+            TickTimeFrame = timeFrame;
             if (bars != null && bars.Count > 0)
             {
                 CurrentBar = bars.LastOrDefault();

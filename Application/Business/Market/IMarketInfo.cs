@@ -20,6 +20,7 @@ namespace Application.Business.Market
         List<HistoricalData> Bars { get; set; }
         List<Position> Positions { get; set; }
         ConfirmingSignals Signals { get; }
-        TimeFrame TimeFrame { get; }
+        TimeFrame TickTimeFrame { get; }
+        TimeFrame BarTimeFrame { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Application.Business.Market;
 using Domain.Entities;
+using Domain.Enums;
 using Robots.Results;
 
 namespace TradeSimulator.Simulate
@@ -26,9 +27,16 @@ namespace TradeSimulator.Simulate
             for (int x=0; x<TestSet.Count; x++)
             {
                 LoadCurrentMarketData(x);
-                OnBar();
+                OnTick();
+                if (IsNewBar(CurrentMarketInfo.BarTimeFrame))
+                    OnBar();
             }
             OnStop();
+        }
+
+        private bool IsNewBar(TimeFrame barTimeFrame)
+        {
+            throw new NotImplementedException();
         }
 
         private void LoadCurrentMarketData(int x)
@@ -42,6 +50,10 @@ namespace TradeSimulator.Simulate
                 CurrentMarketInfo.LastBar = TestSet[x - 1];
         }
 
+        protected internal virtual void OnTick()
+        {
+            throw new NotImplementedException();  // This method should be overridden in the derived class
+        }
         protected internal virtual void OnBar()
         {
             throw new NotImplementedException();  // This method should be overridden in the derived class

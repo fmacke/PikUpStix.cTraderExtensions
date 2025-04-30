@@ -26,7 +26,7 @@ namespace TradeSimulator.Simulate
             Strategy = strategy;
             SaveTestResult = saveTestResult;
         }
-        protected internal override void OnBar()
+        protected internal override void OnTick()
         {
             List<IMarketInfo> marketInfos = new List<IMarketInfo>();
             CurrentMarketInfo.Positions = Positions;

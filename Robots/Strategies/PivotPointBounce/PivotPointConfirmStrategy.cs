@@ -42,7 +42,7 @@ namespace Robots.Strategies.PivotPointBounce
         }
         private void CalculateNewInstructions(IMarketInfo marketInfo, List<IMarketInfo> marketInfos)
         {
-            PivotPoints = GetPivotPointData(marketInfo.TimeFrame, marketInfos);
+            PivotPoints = GetPivotPointData(marketInfo.TickTimeFrame, marketInfos);
             if (PivotPoints != null)
             {
                 StrategySignal = CaculateStrategySignal(marketInfo);
@@ -78,9 +78,9 @@ namespace Robots.Strategies.PivotPointBounce
         private PivotPoints GetPivotPointData(TimeFrame timeFrame, List<IMarketInfo> marketInfos)
         {
             var pivotTimeFrame = GetPivotTimeFrame(timeFrame);
-            if (marketInfos.Any(x => x.TimeFrame == pivotTimeFrame))
+            if (marketInfos.Any(x => x.TickTimeFrame == pivotTimeFrame))
             {
-                var pivotMarketInfo = marketInfos.First(x => x.TimeFrame == pivotTimeFrame);
+                var pivotMarketInfo = marketInfos.First(x => x.TickTimeFrame == pivotTimeFrame);
                 if (pivotMarketInfo.Bars.Count > 0)
                 {
                     var pivotPoint = new PivotPoints(pivotMarketInfo.Bars[0].Date, pivotMarketInfo.Bars[0].HighPrice, pivotMarketInfo.Bars[0].LowPrice, pivotMarketInfo.Bars[0].ClosePrice);
