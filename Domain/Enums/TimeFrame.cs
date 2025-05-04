@@ -12,4 +12,26 @@
         W1,
         MN1
     }
+
+    public static class TimeFrameParser
+    {
+        private static readonly Dictionary<string, TimeFrame> mappings = new()
+        {
+            { "M1", TimeFrame.M1 },
+            { "M5", TimeFrame.M5 },
+            { "M15", TimeFrame.M15 },
+            { "M30", TimeFrame.M30 },
+            { "H1", TimeFrame.H1 },
+            { "H4", TimeFrame.H4 },
+            { "D1", TimeFrame.D1 },
+            { "Daily", TimeFrame.D1 },
+            { "W1", TimeFrame.W1 },
+            { "MN1", TimeFrame.MN1 }
+        };
+        public static bool TryParse(string input, out TimeFrame timeFrame)
+        {
+            return mappings.TryGetValue(input, out timeFrame);
+        }
+    }
+
 }

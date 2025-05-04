@@ -38,7 +38,8 @@ namespace Application.Business.Market
             PipSize = pipSize;
             LotSize = lotSize;
             Signals = signals;
-            TickTimeFrame = timeFrame;
+            //TickTimeFrame = timeFrame;
+            BarTimeFrame = timeFrame;
             if (bars != null && bars.Count > 0)
             {
                 CurrentBar = bars.LastOrDefault();

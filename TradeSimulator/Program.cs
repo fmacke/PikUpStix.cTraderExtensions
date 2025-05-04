@@ -11,7 +11,7 @@ using TradeSimulator.Simulate;
 internal class Program
 {
     public static IStrategy Strategy { get; set; } = new VolumePriceAnalysis();  // set IStrategy here
-    public static int InstrumentId { get; set; } = 1; // the instrument id to be used for testing
+    public static int InstrumentId { get; set; } = 4; // the instrument id to be used for testing
     public static IMarketInfo TestInfo { get; set; }
     public static bool SaveTestResult { get; set; } = true;
 
@@ -46,17 +46,17 @@ internal class Program
             100000,
             1,
             new ConfirmingSignals(new List<ISignal>()),
-            ConvertToTimeFrame(instrument.Frequency)
+            ConvertToTimeFrame("D1")
         );
     }
 
     private static TimeFrame ConvertToTimeFrame(string frequency)
     {
-        TimeFrame timeFrame = new TimeFrame();
-        if (Enum.TryParse(frequency, true, out timeFrame))
+        if (TimeFrameParser.TryParse(frequency, out TimeFrame result))
         {
-            return timeFrame;
+            return result;
         }
+
         throw new Exception("Frequency does not match with any known TimeFrame");
     }
 

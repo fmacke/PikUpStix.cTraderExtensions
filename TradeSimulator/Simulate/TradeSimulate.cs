@@ -28,15 +28,23 @@ namespace TradeSimulator.Simulate
         }
         protected internal override void OnTick()
         {
-            List<IMarketInfo> marketInfos = new List<IMarketInfo>();
-            CurrentMarketInfo.Positions = Positions;
-            marketInfos.Add(CurrentMarketInfo);  // this works for now for testing purposes, where a strategy only deals with a single market instrument.            
+            List<IMarketInfo> marketInfos = GetMarketInfo();
             new StopLossHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutStops();
             new TakeProfitHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutTakeProfits();
+        }
+        protected internal override void OnBar()
+        {
+            List<IMarketInfo> marketInfos = GetMarketInfo();            
             CurrentMarketInfo.CurrentCapital = Positions.Where(p => p.Status == PositionStatus.CLOSED).Sum(p => p.Margin) + InitialCapital;
             PositionInstructions = Strategy.Run(marketInfos);
             new PositionHandler(PositionInstructions, ref Positions, marketInfos).ExecuteInstructions();
-            
+        }
+        private List<IMarketInfo> GetMarketInfo()
+        {
+            List<IMarketInfo> marketInfos = new List<IMarketInfo>();
+            CurrentMarketInfo.Positions = Positions;
+            marketInfos.Add(CurrentMarketInfo);  // this works for now for testing purposes, where a strategy only deals with a single market instrument.            
+            return marketInfos;
         }
         protected internal override void OnStart()
         {

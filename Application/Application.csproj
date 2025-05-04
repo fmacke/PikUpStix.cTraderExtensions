@@ -7,10 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Business\Risk\**" />
     <Compile Remove="Features\CVRs\**" />
     <Compile Remove="Features\Instruments - Copy\**" />
+    <EmbeddedResource Remove="Business\Risk\**" />
     <EmbeddedResource Remove="Features\CVRs\**" />
     <EmbeddedResource Remove="Features\Instruments - Copy\**" />
+    <None Remove="Business\Risk\**" />
     <None Remove="Features\CVRs\**" />
     <None Remove="Features\Instruments - Copy\**" />
   </ItemGroup>
@@ -26,10 +29,6 @@
     <PackageReference Include="InteractiveBrokers.TwsClient" Version="1.0.755" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.36" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Business\Risk\" />
   </ItemGroup>
 
 </Project>

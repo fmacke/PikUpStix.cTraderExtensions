@@ -26,19 +26,25 @@ namespace TradeSimulator.Simulate
             OnStart();
             for (int x=0; x<TestSet.Count; x++)
             {
+                var lastDateTime = CurrentMarketInfo.CursorDate;
                 LoadCurrentMarketData(x);
+                var currentDateTime = CurrentMarketInfo.CursorDate; 
                 OnTick();
-                if (IsNewBar(CurrentMarketInfo.BarTimeFrame))
+                if (IsNewBar(CurrentMarketInfo.BarTimeFrame, currentDateTime, lastDateTime))
                     OnBar();
             }
             OnStop();
         }
-
-        private bool IsNewBar(TimeFrame barTimeFrame)
+        private bool IsNewBar(TimeFrame barTimeFrame, DateTime current, DateTime last)
         {
-            throw new NotImplementedException();
+            if (barTimeFrame == TimeFrame.D1)
+            { 
+                if (current.Date.Day != last.Date.Day)
+                    return true;
+                return false;
+            }
+            throw new NotImplementedException("TimeFrame not implemented yet");
         }
-
         private void LoadCurrentMarketData(int x)
         {
             CurrentMarketInfo.Bars.Add(TestSet[x]);
@@ -49,7 +55,6 @@ namespace TradeSimulator.Simulate
             if (x > 0)
                 CurrentMarketInfo.LastBar = TestSet[x - 1];
         }
-
         protected internal virtual void OnTick()
         {
             throw new NotImplementedException();  // This method should be overridden in the derived class

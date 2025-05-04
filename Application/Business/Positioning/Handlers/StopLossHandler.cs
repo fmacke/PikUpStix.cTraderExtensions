@@ -51,11 +51,9 @@ namespace Application.Business.Positioning.Handlers
         }
         private double? GetMaxPriceExcursion(Position position, IMarketInfo marketInfo)
         {
-            if (position.Created < marketInfo.CursorDate) //  Position created at some point during the last bar - tricky to know if the stop loss was hit without looking at more refined timeframes/tick data
-                return marketInfo.CurrentBar.OpenPrice;
             if (position.PositionType == PositionType.BUY)                
-                return marketInfo.CurrentBar.OpenPrice < marketInfo.LastBar.LowPrice ? marketInfo.CurrentBar.OpenPrice : marketInfo.LastBar.LowPrice;  // FOR BUY POSITIONS
-            return marketInfo.CurrentBar.OpenPrice < marketInfo.LastBar.LowPrice ? marketInfo.CurrentBar.OpenPrice : marketInfo.LastBar.LowPrice;  // FOR SELL POSITIONS
+                return marketInfo.Ask < marketInfo.LastBar.LowPrice ? marketInfo.Ask : marketInfo.LastBar.LowPrice;  // FOR BUY POSITIONS
+            return marketInfo.Ask > marketInfo.LastBar.HighPrice ? marketInfo.Ask : marketInfo.LastBar.HighPrice;  // FOR SELL POSITIONS
 
         }
     }
@@ -100,18 +98,15 @@ namespace Application.Business.Positioning.Handlers
             var maxPriceExcursion = GetMaxPriceExcursion(position, marketInfo);
             if (position.PositionType == PositionType.BUY && maxPriceExcursion >= position.TakeProfit)
                 return true;
-            if (position.PositionType == PositionType.SELL && maxPriceExcursion <= position.StopLoss)
+            if (position.PositionType == PositionType.SELL && maxPriceExcursion <= position.TakeProfit)
                 return true;
             return false;
         }
         private double? GetMaxPriceExcursion(Position position, IMarketInfo marketInfo)
         {
-            if (position.Created < marketInfo.CursorDate) //  Position created at some point during the last bar - tricky to know if the stop loss was hit without looking at more refined timeframes/tick data
-                return marketInfo.CurrentBar.OpenPrice;
             if (position.PositionType == PositionType.BUY)
-                return marketInfo.CurrentBar.OpenPrice < marketInfo.LastBar.HighPrice ? marketInfo.CurrentBar.HighPrice : marketInfo.LastBar.OpenPrice;  // FOR BUY POSITIONS
-            //SELL
-            return marketInfo.CurrentBar.OpenPrice < marketInfo.LastBar.LowPrice ? marketInfo.CurrentBar.LowPrice : marketInfo.LastBar.OpenPrice;  // FOR SELL POSITIONS
+                return marketInfo.Ask > marketInfo.LastBar.HighPrice ? marketInfo.Ask : marketInfo.LastBar.HighPrice;  // FOR BUY POSITIONS
+            return marketInfo.Ask < marketInfo.LastBar.LowPrice? marketInfo.Ask : marketInfo.LastBar.LowPrice;   // FOR SELL POSITIONS
 
         }
     }
