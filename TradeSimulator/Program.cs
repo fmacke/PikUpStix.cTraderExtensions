@@ -11,7 +11,7 @@ using TradeSimulator.Simulate;
 internal class Program
 {
     public static IStrategy Strategy { get; set; } = new VolumePriceAnalysis();  // set IStrategy here
-    public static int InstrumentId { get; set; } = 4; // the instrument id to be used for testing
+    public static int InstrumentId { get; set; } = 3; // the instrument id to be used for testing
     public static IMarketInfo TestInfo { get; set; }
     public static bool SaveTestResult { get; set; } = true;
 
@@ -48,6 +48,7 @@ internal class Program
             new ConfirmingSignals(new List<ISignal>()),
             ConvertToTimeFrame("D1")
         );
+        TestInfo.InstrumentId = instrumentId;
     }
 
     private static TimeFrame ConvertToTimeFrame(string frequency)

@@ -17,6 +17,7 @@ namespace Application.Business.Market
         double PipSize { get; }
         double LotSize { get;  }
         double ExchangeRate { get; }
+        int InstrumentId { get; set; }
         List<HistoricalData> Bars { get; set; }
         List<Position> Positions { get; set; }
         ConfirmingSignals Signals { get; }

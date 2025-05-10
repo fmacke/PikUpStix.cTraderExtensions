@@ -46,7 +46,8 @@ public class VolumePriceAnalysis : IStrategy
                     PositionType = PositionType.BUY,
                     EntryPrice = marketInfo.Ask,
                     StopLoss = stopLoss,
-                    TakeProfit = stopLoss,
+                    TakeProfit = takeProfit,
+                    InstrumentId = marketInfo.InstrumentId,
                     Volume = positionSize,
                     Created = marketInfo.CursorDate,
                     ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
@@ -66,7 +67,8 @@ public class VolumePriceAnalysis : IStrategy
                     PositionType = PositionType.SELL,
                     EntryPrice = marketInfo.Ask,
                     StopLoss = stopLoss,
-                    //TakeProfit = takeProfit,
+                    InstrumentId = marketInfo.InstrumentId,
+                    TakeProfit = takeProfit,
                     Volume = positionSize,
                     Created = marketInfo.CursorDate,
                     ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)

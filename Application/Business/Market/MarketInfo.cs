@@ -9,6 +9,7 @@ namespace Application.Business.Market
         public double Bid { get; set; }
         public double Ask { get; set; }
         public List<Position> Positions { get; set; }
+        public int InstrumentId { get; set; }
         public List<HistoricalData> Bars { get; set; }
         public string SymbolName { get; private set; }
         public double CurrentCapital { get; set; }

@@ -79,7 +79,7 @@ namespace TradeSimulator.Simulate
                         Commission = tr.Commission,
                         ClosedAt = tr.ClosedAt,
                         ClosePrice = tr.ClosePrice,
-                        InstrumentId = 1,
+                        InstrumentId = tr.InstrumentId,
                         StopLoss = tr.StopLoss,
                         TakeProfit = tr.TakeProfit,
                         TrailingStop = tr.TrailingStop,

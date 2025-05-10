@@ -4,10 +4,11 @@ import plotly.graph_objects as go
 
 # SQL Server connection details
 server = 'localhost'
-database = 'Experiment'
+database = 'TradingBE'
 username = 'sa'
-password = 'yourStrongPassword'
-insId = 1
+password = 'Gogogo123!'
+insId = 3
+testId = 6016
 
 # Establish connection to SQL Server
 conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
@@ -20,7 +21,7 @@ conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
 query_ohlc = '''
 SELECT Date, OpenPrice, HighPrice, LowPrice, ClosePrice
 FROM HistoricalData
-WHERE InstrumentId = ? AND YEAR(Date) < 2010 
+WHERE InstrumentId = ? AND YEAR(Date) > 2020
 ORDER BY Date
 '''
 
@@ -31,13 +32,13 @@ df_ohlc = pd.read_sql(query_ohlc, conn, params=[insId])
 query_positions = '''
 SELECT Created, ClosedAt, EntryPrice, ClosePrice, PositionType
 FROM Positions
-WHERE InstrumentId = ? and TestId = 1
-AND YEAR(Created) < 2010
+WHERE InstrumentId = ? and TestId = ?
+AND YEAR(Created) >= 2020
 ORDER BY Created
 '''
 
 # Fetch Positions data into a DataFrame
-df_positions = pd.read_sql(query_positions, conn, params=[insId])
+df_positions = pd.read_sql(query_positions, conn, params=[insId, testId])
 
 # Close the connection
 conn.close()
@@ -51,7 +52,7 @@ fig = go.Figure(data=[go.Ohlc(x=df_ohlc['Date'],
 
 # Overlay trades from Positions table with color-coding based on profit/loss
 for index, row in df_positions.iterrows():
-    
+    color = 'gray'  # Default color to avoid NameError
     if row['PositionType'] == 0 and row['ClosePrice'] > row['EntryPrice']:
      color = 'pink'
     elif row['PositionType'] == 0 and row['ClosePrice'] < row['EntryPrice']:
