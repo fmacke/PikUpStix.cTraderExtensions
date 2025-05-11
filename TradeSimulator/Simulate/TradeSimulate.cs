@@ -28,13 +28,15 @@ namespace TradeSimulator.Simulate
         }
         protected internal override void OnTick()
         {
+            //Debug.WriteLine($"TradeSimulate OnTick() {CurrentMarketInfo.CursorDate}");
             List<IMarketInfo> marketInfos = GetMarketInfo();
             new StopLossHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutStops();
             new TakeProfitHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutTakeProfits();
         }
         protected internal override void OnBar()
         {
-            List<IMarketInfo> marketInfos = GetMarketInfo();            
+            //Debug.WriteLine($"TradeSimulate OnBar() {CurrentMarketInfo.CursorDate}");
+            List<IMarketInfo> marketInfos = GetMarketInfo();
             CurrentMarketInfo.CurrentCapital = Positions.Where(p => p.Status == PositionStatus.CLOSED).Sum(p => p.Margin) + InitialCapital;
             PositionInstructions = Strategy.Run(marketInfos);
             new PositionHandler(PositionInstructions, ref Positions, marketInfos).ExecuteInstructions();

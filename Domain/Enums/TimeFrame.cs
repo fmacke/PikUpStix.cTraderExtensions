@@ -32,6 +32,23 @@
         {
             return mappings.TryGetValue(input, out timeFrame);
         }
+        public static bool TryParseBarFromTick(TimeFrame input, out TimeFrame timeFrame)
+        {
+            return barMappings.TryGetValue(input.ToString(), out timeFrame);
+        }
+        private static readonly Dictionary<string, TimeFrame> barMappings = new()
+        {
+            { "M1", TimeFrame.M5 },
+            { "M5", TimeFrame.M15 },
+            { "M15", TimeFrame.M30 },
+            { "M30", TimeFrame.H1 },
+            { "H1", TimeFrame.D1 },
+            { "H4", TimeFrame.D1 },
+            { "D1", TimeFrame.W1 },
+            { "Daily", TimeFrame.W1 },
+            { "W1", TimeFrame.MN1 },
+            { "MN1", TimeFrame.MN1 }
+        };
     }
 
 }

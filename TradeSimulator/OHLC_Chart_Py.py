@@ -7,8 +7,8 @@ server = 'localhost'
 database = 'TradingBE'
 username = 'sa'
 password = 'Gogogo123!'
-insId = 3
-testId = 6016
+insId = '4'
+testId = '7015'
 
 # Establish connection to SQL Server
 conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
@@ -21,7 +21,7 @@ conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
 query_ohlc = '''
 SELECT Date, OpenPrice, HighPrice, LowPrice, ClosePrice
 FROM HistoricalData
-WHERE InstrumentId = ? AND YEAR(Date) > 2020
+WHERE InstrumentId = ? and YEAR(Date) >= 2018
 ORDER BY Date
 '''
 
@@ -30,10 +30,10 @@ df_ohlc = pd.read_sql(query_ohlc, conn, params=[insId])
 
 # Parameterized query to fetch Positions data with Created date before 2010
 query_positions = '''
-SELECT Created, ClosedAt, EntryPrice, ClosePrice, PositionType
+SELECT Id, Created, ClosedAt, EntryPrice, ClosePrice, PositionType
 FROM Positions
 WHERE InstrumentId = ? and TestId = ?
-AND YEAR(Created) >= 2020
+AND YEAR(Created) >= 2018
 ORDER BY Created
 '''
 
@@ -53,13 +53,13 @@ fig = go.Figure(data=[go.Ohlc(x=df_ohlc['Date'],
 # Overlay trades from Positions table with color-coding based on profit/loss
 for index, row in df_positions.iterrows():
     color = 'gray'  # Default color to avoid NameError
-    if row['PositionType'] == 0 and row['ClosePrice'] > row['EntryPrice']:
+    if row['PositionType'] == 1 and row['ClosePrice'] > row['EntryPrice']:
      color = 'pink'
-    elif row['PositionType'] == 0 and row['ClosePrice'] < row['EntryPrice']:
-     color = 'blue'
     elif row['PositionType'] == 1 and row['ClosePrice'] < row['EntryPrice']:
+     color = 'blue'
+    elif row['PositionType'] == 2 and row['ClosePrice'] < row['EntryPrice']:
      color = 'pink'
-    elif row['PositionType'] == 1 and row['ClosePrice'] > row['EntryPrice']:
+    elif row['PositionType'] == 2 and row['ClosePrice'] > row['EntryPrice']:
      color = 'blue'
 
     fig.add_trace(go.Scatter(

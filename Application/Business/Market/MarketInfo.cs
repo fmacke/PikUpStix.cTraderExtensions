@@ -39,8 +39,8 @@ namespace Application.Business.Market
             PipSize = pipSize;
             LotSize = lotSize;
             Signals = signals;
-            //TickTimeFrame = timeFrame;
-            BarTimeFrame = timeFrame;
+            TickTimeFrame = timeFrame;
+            BarTimeFrame = GetBarTimeFrame(timeFrame);
             if (bars != null && bars.Count > 0)
             {
                 CurrentBar = bars.LastOrDefault();
@@ -51,6 +51,13 @@ namespace Application.Business.Market
                 CurrentBar = new HistoricalData();
                 LastBar = new HistoricalData();
             }
+        }
+
+        private static TimeFrame GetBarTimeFrame(TimeFrame frequency)
+        {
+            if (TimeFrameParser.TryParseBarFromTick(frequency, out TimeFrame result))
+                return result;
+            throw new Exception("No tick time frame matches with this parent Timeframe");
         }
     }
 }

@@ -36,10 +36,10 @@ public class VolumePriceAnalysis : IStrategy
             if (volume > volumeThreshold && price > previousPrice)
             {
                 // Strong buying interest, potential uptrend continuation
-                var stopLoss = marketInfo.Ask - (marketInfo.Ask - 0.001); // Example stop loss calculation
+                var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
                 var stopLossPrice = marketInfo.Ask - stopLoss;
-                var takeProfit = marketInfo.Ask - (marketInfo.Ask - 0.001); // Example stop loss calculation                    
-                var positionSize =  new PositionSize(1, 0.04, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLossPrice, marketInfo.Ask).Calculate();
+                var takeProfit = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation                    
+                var positionSize =  new PositionSize(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLossPrice, marketInfo.Ask).Calculate();
                 var position = new Position()
                 {
                     SymbolName = marketInfo.SymbolName,
