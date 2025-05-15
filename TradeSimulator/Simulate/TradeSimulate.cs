@@ -38,7 +38,7 @@ namespace TradeSimulator.Simulate
             //Debug.WriteLine($"TradeSimulate OnBar() {CurrentMarketInfo.CursorDate}");
             List<IMarketInfo> marketInfos = GetMarketInfo();
             CurrentMarketInfo.CurrentCapital = Positions.Where(p => p.Status == PositionStatus.CLOSED).Sum(p => p.Margin) + InitialCapital;
-            PositionInstructions = Strategy.Run(marketInfos);
+            PositionInstructions = Strategy.CalculateChanges(marketInfos);
             new PositionHandler(PositionInstructions, ref Positions, marketInfos).ExecuteInstructions();
         }
         private List<IMarketInfo> GetMarketInfo()

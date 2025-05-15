@@ -26,7 +26,7 @@ namespace Robots.Strategies.PivotPointBounce
         {
             TestParameters = test_Parameters;
         }
-        public List<IPositionInstruction> Run(List<IMarketInfo> marketInfos)
+        public List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos)
         {           
             foreach (var marketInfo in marketInfos)
             {

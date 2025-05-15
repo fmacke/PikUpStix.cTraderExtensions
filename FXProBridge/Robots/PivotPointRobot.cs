@@ -99,7 +99,7 @@ namespace FXProBridge.Robots
             var confirmingSignals = new ConfirmingSignals(signals);
 
             var strategy = new PivotPointConfirmStrategy(testParams);
-            ManagePositions(strategy.Run(new List<IMarketInfo> { props }));
+            ManagePositions(strategy.CalculateChanges(new List<IMarketInfo> { props }));
         }
     }
 }

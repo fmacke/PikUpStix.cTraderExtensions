@@ -22,7 +22,7 @@ namespace FXProBridge.Robots
                 1, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.H1);
 
             var strategy = new VolumePriceAnalysis();
-            ManagePositions(strategy.Run(new List<IMarketInfo> { marketInfo }));
+            ManagePositions(strategy.CalculateChanges(new List<IMarketInfo> { marketInfo }));
             base.OnBar();
         }
     }

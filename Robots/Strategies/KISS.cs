@@ -15,7 +15,7 @@ namespace Robots.Strategies
         private List<IPositionInstruction> _positionInstructions = new List<IPositionInstruction>();
         public IValidationService ValidationService { get; set;  } = new ValidationService();
 
-        public List<IPositionInstruction> Run(List<IMarketInfo> marketInfos)
+        public List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos)
         {
             _positionInstructions.Clear();
             foreach (var marketInfo in marketInfos)

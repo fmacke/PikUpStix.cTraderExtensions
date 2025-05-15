@@ -9,7 +9,7 @@ namespace Application.Interfaces
     {
         List<string> LogMessages { get; set; }
         List<Test_Parameter> TestParameters { get; set; }
-        List<IPositionInstruction> Run(List<IMarketInfo> marketInfos);
+        List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos);
         public IValidationService ValidationService { get; }
     }
 }

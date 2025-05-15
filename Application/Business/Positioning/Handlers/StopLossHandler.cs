@@ -107,7 +107,6 @@ namespace Application.Business.Positioning.Handlers
             if (position.PositionType == PositionType.BUY)
                 return marketInfo.Ask > marketInfo.LastBar.HighPrice ? marketInfo.Ask : marketInfo.LastBar.HighPrice;  // FOR BUY POSITIONS
             return marketInfo.Ask < marketInfo.LastBar.LowPrice? marketInfo.Ask : marketInfo.LastBar.LowPrice;   // FOR SELL POSITIONS
-
         }
     }
 }

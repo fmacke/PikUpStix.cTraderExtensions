@@ -7,8 +7,8 @@ server = 'localhost'
 database = 'TradingBE'
 username = 'sa'
 password = 'Gogogo123!'
-insId = '4'
-testId = '7015'
+insId = '3'
+testId = '8018'
 
 # Establish connection to SQL Server
 conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
@@ -32,13 +32,13 @@ df_ohlc = pd.read_sql(query_ohlc, conn, params=[insId])
 query_positions = '''
 SELECT Id, Created, ClosedAt, EntryPrice, ClosePrice, PositionType
 FROM Positions
-WHERE InstrumentId = ? and TestId = ?
+WHERE TestId = ?
 AND YEAR(Created) >= 2018
 ORDER BY Created
 '''
 
 # Fetch Positions data into a DataFrame
-df_positions = pd.read_sql(query_positions, conn, params=[insId, testId])
+df_positions = pd.read_sql(query_positions, conn, params=[testId])
 
 # Close the connection
 conn.close()
@@ -62,12 +62,16 @@ for index, row in df_positions.iterrows():
     elif row['PositionType'] == 2 and row['ClosePrice'] > row['EntryPrice']:
      color = 'blue'
 
+    tradeType = 'Buy' 
+    if row['PositionType'] == 2:
+      tradeType = 'Sell'
+
     fig.add_trace(go.Scatter(
         x=[row['Created'], row['ClosedAt']],
         y=[row['EntryPrice'], row['ClosePrice']],
         mode='lines+markers',
         line=dict(color=color),
-        name=f"Trade {index+1}"
+        name=f"{tradeType} {row['Id']}"
     ))
 
 # Add title and labels

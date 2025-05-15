@@ -35,7 +35,7 @@ namespace FXProBridge.Robots
         {
             var changeInstructions = new CarverTrendFollowerStrategy(ResultsCapture.TestParams);
             var exchangeRate = 1;
-            ManagePositions(changeInstructions.Run(
+            ManagePositions(changeInstructions.CalculateChanges(
                 new List<IMarketInfo> {
                     new MarketInfo(Bars.OpenTimes.LastValue,
                     Symbol.Bid,

@@ -28,7 +28,7 @@ namespace Robots.Strategies.CarverTrendFollower
             TestParameters = testParameters;            
         }
 
-        public List<IPositionInstruction> Run(List<IMarketInfo> marketInfos)
+        public List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos)
         {
             _positionInstructions = new List<IPositionInstruction>();
             MarketInfos = marketInfos;
