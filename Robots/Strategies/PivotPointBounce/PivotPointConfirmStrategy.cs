@@ -52,7 +52,7 @@ namespace Robots.Strategies.PivotPointBounce
                             CalculatePips(PivotPoints.Support2 - PivotPoints.Support1) :
                             CalculatePips(PivotPoints.Resistance1 - PivotPoints.Resistance2);
                     var pricePoint = StrategySignal > 0 ? marketInfo.Ask : marketInfo.Bid;
-                    var positionSize = new PositionSize(StrategySignal, MaximumRisk, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, pricePoint).Calculate();
+                    var positionSize = new PositionSizer(StrategySignal, MaximumRisk, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, pricePoint).Calculate();
                     var position = new Position()
                     {
                         SymbolName = marketInfo.SymbolName,

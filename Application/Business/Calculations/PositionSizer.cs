@@ -1,6 +1,6 @@
 ﻿namespace Application.Business.Calculations
 {
-    public class PositionSize : ICalculate
+    public class PositionSizer : ICalculate
     {
         public double Forecast { get; private set; } = 0.0;
         public double RiskPerTrade { get; private set; } = 0.0;
@@ -9,7 +9,7 @@
         public double LotSize { get; private set; } = 0.0;
         public double StopLossPrice { get; private set; } = 0.0;
         public double EntryPrice { get; private set; } = 0.0;
-        public PositionSize(double forecast, double maximumRisk, double accountBalance, double lotSize, double pipSize, double stopLossPrice, double entryPrice)
+        public PositionSizer(double forecast, double maximumRisk, double accountBalance, double lotSize, double pipSize, double stopLossPrice, double entryPrice)
         {
             if (maximumRisk > 0.5)
             {

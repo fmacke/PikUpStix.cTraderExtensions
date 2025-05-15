@@ -2,6 +2,7 @@
 using Application.Business.Market;
 using Application.Business.Positioning.Instructions;
 using Application.Business.Positioning.Validation;
+using Application.Business.Positioning;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
@@ -21,22 +22,7 @@ public class Test : IStrategy
         {
             if (!marketInfo.Positions.Where(x => x.Status == PositionStatus.OPEN).Any())
             {
-                var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.01); // Example stop loss calculation
-                var stopLossPrice = marketInfo.Ask - stopLoss;
-                var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.01); // Example stop loss calculation                    
-                var positionSize = new PositionSize(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLossPrice, marketInfo.Ask).Calculate();
-                var position = new Position()
-                {
-                    SymbolName = marketInfo.SymbolName,
-                    PositionType = PositionType.BUY,
-                    EntryPrice = marketInfo.Ask,
-                    StopLoss = stopLoss,
-                    TakeProfit = takeProfit,
-                    InstrumentId = marketInfo.InstrumentId,
-                    Volume = positionSize,
-                    Created = marketInfo.CursorDate,
-                    ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
-                };
+                Position position = PositionCreator.CreatePosition(PositionType.BUY, 0.01, 0.02, marketInfo);
                 _positionInstructions.Add(new OpenInstruction(position, ValidationService));
                 LogMessages.Add($"Buy signal for {marketInfo.SymbolName} at price {marketInfo.Ask}");
             }
@@ -77,7 +63,7 @@ public class VolumePriceAnalysis : IStrategy
                 var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
                 var stopLossPrice = marketInfo.Ask - stopLoss;
                 var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.003); // Example stop loss calculation                    
-                var positionSize =  new PositionSize(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLossPrice, marketInfo.Ask).Calculate();
+                var positionSize =  new PositionSizer(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLossPrice, marketInfo.Ask).Calculate();
                 var position = new Position()
                 {
                     SymbolName = marketInfo.SymbolName,
@@ -98,7 +84,7 @@ public class VolumePriceAnalysis : IStrategy
                 // Strong selling pressure, potential downtrend continuation
                 var stopLoss = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation
                 var takeProfit = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation                    
-                var positionSize = new PositionSize(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, marketInfo.Ask).Calculate();
+                var positionSize = new PositionSizer(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, marketInfo.Ask).Calculate();
                 var position = new Position()
                 {
                     SymbolName = marketInfo.SymbolName,
