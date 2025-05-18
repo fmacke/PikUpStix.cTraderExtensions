@@ -8,29 +8,25 @@ namespace Application.Business.Calculations
         {
             Excursions = new List<double>();
             var orderedResults = results.OrderBy(x => x.ClosedAt).ToList();
+
+            double cumulativeMargin = 0; // Ensure it includes current position
+
             for (int i = 0; i < orderedResults.Count; i++)
             {
-                var cumulativeMargin = orderedResults.Take(i).Sum(x => x.Margin);
+                cumulativeMargin += orderedResults[i].Margin; // Accumulate margin properly
+
                 if (cumulativeMargin == 0)
                     continue;
-                Excursions.Add(orderedResults[i].Margin / cumulativeMargin);
+
+                Excursions.Add(cumulativeMargin);
             }
 
-            if (Excursions.Count > 0)
-            {
-                MaxFavourableExcursion = Math.Round(Excursions.Max(), 2);
-                MaxAdverseExcursion = Math.Round(Excursions.Min(), 2);
-            }
-            else
-            {
-                MaxFavourableExcursion = 0;
-                MaxAdverseExcursion = 0;
-            }
+            MaxFavourableExcursion = Excursions.Count > 0 ? Math.Round(Excursions.Max(), 2) : 0;
+            MaxAdverseExcursion = Excursions.Count > 0 ? Math.Round(Excursions.Min(), 2) : 0;
         }
 
         public double MaxAdverseExcursion { get; private set; }
         public double MaxFavourableExcursion { get; private set; }
         public List<double> Excursions { get; private set; }
     }
-
 }

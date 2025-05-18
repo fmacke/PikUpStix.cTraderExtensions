@@ -9,26 +9,23 @@ namespace Application.Tests.Calculations
         [Test]
         public void MaxDailyAdverseExcursionTest()
         {
-            //todo: this needs updated since Test_Results table was made redundant
             var results = new List<Position>()
             {
-                new Position()
-                {
-                    Margin = 100,
-                    //CumulativeMargin = 1100
-                },
-                new Position()
-                {
-                    Margin = -200,
-                    //CumulativeMargin = 1100
-                }
+                new Position() { Margin = 100, ClosedAt = new DateTime(2000,1,1)},
+                new Position() { Margin = -200, ClosedAt = new DateTime(2000,1,2) },
+                new Position() { Margin = 300, ClosedAt = new DateTime(2000,1,3) },
+                new Position() { Margin = -400, ClosedAt = new DateTime(2000,1,4) },
+                new Position() { Margin = 600, ClosedAt = new DateTime(2000,1,5) },
+                new Position() { Margin = -700, ClosedAt = new DateTime(2000,1,6) },
+                new Position() { Margin = -800, ClosedAt = new DateTime(2000,1,7) },
+                new Position() { Margin = 900, ClosedAt = new DateTime(2000,1,8) },
+                new Position() { Margin = -1000, ClosedAt = new DateTime(2000,1,9) }
             };
+
             var mae = new DailyExcursions(results);
 
-            Assert.AreEqual(Math.Round(0.10, 2), Math.Round(mae.MaxFavourableExcursion, 2));
-            Assert.AreEqual(Math.Round(-0.15, 2), Math.Round(mae.MaxAdverseExcursion, 2));
+            Assert.AreEqual(400, Math.Round(mae.MaxFavourableExcursion, 2));  // Expected correct value
+            Assert.AreEqual(-1200, Math.Round(mae.MaxAdverseExcursion, 2));   // Expected correct value
         }
     }
-
-
 }

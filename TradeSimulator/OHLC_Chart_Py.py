@@ -7,8 +7,8 @@ server = 'localhost'
 database = 'TradingBE'
 username = 'sa'
 password = 'Gogogo123!'
-insId = '3'
-testId = '8018'
+insId = '4'
+testId = '9016'
 
 # Establish connection to SQL Server
 conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'

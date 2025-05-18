@@ -18,7 +18,7 @@ namespace Application.Business.Positioning
                                                 marketInfo.CurrentCapital,
                                                 marketInfo.PipSize,
                                                 marketInfo.LotSize,
-                                                stopLossPrice,
+                                                stopLoss,
                                                 marketInfo.Ask).Calculate();
             
             var position = new Position()

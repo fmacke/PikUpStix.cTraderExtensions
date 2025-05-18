@@ -3,7 +3,6 @@ using Application.Features.HistoricalDatas.Create;
 using Application.Features.Instruments.Commands.Create;
 using Application.Features.Instruments.Queries.GetAllCached;
 using Application.Features.Instruments.Queries.GetById;
-using Application.Features.Tests.Queries.GetById;
 using Application.Mappings;
 using AutoMapper;
 using Domain.Entities;

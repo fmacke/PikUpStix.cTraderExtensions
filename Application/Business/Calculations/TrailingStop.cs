@@ -26,21 +26,23 @@ namespace Application.Business.Calculations
 
             if (tradeType == PositionType.BUY)
             {
-                TrailingStopAt = entryPrice + moveTrailByPips;
+                
                 if (stopLossAt < entryPrice)
                     if (askingPrice > entryPrice)
                         if (askingPrice - entryPrice > executeTrailAtPips)
                         {
+                            TrailingStopAt = entryPrice + moveTrailByPips;
                             TrailingStopUpdated = true;
                         }
             }
             if (tradeType == PositionType.SELL)
             {
-                TrailingStopAt = entryPrice - moveTrailByPips;
+
                 if (stopLossAt > entryPrice)
                     if (biddingPrice < entryPrice)
                         if (entryPrice - biddingPrice > executeTrailAtPips)
                         {
+                            TrailingStopAt = entryPrice - moveTrailByPips;
                             TrailingStopUpdated = true;
                         }
             }

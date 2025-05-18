@@ -42,8 +42,8 @@ internal class Program
             instrument.InstrumentName,
             instrument.Currency,
             10000,
-            instrument.ContractUnit,
-            100000,
+            instrument.MinimumPriceFluctuation, //pip size
+            instrument.ContractUnit,// lot size
             1,
             new ConfirmingSignals(new List<ISignal>()),
             ConvertToTimeFrame(instrument.Frequency)
