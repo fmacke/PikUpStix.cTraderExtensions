@@ -7,6 +7,8 @@ namespace Domain.Enums
         [Description("Open")]
         OPEN = 0,
         [Description("Closed")]
-        CLOSED = 1
+        CLOSED = 1,
+        [Description("Order")]
+        ORDER = 2
     }
 }

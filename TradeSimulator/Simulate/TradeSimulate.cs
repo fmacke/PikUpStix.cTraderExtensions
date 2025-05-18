@@ -30,6 +30,7 @@ namespace TradeSimulator.Simulate
         {
             //Debug.WriteLine($"TradeSimulate OnTick() {CurrentMarketInfo.CursorDate}");
             List<IMarketInfo> marketInfos = GetMarketInfo();
+            new ExpiryHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutExpiredPositions();
             new StopLossHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutStops();
             new TakeProfitHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutTakeProfits();
         }

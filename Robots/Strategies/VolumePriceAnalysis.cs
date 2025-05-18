@@ -22,7 +22,7 @@ public class Test : IStrategy
         {
             if (!marketInfo.Positions.Where(x => x.Status == PositionStatus.OPEN).Any())
             {
-                Position position = PositionCreator.CreatePosition(PositionType.BUY, 0.01, 0.02, marketInfo);
+                Position position = PositionCreator.CreatePosition(PositionType.BUY, 1, 0.02, 0.01, 0.02, marketInfo, null);
                 _positionInstructions.Add(new OpenInstruction(position, ValidationService));
                 LogMessages.Add($"Buy signal for {marketInfo.SymbolName} at price {marketInfo.Ask}");
             }

@@ -7,18 +7,20 @@ namespace Application.Business.Positioning
 {
     public static class PositionCreator
     {
-        public static Position CreatePosition(PositionType positionType, double stopLossInPips, double takeProfitInPips, IMarketInfo marketInfo)
+        public static Position CreatePosition(PositionType positionType, double forecast, double maximumRiskPercentage, 
+            double stopLossInPips, double takeProfitInPips, IMarketInfo marketInfo, DateTime? expiration)
         {
             var stopLoss = marketInfo.Ask - (marketInfo.Ask * stopLossInPips); // Example stop loss calculation
             var stopLossPrice = marketInfo.Ask - stopLoss;
             var takeProfit = marketInfo.Ask + (marketInfo.Ask * takeProfitInPips); // Example stop loss calculation                    
-            var positionSize = new PositionSizer(1,
-                                                0.02,
+            var positionSize = new PositionSizer(forecast,
+                                                maximumRiskPercentage,
                                                 marketInfo.CurrentCapital,
                                                 marketInfo.PipSize,
                                                 marketInfo.LotSize,
                                                 stopLossPrice,
                                                 marketInfo.Ask).Calculate();
+            
             var position = new Position()
             {
                 SymbolName = marketInfo.SymbolName,
@@ -28,10 +30,14 @@ namespace Application.Business.Positioning
                 TakeProfit = takeProfit,
                 InstrumentId = marketInfo.InstrumentId,
                 Volume = positionSize,
-                Created = marketInfo.CursorDate,
-                ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
+                Created = marketInfo.CursorDate
             };
+            if (expiration.HasValue)
+            {
+                position.ExpirationDate = expiration.Value;
+            }
             return position;
         }
+
     }
 }
