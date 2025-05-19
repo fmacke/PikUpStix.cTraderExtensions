@@ -9,8 +9,8 @@ database = 'TradingBE'
 username = 'sa'
 password = 'Gogogo123!'
 insId = '4'
-testId = '11016'
-no_results_before_year_filter = 2018  
+testId = '11025'
+no_results_before_year_filter = 2022 
 
 # Set locale to UK for GBP formatting
 locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')

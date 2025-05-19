@@ -2,6 +2,7 @@
 using Application.Business.Market;
 using FXProBridge.Common;
 using FXProBridge.DataConversions;
+using Robots.Strategies;
 
 namespace FXProBridge.Robots
 {

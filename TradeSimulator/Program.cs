@@ -6,6 +6,7 @@ using AutoMapper;
 using DataServices;
 using Domain.Entities;
 using Domain.Enums;
+using Robots.Strategies;
 using TradeSimulator.Simulate;
 
 internal class Program

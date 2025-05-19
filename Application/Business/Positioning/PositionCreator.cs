@@ -10,10 +10,10 @@ namespace Application.Business.Positioning
         public static Position CreatePosition(PositionType positionType, double forecast, double maximumRiskPercentage, 
             double stopLossAmount, double? takeProfitAmount, IMarketInfo marketInfo, DateTime? expiration)
         {
-            double stopLoss = 0;
+            double stopLossPrice = 0;
             if (stopLossAmount > 0)
-                stopLoss = positionType == PositionType.BUY ? marketInfo.Ask - stopLossAmount : marketInfo.Ask + stopLossAmount;
-            var stopLossPrice = marketInfo.Ask - stopLoss;
+                stopLossPrice = positionType == PositionType.BUY ? marketInfo.Ask - stopLossAmount : marketInfo.Ask + stopLossAmount;
+            //var stopLossPrice = marketInfo.Ask - stopLoss;
             var positionSize = new PositionSizer(forecast,
                                                 maximumRiskPercentage,
                                                 marketInfo.CurrentCapital,
@@ -27,7 +27,7 @@ namespace Application.Business.Positioning
                 SymbolName = marketInfo.SymbolName,
                 PositionType = positionType,
                 EntryPrice = marketInfo.Ask,
-                StopLoss = stopLoss,
+                StopLoss = stopLossPrice,
                 
                 InstrumentId = marketInfo.InstrumentId,
                 Volume = positionSize,

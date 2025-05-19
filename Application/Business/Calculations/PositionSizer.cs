@@ -21,6 +21,8 @@ namespace Application.Business.Calculations
             this.pipSize = pipSize;
             this.stopLossPrice = stopLossPrice;
             this.entryPrice = entryPrice;
+            if(stopLossPrice == 0)
+                throw new ArgumentException("Stop loss price cannot be zero if using PositionSizer.");
         }
 
         public double Calculate()
