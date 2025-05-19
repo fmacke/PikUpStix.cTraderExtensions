@@ -8,17 +8,18 @@ namespace Application.Business.Positioning
     public static class PositionCreator
     {
         public static Position CreatePosition(PositionType positionType, double forecast, double maximumRiskPercentage, 
-            double stopLossInPips, double takeProfitInPips, IMarketInfo marketInfo, DateTime? expiration)
+            double stopLossAmount, double? takeProfitAmount, IMarketInfo marketInfo, DateTime? expiration)
         {
-            var stopLoss = marketInfo.Ask - (marketInfo.Ask * stopLossInPips); // Example stop loss calculation
+            double stopLoss = 0;
+            if (stopLossAmount > 0)
+                stopLoss = positionType == PositionType.BUY ? marketInfo.Ask - stopLossAmount : marketInfo.Ask + stopLossAmount;
             var stopLossPrice = marketInfo.Ask - stopLoss;
-            var takeProfit = marketInfo.Ask + (marketInfo.Ask * takeProfitInPips); // Example stop loss calculation                    
             var positionSize = new PositionSizer(forecast,
                                                 maximumRiskPercentage,
                                                 marketInfo.CurrentCapital,
-                                                marketInfo.PipSize,
                                                 marketInfo.LotSize,
-                                                stopLoss,
+                                                marketInfo.PipSize,
+                                                stopLossPrice,
                                                 marketInfo.Ask).Calculate();
             
             var position = new Position()
@@ -27,15 +28,15 @@ namespace Application.Business.Positioning
                 PositionType = positionType,
                 EntryPrice = marketInfo.Ask,
                 StopLoss = stopLoss,
-                TakeProfit = takeProfit,
+                
                 InstrumentId = marketInfo.InstrumentId,
                 Volume = positionSize,
                 Created = marketInfo.CursorDate
             };
+            if(takeProfitAmount.HasValue)
+                position.TakeProfit = positionType == PositionType.BUY ? marketInfo.Ask + takeProfitAmount : marketInfo.Ask - takeProfitAmount;
             if (expiration.HasValue)
-            {
                 position.ExpirationDate = expiration.Value;
-            }
             return position;
         }
 

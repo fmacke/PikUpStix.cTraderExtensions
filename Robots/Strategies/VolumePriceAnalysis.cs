@@ -59,44 +59,47 @@ public class VolumePriceAnalysis : IStrategy
 
             if (volume > volumeThreshold && price > previousPrice)
             {
-                // Strong buying interest, potential uptrend continuation
-                var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
-                var stopLossPrice = marketInfo.Ask - stopLoss;
-                var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.003); // Example stop loss calculation                    
-                var positionSize =  new PositionSizer(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLossPrice, marketInfo.Ask).Calculate();
-                var position = new Position()
-                {
-                    SymbolName = marketInfo.SymbolName,
-                    PositionType = PositionType.BUY,
-                    EntryPrice = marketInfo.Ask,
-                    StopLoss = stopLoss,
-                    TakeProfit = takeProfit,
-                    InstrumentId = marketInfo.InstrumentId,
-                    Volume = positionSize,
-                    Created = marketInfo.CursorDate,
-                    ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
-                };
+                //// Strong buying interest, potential uptrend continuation
+                //var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
+                //var stopLossPrice = marketInfo.Ask - stopLoss;
+                //var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.003); // Example stop loss calculation
+                Position position = PositionCreator.CreatePosition(PositionType.BUY, 1, 0.02, 0.01, null, marketInfo, null);
+                //var positionSize =  new PositionSizer(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLossPrice, marketInfo.Ask).Calculate();
+                //var position = new Position()
+                //{
+                //    SymbolName = marketInfo.SymbolName,
+                //    PositionType = PositionType.BUY,
+                //    EntryPrice = marketInfo.Ask,
+                //    StopLoss = stopLoss,
+                //    TakeProfit = takeProfit,
+                //    InstrumentId = marketInfo.InstrumentId,
+                //    Volume = positionSize,
+                //    Created = marketInfo.CursorDate,
+                //    ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
+                //};
                 _positionInstructions.Add(new OpenInstruction(position, ValidationService));
                 LogMessages.Add($"Buy signal for {marketInfo.SymbolName} at price {price}");
             }
             else if (volume > volumeThreshold && price < previousPrice)
             {
                 // Strong selling pressure, potential downtrend continuation
-                var stopLoss = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation
-                var takeProfit = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation                    
-                var positionSize = new PositionSizer(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, marketInfo.Ask).Calculate();
-                var position = new Position()
-                {
-                    SymbolName = marketInfo.SymbolName,
-                    PositionType = PositionType.SELL,
-                    EntryPrice = marketInfo.Ask,
-                    StopLoss = stopLoss,
-                    InstrumentId = marketInfo.InstrumentId,
-                    TakeProfit = takeProfit,
-                    Volume = positionSize,
-                    Created = marketInfo.CursorDate,
-                    ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
-                };
+
+                Position position = PositionCreator.CreatePosition(PositionType.SELL, 1, 0.02, 0.01, null, marketInfo, null);
+                //var stopLoss = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation
+                //var takeProfit = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation                    
+                //var positionSize = new PositionSizer(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, marketInfo.Ask).Calculate();
+                //var position = new Position()
+                //{
+                //    SymbolName = marketInfo.SymbolName,
+                //    PositionType = PositionType.SELL,
+                //    EntryPrice = marketInfo.Ask,
+                //    StopLoss = stopLoss,
+                //    InstrumentId = marketInfo.InstrumentId,
+                //    TakeProfit = takeProfit,
+                //    Volume = positionSize,
+                //    Created = marketInfo.CursorDate,
+                //    ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
+                //};
                 _positionInstructions.Add(new OpenInstruction(position, ValidationService));
                 LogMessages.Add($"Sell signal for {marketInfo.SymbolName} at price {price}");
             }
