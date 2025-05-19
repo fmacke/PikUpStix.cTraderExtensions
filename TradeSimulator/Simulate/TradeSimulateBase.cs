@@ -43,6 +43,55 @@ namespace TradeSimulator.Simulate
                     return true;
                 return false;
             }
+            if (barTimeFrame == TimeFrame.H1)
+            {
+                if (current.Hour != last.Hour)
+                    return true;
+                return false;
+            }
+            if (barTimeFrame == TimeFrame.M1)
+            {
+                if (current.Minute != last.Minute)
+                    return true;
+                return false;
+            }
+            if (barTimeFrame == TimeFrame.M5)
+            {
+                if (current.Minute % 5 != last.Minute % 5)
+                    return true;
+                return false;
+            }
+            if (barTimeFrame == TimeFrame.M15)
+            {
+                if (current.Minute % 15 != last.Minute % 15)
+                    return true;
+                return false;
+            }
+            if (barTimeFrame == TimeFrame.M30)
+            {
+                if (current.Minute % 30 != last.Minute % 30)
+                    return true;
+                return false;
+            }
+            if (barTimeFrame == TimeFrame.H4)
+            {
+                if (current.Hour % 4 != last.Hour % 4)
+                    return true;
+                return false;
+            }
+            if (barTimeFrame == TimeFrame.W1)
+            {
+                if (current.Date.DayOfWeek != last.Date.DayOfWeek)
+                    return true;
+                return false;
+            }
+            if (barTimeFrame == TimeFrame.MN1)
+            {
+                if (current.Date.Month != last.Date.Month)
+                    return true;
+                return false;
+            }
+
             throw new NotImplementedException("TimeFrame not implemented yet");
         }
         private void LoadCurrentMarketData(int x)
