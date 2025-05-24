@@ -31,10 +31,12 @@ namespace Application.Business.Positioning.Handlers
 
                 foreach (var position in positionsToClose)
                 {
+                    position.Comment = "Take Profit hit at " + cursorDate.ToString("yyyy-MM-dd HH:mm:ss");
                     closeHandler.ClosePosition(
                         position,
                         position.TakeProfit.GetValueOrDefault(),
                         Convert.ToDateTime(cursorDate),
+                        marketInfo.LotSize,
                         marketInfo.PipSize,
                         marketInfo.ExchangeRate);
                 }

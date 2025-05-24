@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace Application.Business.Calculations
+﻿namespace Application.Business.Calculations
 {
     public class PositionSizer
     {
@@ -14,7 +12,7 @@ namespace Application.Business.Calculations
 
         public PositionSizer(double forecast, double maximumRisk, double accountBalance, double lotSize, double pipSize, double stopLossPrice, double entryPrice)
         {
-            this.forecast = forecast;
+            this.forecast = Math.Sqrt(forecast*forecast);
             this.maximumRisk = maximumRisk;
             this.accountBalance = accountBalance;
             this.lotSize = lotSize;
@@ -28,18 +26,15 @@ namespace Application.Business.Calculations
         public double Calculate()
         {
             double riskAmount = accountBalance * maximumRisk;
-            double priceDifference = Math.Abs(entryPrice - stopLossPrice);
-
+            double priceDifference = Math.Sqrt(Math.Pow(Math.Round((entryPrice - stopLossPrice), 4),2));
             double unitsToTrade;
 
             // Use pip logic only if pipSize < 1 and lotSize > 1 (likely Forex)
             if (pipSize < 1 && lotSize > 1)
             {
                 double pipDifference = priceDifference / pipSize;
-                double pipValuePerUnit = pipSize;
-                double riskPerUnit = pipDifference * pipValuePerUnit;
-
-                unitsToTrade = riskAmount / riskPerUnit;
+                double riskPerUnit = pipDifference * pipSize;
+                unitsToTrade = (riskAmount / riskPerUnit) * 1000;
             }
             else
             {

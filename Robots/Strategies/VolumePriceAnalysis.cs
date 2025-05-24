@@ -19,63 +19,72 @@ namespace Robots.Strategies
 
         public List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos)
         {
+            var dataAmount = 21; // Number of bars to consider for volume analysis
             PositionInstructions.Clear();
 
             foreach (var marketInfo in marketInfos)
             {
-                if (marketInfo?.Bars == null || marketInfo.Bars.Count < 20)
+                if (marketInfo?.Bars == null || marketInfo.Bars.Count < dataAmount)
                 {
                     LogMessages.Add($"Insufficient data for {marketInfo?.SymbolName ?? "Unknown Symbol"}");
                     continue;
                 }
 
                 // Calculate historical volume stats
-                double meanVolume = CalculateAverageElements(marketInfo.Bars.Select(b => b.Volume).ToArray(), 20);
-                double standardDeviation = new StandardDeviation(
-                    marketInfo.Bars.Select(b => b.Volume).TakeLast(20).ToArray()).Calculate();
+                var recentMarketData = marketInfo.Bars.Select(b => b.Volume).TakeLast(dataAmount).ToArray();
+                recentMarketData = recentMarketData.Take(recentMarketData.Length - 1).ToArray();  // remove current bar volume
+                double meanVolume = recentMarketData.Average();
+                double volumeStdDev = new StandardDeviation(recentMarketData).Calculate();
+
+                // Calculate historical price stats
+                var averagePrices = marketInfo.Bars.Select(b => (b.OpenPrice + b.HighPrice + b.LowPrice) / 3).TakeLast(dataAmount).ToArray();
+                averagePrices = averagePrices.Take(averagePrices.Length - 1).ToArray(); // remove current bar price
+                double meanPrice = averagePrices.Average();
+                double priceStdDev = new StandardDeviation(averagePrices).Calculate();
 
                 // Current market data
-                var volume = marketInfo.LastBar.Volume;
+                var volume = marketInfo.CurrentBar.Volume;
                 var price = marketInfo.Ask;
-                var previousPrice = marketInfo.LastBar.ClosePrice;
 
                 // **Compute Forecast (-1 to 1)**
-                double normalizedPriceChange = (price - previousPrice) / previousPrice;
-                double normalizedVolumeStrength = (volume - meanVolume) / standardDeviation;
+                double normalizedPriceChange = (price - meanPrice) / priceStdDev;
+                double normalizedVolumeStrength = (volume - meanVolume) / volumeStdDev;
 
                 // Combine and weight price vs. volume impact
                 double forecast = Math.Clamp((0.7 * normalizedPriceChange) + (0.3 * normalizedVolumeStrength), -1, 1);
                 Debug.Print(forecast.ToString("F2"));
-                // **Close Positions If Forecast Turns Against Them**
-                //foreach (var position in marketInfo.Positions.Where(p => p.Status == PositionStatus.OPEN))
-                //{
-                //    if ((position.PositionType == PositionType.BUY && forecast < -0.3) ||
-                //        (position.PositionType == PositionType.SELL && forecast > 0.3))
-                //    {
-                //        PositionInstructions.Add(new CloseInstruction(position, marketInfo.Ask, marketInfo.CursorDate, ValidationService));
-                //        LogMessages.Add($"Closing {position.PositionType} position for {marketInfo.SymbolName} (Forecast reversed to {forecast:F2})");
-                //    }
-                //}
+
+                //// **Close Positions If Forecast Turns Against Them**
+                foreach (var position in marketInfo.Positions.Where(p => p.Status == PositionStatus.OPEN))
+                {
+                    if ((position.PositionType == PositionType.BUY && forecast < 0) ||
+                        (position.PositionType == PositionType.SELL && forecast > 0))
+                    {
+                        position.Comment = $"Closing position due to forecast reversal (Forecast: {forecast:F2})";
+                        PositionInstructions.Add(new CloseInstruction(position, marketInfo.Ask, marketInfo.CursorDate, ValidationService));
+                        LogMessages.Add($"Closing {position.PositionType} position for {marketInfo.SymbolName} (Forecast reversed to {forecast:F2})");
+                    }
+                }
 
                 //// **Open New Positions Based on Forecast**
-                //if (forecast > 0.3)
-                //{
-                //    double tradeSize = Math.Max(0.5, forecast);
-                //    Position position = PositionCreator.CreatePosition(PositionType.BUY, tradeSize, 0.05, 0.1, null, marketInfo, null);
-                //    PositionInstructions.Add(new OpenInstruction(position, ValidationService));
-                //    LogMessages.Add($"Opening Buy position for {marketInfo.SymbolName} (Forecast: {forecast:F2}) at price {price}");
-                //}
-                //else if (forecast < -0.3)
-                //{
-                //    double tradeSize = Math.Max(0.5, Math.Abs(forecast));
-                //    Position position = PositionCreator.CreatePosition(PositionType.SELL, tradeSize, 0.05, 0.1, null, marketInfo, null);
-                //    PositionInstructions.Add(new OpenInstruction(position, ValidationService));
-                //    LogMessages.Add($"Opening Sell position for {marketInfo.SymbolName} (Forecast: {forecast:F2}) at price {price}");
-                //}
-                //else
-                //{
-                //    LogMessages.Add($"Hold signal for {marketInfo.SymbolName} (Forecast: {forecast:F2}) at price {price}");
-                //}
+                var maxRiskPercentage = 0.05; // 5% of current capital
+                var stopLossAmount = 0.1; // 10 pips stop loss
+                if (forecast > 0.3)
+                {
+                    Position position = PositionCreator.CreatePosition(PositionType.BUY, forecast, maxRiskPercentage, stopLossAmount, null, marketInfo, null);
+                    PositionInstructions.Add(new OpenInstruction(position, ValidationService));
+                    LogMessages.Add($"Opening Buy position for {marketInfo.SymbolName} (Forecast: {forecast:F2}) at price {price}");
+                }
+                else if (forecast < -0.3)
+                {
+                    Position position = PositionCreator.CreatePosition(PositionType.SELL, forecast, maxRiskPercentage, stopLossAmount, null, marketInfo, null);
+                    PositionInstructions.Add(new OpenInstruction(position, ValidationService));
+                    LogMessages.Add($"Opening Sell position for {marketInfo.SymbolName} (Forecast: {forecast:F2}) at price {price}");
+                }
+                else
+                {
+                    LogMessages.Add($"Hold signal for {marketInfo.SymbolName} (Forecast: {forecast:F2}) at price {price}");
+                }
             }
 
             return PositionInstructions;

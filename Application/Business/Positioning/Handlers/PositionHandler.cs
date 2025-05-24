@@ -34,7 +34,8 @@ namespace Application.Business.Positioning.Handlers
         {
             var contractUnit = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).PipSize;
             var exchangeRate = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).ExchangeRate;
-            new ClosePositionHandler(ref _positions).ClosePosition(update.Position, update.ClosePrice, update.ClosedAt, contractUnit, exchangeRate);
+            var lotSize = MarketInfo.Find(m => m.SymbolName == update.Position.SymbolName).LotSize;
+            new ClosePositionHandler(ref _positions).ClosePosition(update.Position, update.ClosePrice, update.ClosedAt, lotSize, contractUnit, exchangeRate);
         }
 
         private void HandleModify<T>(T update) where T : ModifyInstruction

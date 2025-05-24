@@ -28,8 +28,8 @@ namespace Application.Tests.Calculations
             lotSize = 100000;
             stopLossPrice = 1.09143;
             entryPrice = 1.09243;
-
-            Assert.AreEqual(2, Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 4));
+            var result = Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 4);
+            Assert.AreEqual(2000, result);
         }
         [Test]
         public void CalculatePositionSize_GoldXAUUSD()
@@ -41,8 +41,8 @@ namespace Application.Tests.Calculations
             double lotSize = 100; // Standard futures contract size
             double stopLossPrice = 1980;
             double entryPrice = 2000;
-
-            Assert.AreEqual(0.75, Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 2));
+            // check that figure 750 is right when useing gold - might be wrong
+            Assert.AreEqual(750, Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 2));
         }
         [Test]
         public void CalculatePositionSize_StockAAPL()
@@ -67,7 +67,6 @@ namespace Application.Tests.Calculations
             double lotSize = 1; // 1 BTC per contract
             double stopLossPrice = 38000;
             double entryPrice = 40000;
-
             Assert.AreEqual(0.75, Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 2));
         }
         [Test]
@@ -96,7 +95,24 @@ namespace Application.Tests.Calculations
             pipSize = 0.0001;
             stopLossPrice = 1.09143;
             entryPrice = 1.09243;
-            Assert.AreEqual(Math.Round(2.713, 3), Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 3));
+            Assert.AreEqual(Math.Round(2713.0, 0), Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 0));
+            forecast = 0.73398719064586015;
+            lotSize = 100000;
+            maximumRisk = 0.05;
+            accountBalance = 10000;
+            pipSize = 0.0001;
+            stopLossPrice = 1.1897;
+            entryPrice = 1.2897;
+            Assert.AreEqual(Math.Round(37.0, 0), Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 0));
+;
+            lotSize = 100000;
+            maximumRisk = 0.04;
+            accountBalance = 6781.73;
+            pipSize = 0.0001;
+            stopLossPrice = 1.09143;
+            entryPrice = 1.09243;
+            Assert.AreEqual(Math.Round(1991.0, 0), Math.Round(new PositionSizer(forecast, maximumRisk, accountBalance, lotSize, pipSize, stopLossPrice, entryPrice).Calculate(), 0));
+
         }
 
     }

@@ -27,8 +27,7 @@ namespace Application.Business.Positioning
                 SymbolName = marketInfo.SymbolName,
                 PositionType = positionType,
                 EntryPrice = marketInfo.Ask,
-                StopLoss = stopLossPrice,
-                
+                StopLoss = stopLossPrice,                
                 InstrumentId = marketInfo.InstrumentId,
                 Volume = positionSize,
                 Created = marketInfo.CursorDate

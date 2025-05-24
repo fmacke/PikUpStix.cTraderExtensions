@@ -11,14 +11,14 @@ namespace Application.Business.Positioning.Handlers
         {
             _positionLookup = positions.ToDictionary(p => p);
         }
-        public void ClosePosition(Position position, double closePrice, DateTime closedAt, double contractUnit, double exchangeRate)
+        public void ClosePosition(Position position, double closePrice, DateTime closedAt, double lotSize, double contractUnit, double exchangeRate)
         {
             if (_positionLookup.TryGetValue(position, out var pos))
             {
                 pos.ClosedAt = closedAt;
                 pos.Status = PositionStatus.CLOSED;
                 pos.ClosePrice = closePrice;
-                pos.Margin = new Margin(contractUnit, exchangeRate, pos, closePrice, pos.Volume).Calculate();
+                pos.Margin = new Margin(lotSize, contractUnit, exchangeRate, pos, closePrice, pos.Volume).Calculate();
             }
         }
     }
