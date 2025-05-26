@@ -41,13 +41,9 @@ namespace TradeSimulator.Simulate
             CurrentMarketInfo.CurrentCapital = Positions.Where(p => p.Status == PositionStatus.CLOSED).Sum(p => p.Margin) + InitialCapital;
 
             if(CurrentMarketInfo.CurrentCapital < 0)
-            {
-                return;
-            }
+                return;  // no money left.
             foreach(var mi in marketInfos)
-            {
                 mi.CurrentCapital = CurrentMarketInfo.CurrentCapital;
-            }
             PositionInstructions = Strategy.CalculateChanges(marketInfos);
             new PositionHandler(PositionInstructions, ref Positions, marketInfos).ExecuteInstructions();
         }

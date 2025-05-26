@@ -2,9 +2,9 @@
 {
     public class Ewmac
     {
-        public decimal GetEwmac(decimal currentPeriodDAta, decimal decay, decimal previousPeriodEWMA)
+        public double GetEwmac(double currentPeriodDAta, double decay, double previousPeriodEWMA)
         {
-            decimal x = decimal.Round(currentPeriodDAta * decay + previousPeriodEWMA * (1 - decay), 6);
+            double x = Math.Round(currentPeriodDAta * decay + previousPeriodEWMA * (1 - decay), 6);
             return x;
         }
     }

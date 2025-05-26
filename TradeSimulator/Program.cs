@@ -19,12 +19,37 @@ internal class Program
     private static void Main(string[] args)
     {
         GetMarketData(InstrumentId);
-        Strategy.TestParameters = new List<Test_Parameter>()
+        int[] periods = { 25 };
+        double[] volumeWeights = { 0.5 };// { 0.2, 0.4, 0.5, 0.6, 0.8 };
+        double[] riskPerTrade = { 0.02 };
+        double[] stopLossAmount = { 1 };//0.0001, 0.0005, 0.0008, 0.001, 0.01 };
+
+        foreach (var period in periods)
         {
-            new Test_Parameter() { Name = "ForecastThreshold[Double]", Value = "1" }
-        };
-        var tradeSimulator = new TradeSimulate(TestInfo, Strategy, 10000, SaveTestResult);
-        tradeSimulator.Run();
+            foreach (var volumeWeight in volumeWeights)
+            {
+                foreach (var risk in riskPerTrade)
+                {
+                    foreach (var stopLoss in stopLossAmount)
+                    {
+                        Strategy.TestParameters = new List<Test_Parameter>();
+                        GetVolumePriceAnalysisParameters(period, volumeWeight, risk, stopLoss);
+                        var tradeSimulator = new TradeSimulate(TestInfo, Strategy, 10000, SaveTestResult);
+                        tradeSimulator.Run();
+                    }
+                }
+            }
+        }
+    }
+
+    private static void GetVolumePriceAnalysisParameters(int period, double volumeWeight, double riskPerTrade, double stopLossAmount)
+    {
+        Strategy.TestParameters.Add(new Test_Parameter() { Name = "RiskPerTrade[Double]", Value = riskPerTrade.ToString() });
+        Strategy.TestParameters.Add(new Test_Parameter() { Name = "Periods[Int]", Value = period.ToString() });
+        Strategy.TestParameters.Add(new Test_Parameter() { Name = "PriceWeight[Double]", Value = (1 - volumeWeight).ToString() });
+        Strategy.TestParameters.Add(new Test_Parameter() { Name = "VolumeWeight[Double]", Value = volumeWeight.ToString() });
+        Strategy.TestParameters.Add(new Test_Parameter() { Name = "StopLossAmount[Double]", Value = stopLossAmount.ToString() });
+
     }
 
     private static void GetMarketData(int instrumentId)

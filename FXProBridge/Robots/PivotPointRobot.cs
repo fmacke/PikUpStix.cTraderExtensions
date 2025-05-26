@@ -70,7 +70,7 @@ namespace FXProBridge.Robots
         {
             var testParams = ResultsCapture.TestParams;
             var exchangeRate = 1;
-            var props = new MarketInfo(cursorDate, 
+            var marketInfo = new MarketInfo(cursorDate, 
                 Symbol.Bid,
                 Symbol.Ask,
                 PositionConvert.ConvertPosition(Positions),
@@ -84,7 +84,7 @@ namespace FXProBridge.Robots
             var signals = new List<ISignal>();
             if(EnableMA)
             {
-                signals.Add(new EWMAC(SymbolName, props.Bars, Bid, Ask));
+                signals.Add(new EWMAC(SymbolName, marketInfo.Bars, Bid, Ask));
                 Print("EWMAC: " + signals.Last().Forecast);
             }
             if (EnableAdx)
@@ -99,7 +99,7 @@ namespace FXProBridge.Robots
             var confirmingSignals = new ConfirmingSignals(signals);
 
             var strategy = new PivotPointConfirmStrategy(testParams);
-            ManagePositions(strategy.CalculateChanges(new List<IMarketInfo> { props }));
+            ManagePositions(strategy.CalculateChanges(new List<IMarketInfo> { marketInfo }));
         }
     }
 }

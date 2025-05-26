@@ -9,8 +9,7 @@ namespace Application.Tests.Indicator
         public void GetEmacTest()
         {
             var ewmac = new Ewmac();
-            Assert.AreEqual(Convert.ToDecimal(13.3725), ewmac.GetEwmac(Convert.ToDecimal(12.51),
-                Convert.ToDecimal(0.25), Convert.ToDecimal(13.66)));
+            Assert.AreEqual(13.3725, ewmac.GetEwmac(12.51, 0.25, 13.66));
         }
     }
 }

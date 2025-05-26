@@ -24,7 +24,7 @@ namespace Robots.Strategies
                 {
                     var stopLoss = marketInfo.Ask - (marketInfo.Ask * 0.001); // Example stop loss calculation
                     var takeProfit = marketInfo.Ask + (marketInfo.Ask * 0.001); // Example stop loss calculation                    
-                    var lotSize = new PositionSizer(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, marketInfo.Ask).Calculate();
+                    var lotSize = new StopLossBasedPositionSizer(1, 0.02, marketInfo.CurrentCapital, marketInfo.PipSize, marketInfo.LotSize, stopLoss, marketInfo.Ask).Calculate();
                     var position = new Position()
                     {
                         SymbolName = marketInfo.SymbolName,
