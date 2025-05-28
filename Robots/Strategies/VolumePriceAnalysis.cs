@@ -39,11 +39,15 @@ namespace Robots.Strategies
                     LogMessages.Add($"Insufficient data for {marketInfo?.SymbolName ?? "Unknown Symbol"}");
                     continue;
                 }
-
                 var forecast = CalculateForecast(periods, marketInfo);
-                //Debug.Print(forecast.ToString("F2"));
+                Debug.Print(forecast.ToString("F2"));
                 ClosePosition(marketInfo, forecast);
-                OpenPosition(marketInfo, marketInfo.Ask, forecast);
+                if (!marketInfo.Positions.Any(p => p.Status == PositionStatus.OPEN))
+                {
+                    
+                    
+                    OpenPosition(marketInfo, marketInfo.Ask, forecast);
+                }
             }
             return PositionInstructions;
         }

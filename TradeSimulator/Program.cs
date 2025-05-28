@@ -11,8 +11,8 @@ using TradeSimulator.Simulate;
 
 internal class Program
 {
-    public static IStrategy Strategy { get; set; } = new VolumePriceAnalysis();  // set IStrategy here
-    public static int InstrumentId { get; set; } = 4; // the tick instrument id to be used for testing
+    public static IStrategy Strategy { get; set; } = new KISS();  // set IStrategy here
+    public static int InstrumentId { get; set; } = 3; // the tick instrument id to be used for testing
     public static IMarketInfo TestInfo { get; set; }
     public static bool SaveTestResult { get; set; } = true;
 

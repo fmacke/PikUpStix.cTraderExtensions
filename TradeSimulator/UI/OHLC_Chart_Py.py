@@ -8,8 +8,8 @@ server = 'localhost'
 database = 'TradingBE'
 username = 'sa'
 password = 'Gogogo123!'
-insId = '4'
-testId = '11058'
+insId = '3'
+testId = '13738'
 no_results_before_year_filter = 2022 
 
 # Set locale to UK for GBP formatting
