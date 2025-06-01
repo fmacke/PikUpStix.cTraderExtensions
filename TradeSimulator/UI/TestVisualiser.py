@@ -18,7 +18,6 @@ server = 'localhost'
 database = 'TradingBE'
 username = 'sa'
 password = 'Gogogo123!'
-no_results_before_year_filter = 2022  
 
 # Set locale to UK for GBP formatting
 locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
@@ -30,19 +29,19 @@ conn = pyodbc.connect(f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server}
 query_ohlc = """
 SELECT Date, OpenPrice, HighPrice, LowPrice, ClosePrice
 FROM HistoricalData
-WHERE InstrumentId = ? AND YEAR(Date) >= ?
+WHERE InstrumentId = ?
 ORDER BY Date
 """
-df_ohlc = pd.read_sql(query_ohlc, conn, params=[insId, no_results_before_year_filter])
+df_ohlc = pd.read_sql(query_ohlc, conn, params=[insId])
 
 # Fetch Positions data
 query_positions = """
 SELECT Id, Created, ClosedAt, EntryPrice, ClosePrice, PositionType, Margin
 FROM Positions
-WHERE TestId = ? AND YEAR(Created) >= ?
+WHERE TestId = ?
 ORDER BY Created
 """
-df_positions = pd.read_sql(query_positions, conn, params=[testId, no_results_before_year_filter])
+df_positions = pd.read_sql(query_positions, conn, params=[testId])
 
 # Close the connection
 conn.close()
@@ -78,8 +77,8 @@ for index, row in df_positions.iterrows():
         name=f"{tradeType}{', '}{f'£{locale.format_string("%.2f", row['Margin'], grouping=True)}'}{', '}{row['Id']}"
     ))
 
-# Add title and labels
-formatted_amount = f'£{locale.format_string("%.2f", df_positions['Margin'].sum(), grouping=True)}'
+formatted_amount = f'£{locale.format_string("%.2f", df_positions["Margin"].sum(), grouping=True)}'
+
 
 fig.update_layout(
     title=strategy + ', Instrument ID: ' + insId + ', Run At: ' + runat + ', Margin Sum: ' + formatted_amount,

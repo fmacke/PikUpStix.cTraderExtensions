@@ -27,7 +27,7 @@ namespace Application.Business.Calculations
                 priceMovement = Math.Round(closePrice - trade.EntryPrice, 3);
             else
                 priceMovement = Math.Round(trade.EntryPrice - closePrice, 3);
-            return contractUnit * exchangeRate * priceMovement * EnsurePositive(volume) * lotSize;
+            return Math.Round(contractUnit * exchangeRate * priceMovement * EnsurePositive(volume) * lotSize,2);
            // return lotSize * contractUnit * exchangeRate * tradeVolume * closePrice;
         }
 
