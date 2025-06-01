@@ -1,51 +1,48 @@
-﻿import pandas as pd
+import sys
+import pandas as pd
 import pyodbc
 import plotly.graph_objects as go
 import locale
 
-# SQL Server connection details
+# Read command-line arguments
+if len(sys.argv) < 5:
+    print("Usage: python TestVisualiser.py <testId> <insId> <strategy> <runat>")
+    sys.exit(1)
+
+testId = sys.argv[1]
+insId = sys.argv[2]
+strategy = sys.argv[3] 
+runat = sys.argv[4]
+
 server = 'localhost'
 database = 'TradingBE'
 username = 'sa'
 password = 'Gogogo123!'
-insId = '3'
-testId = '14736'
-no_results_before_year_filter = 2022 
+no_results_before_year_filter = 2022  
 
 # Set locale to UK for GBP formatting
 locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
 
 # Establish connection to SQL Server
-conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
-                      'SERVER=' + server + ';'
-                      'DATABASE=' + database + ';'
-                      'UID=' + username + ';'
-                      'PWD=' + password)
+conn = pyodbc.connect(f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}')
 
-# Parameterized query to fetch OHLC data
-query_ohlc = f'''
+# Fetch OHLC data
+query_ohlc = """
 SELECT Date, OpenPrice, HighPrice, LowPrice, ClosePrice
 FROM HistoricalData
-WHERE InstrumentId = ? and YEAR(Date) >= {no_results_before_year_filter}
+WHERE InstrumentId = ? AND YEAR(Date) >= ?
 ORDER BY Date
-'''
+"""
+df_ohlc = pd.read_sql(query_ohlc, conn, params=[insId, no_results_before_year_filter])
 
-# Fetch OHLC data into a DataFrame
-df_ohlc = pd.read_sql(query_ohlc, conn, params=[insId])
-
-# Parameterized query to fetch Positions data with Created date before 2010
-query_positions = f'''
+# Fetch Positions data
+query_positions = """
 SELECT Id, Created, ClosedAt, EntryPrice, ClosePrice, PositionType, Margin
 FROM Positions
-WHERE TestId = ?
-AND YEAR(Created) >= {no_results_before_year_filter}
+WHERE TestId = ? AND YEAR(Created) >= ?
 ORDER BY Created
-'''
-
-df_positions = pd.read_sql(query_positions, conn, params=[testId])
-
-# Fetch Positions data into a DataFrame
-df_positions = pd.read_sql(query_positions, conn, params=[testId])
+"""
+df_positions = pd.read_sql(query_positions, conn, params=[testId, no_results_before_year_filter])
 
 # Close the connection
 conn.close()
@@ -85,8 +82,7 @@ for index, row in df_positions.iterrows():
 formatted_amount = f'£{locale.format_string("%.2f", df_positions['Margin'].sum(), grouping=True)}'
 
 fig.update_layout(
-    title='Test ID: ' + str(testId) + ', Instrument ID: ' + str(insId)
-    + ', Margin Sum: ' + formatted_amount,
+    title=strategy + ', Instrument ID: ' + insId + ', Run At: ' + runat + ', Margin Sum: ' + formatted_amount,
     xaxis_title='Date',
     yaxis_title='Price',
     xaxis_rangeslider_visible=True,
@@ -109,7 +105,6 @@ fig.update_layout(
     yaxis=dict(fixedrange=False)
 )
 
-# Save the figure as an HTML file with embedded JavaScript
-fig.write_html("ohlc_chart_with_trades.html", include_plotlyjs='cdn')
-
-print("OHLC chart with trades created and saved as ohlc_chart_with_trades.html")
+# Save as HTML
+fig.write_html(f"C:\\Users\\finn\\OneDrive\\Documents\\Money\\Business\\trading\\TestExports\\{testId}.html", include_plotlyjs='cdn')
+print(f"{testId}.html")

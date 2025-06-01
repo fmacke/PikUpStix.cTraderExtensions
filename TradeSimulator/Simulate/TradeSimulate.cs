@@ -64,8 +64,12 @@ namespace TradeSimulator.Simulate
         {
             Debug.WriteLine("OnStop");
             var report = new TradeStatistics(Positions, InitialCapital, 20);
-            if(SaveTestResult)
+            if (SaveTestResult)
+            {
                 SaveTest(report);
+                new PythonRunner().RunScript("C:\\Users\\finn\\source\\repos\\fmacke\\PikUpStix.cTraderExtensions\\TradeSimulator\\UI\\TestVisualiser.py", 
+                    ResultsCapture.TestId + " 3 " + Strategy.GetType().Name + " " + DateTime.Now.ToShortDateString());
+            }
             Debug.WriteLine(ClassToString.FormatProperties(report));
         }
 
