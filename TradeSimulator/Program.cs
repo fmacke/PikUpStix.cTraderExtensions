@@ -11,7 +11,7 @@ using TradeSimulator.Simulate;
 
 internal class Program
 {
-    public static IStrategy Strategy { get; set; } = new KISS();  // set IStrategy here
+    public static IStrategy Strategy { get; set; } = new VolumePriceAnalysis();  // set IStrategy here
     public static int InstrumentId { get; set; } = 3; // the tick instrument id to be used for testing
     public static IMarketInfo TestInfo { get; set; }
     public static bool SaveTestResult { get; set; } = true;
@@ -19,9 +19,9 @@ internal class Program
     private static void Main(string[] args)
     {
         GetMarketData(InstrumentId);
-        int[] periods = { 25 };
-        double[] volumeWeights = { 0.5 };// { 0.2, 0.4, 0.5, 0.6, 0.8 };
-        double[] riskPerTrade = { 0.02 };
+        int[] periods = { 100 };
+        double[] volumeWeights = { 0.8 };
+        double[] riskPerTrade = { 0.1 };
         double[] stopLossAmount = { 1 };//0.0001, 0.0005, 0.0008, 0.001, 0.01 };
 
         foreach (var period in periods)

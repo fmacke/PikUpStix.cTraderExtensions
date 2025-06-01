@@ -40,11 +40,10 @@ namespace Robots.Strategies
                     continue;
                 }
                 var forecast = CalculateForecast(periods, marketInfo);
-                Debug.Print(forecast.ToString("F2"));
+                //Debug.Print(forecast.ToString("F2"));
                 ClosePosition(marketInfo, forecast);
                 if (!marketInfo.Positions.Any(p => p.Status == PositionStatus.OPEN))
-                {
-                    
+                {          
                     
                     OpenPosition(marketInfo, marketInfo.Ask, forecast);
                 }

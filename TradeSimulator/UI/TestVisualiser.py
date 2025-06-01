@@ -2,6 +2,7 @@ import sys
 import pandas as pd
 import pyodbc
 import plotly.graph_objects as go
+import plotly.subplots as sp
 import locale
 
 # Read command-line arguments
@@ -46,64 +47,57 @@ df_positions = pd.read_sql(query_positions, conn, params=[testId])
 # Close the connection
 conn.close()
 
-# Create OHLC chart with dynamic y-axis range
-fig = go.Figure(data=[go.Ohlc(x=df_ohlc['Date'],
-                              open=df_ohlc['OpenPrice'],
-                              high=df_ohlc['HighPrice'],
-                              low=df_ohlc['LowPrice'],
-                              close=df_ohlc['ClosePrice'])])
+# Create subplots: (rows=2, columns=1)
+fig = sp.make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.1, 
+                       subplot_titles=("OHLC Chart & Trades", "Margin Over Time"))
 
-# Overlay trades from Positions table with color-coding based on profit/loss
-for index, row in df_positions.iterrows():
-    color = 'gray'  # Default color to avoid NameError
-    if row['PositionType'] == 1 and row['ClosePrice'] > row['EntryPrice']:
-     color = 'pink'
-    elif row['PositionType'] == 1 and row['ClosePrice'] < row['EntryPrice']:
-     color = 'blue'
-    elif row['PositionType'] == 2 and row['ClosePrice'] < row['EntryPrice']:
-     color = 'pink'
-    elif row['PositionType'] == 2 and row['ClosePrice'] > row['EntryPrice']:
-     color = 'blue'
+# Add OHLC candlestick chart (Top Graph)
+fig.add_trace(go.Candlestick(
+    x=df_ohlc['Date'],
+    open=df_ohlc['OpenPrice'],
+    high=df_ohlc['HighPrice'],
+    low=df_ohlc['LowPrice'],
+    close=df_ohlc['ClosePrice'],
+    name="OHLC",
+), row=1, col=1)
 
-    tradeType = 'Buy' 
-    if row['PositionType'] == 2:
-      tradeType = 'Sell'
+# Overlay trades (Top Graph)
+for _, row in df_positions.iterrows():
+    color = 'pink' if ((row['PositionType'] == 1 and row['ClosePrice'] > row['EntryPrice']) or 
+                        (row['PositionType'] == 2 and row['ClosePrice'] < row['EntryPrice'])) else 'blue'
+    
+    tradeType = 'Buy' if row['PositionType'] == 1 else 'Sell'
 
     fig.add_trace(go.Scatter(
         x=[row['Created'], row['ClosedAt']],
         y=[row['EntryPrice'], row['ClosePrice']],
         mode='lines+markers',
         line=dict(color=color),
-        name=f"{tradeType}{', '}{f'£{locale.format_string("%.2f", row['Margin'], grouping=True)}'}{', '}{row['Id']}"
-    ))
-
-formatted_amount = f'£{locale.format_string("%.2f", df_positions["Margin"].sum(), grouping=True)}'
+        name=f"{tradeType}, £{locale.format_string('%.2f', row['Margin'], grouping=True)}, {row['Id']}",
+    ), row=1, col=1)
 
 
+
+df_positions['CumulativeMargin'] = df_positions['Margin'].cumsum()
+
+fig.add_trace(go.Scatter(
+    x=df_positions['Created'], 
+    y=df_positions['CumulativeMargin'],  # Use cumulative sum here
+    mode='lines+markers', 
+    name="Cumulative Margin Over Time",
+    line=dict(color="green"),
+), row=2, col=1)
+
+# Layout adjustments
 fig.update_layout(
-    title=strategy + ', Instrument ID: ' + insId + ', Run At: ' + runat + ', Margin Sum: ' + formatted_amount,
-    xaxis_title='Date',
-    yaxis_title='Price',
-    xaxis_rangeslider_visible=True,
-    yaxis=dict(autorange=True)
+    title=f"Trading Data: {strategy}, Instrument ID: {insId}, Run At: {runat}",
+    xaxis_title="Date",
+    xaxis_rangeslider_visible=False,
+    showlegend=True
 )
 
-# JavaScript to dynamically update y-axis range
-fig.update_layout(
-    xaxis=dict(
-        rangeselector=dict(
-            buttons=list([
-                dict(count=1, label="1m", step="month", stepmode="backward"),
-                dict(count=6, label="6m", step="month", stepmode="backward"),
-                dict(step="all")
-            ])
-        ),
-        rangeslider=dict(visible=True),
-        type="date"
-    ),
-    yaxis=dict(fixedrange=False)
-)
+# Save to HTML file
+html_output = f"C:\\Users\\finn\\OneDrive\\Documents\\Money\\Business\\trading\\TestExports\\{testId}.html"
+fig.write_html(html_output, include_plotlyjs='cdn')
 
-# Save as HTML
-fig.write_html(f"C:\\Users\\finn\\OneDrive\\Documents\\Money\\Business\\trading\\TestExports\\{testId}.html", include_plotlyjs='cdn')
-print(f"{testId}.html")
+print(f"Saved to {html_output}")
