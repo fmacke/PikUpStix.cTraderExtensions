@@ -7,13 +7,14 @@ import locale
 
 # Read command-line arguments
 if len(sys.argv) < 5:
-    print("Usage: python TestVisualiser.py <testId> <insId> <strategy> <runat>")
+    print("Usage: python TestVisualiser.py <testId> <insId> <strategy> <runat> <saveFileTo>")
     sys.exit(1)
 
 testId = sys.argv[1]
 insId = sys.argv[2]
 strategy = sys.argv[3] 
 runat = sys.argv[4]
+savefileTo = sys.argv[5] 
 
 server = 'localhost'
 database = 'TradingBE'
@@ -97,7 +98,7 @@ fig.update_layout(
 )
 
 # Save to HTML file
-html_output = f"C:\\Users\\finn\\OneDrive\\Documents\\Money\\Business\\trading\\TestExports\\{testId}.html"
+html_output = f"{saveFileTo}{testId}.html"
 fig.write_html(html_output, include_plotlyjs='cdn')
 
 print(f"Saved to {html_output}")

@@ -10,6 +10,7 @@ using Robots.Results;
 using DataServices;
 using Application.Features.Positions.Commands.Create;
 using Domain.Enums;
+using Microsoft.Extensions.Configuration;
 
 namespace TradeSimulator.Simulate
 {
@@ -67,8 +68,18 @@ namespace TradeSimulator.Simulate
             if (SaveTestResult)
             {
                 SaveTest(report);
-                new PythonRunner().RunScript("C:\\Users\\finn\\source\\repos\\fmacke\\PikUpStix.cTraderExtensions\\TradeSimulator\\UI\\TestVisualiser.py", 
-                    ResultsCapture.TestId + " 3 " + Strategy.GetType().Name + " " + DateTime.Now.ToShortDateString());
+                var builder = new ConfigurationBuilder()
+                    .AddUserSecrets<TradeSimulate>();
+                var configuration = builder.Build();
+                var saveResultTo = configuration["SaveTestResultsTo"] ?? throw new Exception("No directory set for test exports");
+
+
+                string relativePath = @"..\UI\TestVisualiser.py";
+                string fullPath = Path.GetFullPath(relativePath);
+
+
+                new PythonRunner().RunScript(fullPath, 
+                    ResultsCapture.TestId + " 3 " + Strategy.GetType().Name + " " + DateTime.Now.ToShortDateString() + saveResultTo);
             }
             Debug.WriteLine(ClassToString.FormatProperties(report));
         }
