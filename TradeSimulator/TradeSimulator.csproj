@@ -15,4 +15,10 @@
     <ProjectReference Include="..\Robots\Robots.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="UI\TestVisualiser.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

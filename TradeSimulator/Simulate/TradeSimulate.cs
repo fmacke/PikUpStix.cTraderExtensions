@@ -47,14 +47,14 @@ namespace TradeSimulator.Simulate
                 mi.CurrentCapital = CurrentMarketInfo.CurrentCapital;
             PositionInstructions = Strategy.CalculateChanges(marketInfos);
             new PositionHandler(PositionInstructions, ref Positions, marketInfos).ExecuteInstructions();
-        }
+        } 
         private List<IMarketInfo> GetMarketInfo()
         {
             List<IMarketInfo> marketInfos = new List<IMarketInfo>();
             CurrentMarketInfo.Positions = Positions;
             marketInfos.Add(CurrentMarketInfo);  // this works for now for testing purposes, where a strategy only deals with a single market instrument.            
             return marketInfos;
-        }
+        } 
         protected internal override void OnStart()
         {
             Debug.WriteLine($"TradeSimulate OnStart()");
@@ -66,20 +66,18 @@ namespace TradeSimulator.Simulate
             Debug.WriteLine("OnStop");
             var report = new TradeStatistics(Positions, InitialCapital, 20);
             if (SaveTestResult)
-            {
+            { 
                 SaveTest(report);
                 var builder = new ConfigurationBuilder()
                     .AddUserSecrets<TradeSimulate>();
                 var configuration = builder.Build();
                 var saveResultTo = configuration["SaveTestResultsTo"] ?? throw new Exception("No directory set for test exports");
+                 
 
-
-                string relativePath = @"..\UI\TestVisualiser.py";
+                string relativePath = @"..\net9.0\UI\TestVisualiser.py";
                 string fullPath = Path.GetFullPath(relativePath);
-
-
-                new PythonRunner().RunScript(fullPath, 
-                    ResultsCapture.TestId + " 3 " + Strategy.GetType().Name + " " + DateTime.Now.ToShortDateString() + saveResultTo);
+                new PythonRunner().RunScript(fullPath,  
+                    ResultsCapture.TestId + " 3 " + Strategy.GetType().Name + " " + DateTime.Now.ToShortDateString() + " " + saveResultTo);
             }
             Debug.WriteLine(ClassToString.FormatProperties(report));
         }
@@ -111,7 +109,7 @@ namespace TradeSimulator.Simulate
                         Status = PositionStatus.CLOSED,
                         Margin = tr.Margin
                     });
-                }
+                } 
                 ResultsCapture.Capture("onStop", tts, DataService, 0);
             }
         }

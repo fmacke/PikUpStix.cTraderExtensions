@@ -1,9 +1,11 @@
 import sys
 import pandas as pd
-import pyodbc
 import plotly.graph_objects as go
 import plotly.subplots as sp
 import locale
+from sqlalchemy import create_engine
+
+
 
 # Read command-line arguments
 if len(sys.argv) < 5:
@@ -25,7 +27,7 @@ password = 'Gogogo123!'
 locale.setlocale(locale.LC_ALL, 'en_GB.UTF-8')
 
 # Establish connection to SQL Server
-conn = pyodbc.connect(f'DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}')
+engine = create_engine(f"mssql+pyodbc://{username}:{password}@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server", fast_executemany=True)
 
 # Fetch OHLC data
 query_ohlc = """
@@ -34,7 +36,7 @@ FROM HistoricalData
 WHERE InstrumentId = ?
 ORDER BY Date
 """
-df_ohlc = pd.read_sql(query_ohlc, conn, params=[insId])
+df_ohlc = pd.read_sql(query_ohlc, engine, params=(insId,))
 
 # Fetch Positions data
 query_positions = """
@@ -43,10 +45,10 @@ FROM Positions
 WHERE TestId = ?
 ORDER BY Created
 """
-df_positions = pd.read_sql(query_positions, conn, params=[testId])
 
+df_positions = pd.read_sql(query_positions, engine, params=(testId,))
 # Close the connection
-conn.close()
+engine.dispose()
 
 # Create subplots: (rows=2, columns=1)
 fig = sp.make_subplots(rows=2, cols=1, shared_xaxes=True, vertical_spacing=0.1, 
@@ -98,7 +100,7 @@ fig.update_layout(
 )
 
 # Save to HTML file
-html_output = f"{saveFileTo}{testId}.html"
+html_output = f"{savefileTo}{testId}.html"
 fig.write_html(html_output, include_plotlyjs='cdn')
 
 print(f"Saved to {html_output}")

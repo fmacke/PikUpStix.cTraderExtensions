@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using static Application.Common.Constants.Permissions;
 namespace Application.Common.Utilities
 {
     public interface IPythonRunner
@@ -9,6 +10,7 @@ namespace Application.Common.Utilities
     {
         public void RunScript(string scriptPath, string args)
         {
+            //args = "16770 3 strategy 20/2/2025 C:/Users/finn/OneDrive/Desktop/ss";
             ProcessStartInfo start = new ProcessStartInfo();
             start.FileName = "python";
             start.Arguments = $"{scriptPath} {args}";
@@ -20,8 +22,11 @@ namespace Application.Common.Utilities
             {
                 using (StreamReader reader = process.StandardOutput)
                 {
-                    string result = reader.ReadToEnd();
-                    Console.WriteLine(result);
+                    string error = reader.ReadToEnd();
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        Debug.WriteLine($"Python Error: {error}");
+                    }
                 }
             }
         }
