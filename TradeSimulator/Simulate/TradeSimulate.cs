@@ -22,7 +22,7 @@ namespace TradeSimulator.Simulate
         public bool SaveTestResult { get; }
         public DataService DataService { get; set; } = new DataService();
 
-        public TradeSimulate(IMarketInfo runData, IStrategy strategy, double initialCapital, bool saveTestResult) : base(initialCapital, runData) 
+        public TradeSimulate(IMarketInfo runData, IStrategy strategy, double initialCapital, bool saveTestResult) : base(initialCapital, runData)
         {
             Strategy = strategy;
             SaveTestResult = saveTestResult;
@@ -41,24 +41,24 @@ namespace TradeSimulator.Simulate
             List<IMarketInfo> marketInfos = GetMarketInfo();
             CurrentMarketInfo.CurrentCapital = Positions.Where(p => p.Status == PositionStatus.CLOSED).Sum(p => p.Margin) + InitialCapital;
 
-            if(CurrentMarketInfo.CurrentCapital < 0)
+            if (CurrentMarketInfo.CurrentCapital < 0)
                 return;  // no money left.
-            foreach(var mi in marketInfos)
+            foreach (var mi in marketInfos)
                 mi.CurrentCapital = CurrentMarketInfo.CurrentCapital;
             PositionInstructions = Strategy.CalculateChanges(marketInfos);
             new PositionHandler(PositionInstructions, ref Positions, marketInfos).ExecuteInstructions();
-        } 
+        }
         private List<IMarketInfo> GetMarketInfo()
         {
             List<IMarketInfo> marketInfos = new List<IMarketInfo>();
             CurrentMarketInfo.Positions = Positions;
             marketInfos.Add(CurrentMarketInfo);  // this works for now for testing purposes, where a strategy only deals with a single market instrument.            
             return marketInfos;
-        } 
+        }
         protected internal override void OnStart()
         {
             Debug.WriteLine($"TradeSimulate OnStart()");
-            if(SaveTestResult)
+            if (SaveTestResult)
                 ResultsCapture = new TestResultsCapture("test begun at " + DateTime.Now.ToString(), InitialCapital, Strategy.TestParameters, DataService);
         }
         protected internal override void OnStop()
@@ -66,18 +66,8 @@ namespace TradeSimulator.Simulate
             Debug.WriteLine("OnStop");
             var report = new TradeStatistics(Positions, InitialCapital, 20);
             if (SaveTestResult)
-            { 
+            {
                 SaveTest(report);
-                var builder = new ConfigurationBuilder()
-                    .AddUserSecrets<TradeSimulate>();
-                var configuration = builder.Build();
-                var saveResultTo = configuration["SaveTestResultsTo"] ?? throw new Exception("No directory set for test exports");
-                 
-
-                string relativePath = @"..\net9.0\UI\TestVisualiser.py";
-                string fullPath = Path.GetFullPath(relativePath);
-                new PythonRunner().RunScript(fullPath,  
-                    ResultsCapture.TestId + " 3 " + Strategy.GetType().Name + " " + DateTime.Now.ToShortDateString() + " " + saveResultTo);
             }
             Debug.WriteLine(ClassToString.FormatProperties(report));
         }
@@ -109,9 +99,21 @@ namespace TradeSimulator.Simulate
                         Status = PositionStatus.CLOSED,
                         Margin = tr.Margin
                     });
-                } 
+                }
                 ResultsCapture.Capture("onStop", tts, DataService, 0);
+                SaveReportToHtml();
             }
+        }
+
+        private void SaveReportToHtml()
+        {
+            var builder = new ConfigurationBuilder().AddUserSecrets<TradeSimulate>();
+            var configuration = builder.Build();
+            var saveResultTo = configuration["SaveTestResultsTo"] ?? throw new Exception("No directory set for test exports");
+            string relativePath = @"..\net9.0\UI\TestVisualiser.py";
+            string fullPath = Path.GetFullPath(relativePath);
+            new PythonRunner().RunScript(fullPath,
+                ResultsCapture.TestId + " 3 " + Strategy.GetType().Name + " " + DateTime.Now.ToShortDateString() + " " + saveResultTo);
         }
     }
 }

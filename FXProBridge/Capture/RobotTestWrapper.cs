@@ -1,8 +1,11 @@
 ﻿using Application.Business.Calculations;
+using Application.Common.Utilities;
 using Application.Features.Positions.Commands.Create;
+using Application.Interfaces;
 using cAlgo.API;
 using DataServices;
 using Domain.Enums;
+using Microsoft.Extensions.Configuration;
 using Robots.Results;
 
 namespace FXProBridge.Capture
@@ -71,9 +74,20 @@ namespace FXProBridge.Capture
                         Margin = tr.NetProfit
                     });
                 }
+                SaveReportToHtml();
                 return ResultsCapture.Capture("onStop", tts, DataService, _maximumAdverseExcursion);
             }
             return "Not a test run.";
+        }
+        private void SaveReportToHtml()
+        {
+            var builder = new ConfigurationBuilder().AddUserSecrets<RobotTestWrapper>();
+            var configuration = builder.Build();
+            var saveResultTo = configuration["SaveTestResultsTo"] ?? throw new Exception("No directory set for test exports");
+            string relativePath = @"..\net9.0\UI\TestVisualiser.py";
+            string fullPath = Path.GetFullPath(relativePath);
+            new PythonRunner().RunScript(fullPath,
+                ResultsCapture.TestId + " 3 " + this.GetType().Name + " " + DateTime.Now.ToShortDateString() + " " + saveResultTo);
         }
     }
 }

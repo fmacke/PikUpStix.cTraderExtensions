@@ -11,10 +11,12 @@ using TradeSimulator.Simulate;
 
 internal class Program
 {
-    public static IStrategy Strategy { get; set; } = new VolumePriceAnalysis();  // set IStrategy here
+    public static IStrategy Strategy { get; set; } = new SimpleTestStrategy();  // set IStrategy here
     public static int InstrumentId { get; set; } = 3; // the tick instrument id to be used for testing
     public static IMarketInfo TestInfo { get; set; }
     public static bool SaveTestResult { get; set; } = true;
+    private static DateTime startTestingFrom = new DateTime(2024, 01, 01);
+    private static DateTime endTestingAt = new DateTime(2025, 01, 01);
 
     private static void Main(string[] args)
     {
@@ -23,7 +25,7 @@ internal class Program
         double[] volumeWeights = { 0.8 };
         double[] riskPerTrade = { 0.1 };
         double[] stopLossAmount = { 1 };//0.0001, 0.0005, 0.0008, 0.001, 0.01 };
-
+        
         foreach (var period in periods)
         {
             foreach (var volumeWeight in volumeWeights)
@@ -58,7 +60,8 @@ internal class Program
         var instrument = dataServices.InstrumentCaller.GetInstrument(instrumentId);
         var config = new MapperConfiguration(cfg => cfg.AddProfile<HistoricalDataProfile>());
         var mapper = config.CreateMapper();
-        var marketData = mapper.Map<List<HistoricalData>>(instrument.HistoricalDatas.ToList());
+        var marketData = mapper.Map<List<HistoricalData>>(
+            instrument.HistoricalDatas.Where(x => x.Date > startTestingFrom && x.Date < endTestingAt).ToList());
         TestInfo = new MarketInfo(
             new DateTime(),
             0,
