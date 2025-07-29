@@ -11,16 +11,20 @@ namespace FXProBridge.Robots
        protected override void OnBar()
         {
             var bars = BarConvert.ConvertBars(Bars);
+            var ticks = BarConvert.ConvertBars(MarketData.GetBars(cAlgo.API.TimeFrame.Hour));
             var marketInfo = new MarketInfo(Bars.OpenTimes.LastValue,
                 Symbol.Bid,
                 Symbol.Ask,
                 PositionConvert.ConvertPosition(Positions),
                 bars,
+                ticks,
                 SymbolName,
                 SymbolName,
                 Account.Equity,
                 Symbol.PipSize, Symbol.LotSize,
-                1, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.H1);
+                1, new ConfirmingSignals(new List<ISignal>()),
+                Domain.Enums.TimeFrame.D1,
+                Domain.Enums.TimeFrame.H1);
 
             var strategy = new VolumePriceAnalysis();
             ManagePositions(strategy.CalculateChanges(new List<IMarketInfo> { marketInfo }));

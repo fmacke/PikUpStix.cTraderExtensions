@@ -2,6 +2,7 @@
 {
     public enum TimeFrame
     {
+        Tick,
         M1,
         M5,
         M15,
@@ -17,6 +18,7 @@
     {
         private static readonly Dictionary<string, TimeFrame> mappings = new()
         {
+            { "Tick", TimeFrame.Tick },
             { "M1", TimeFrame.M1 },
             { "M5", TimeFrame.M5 },
             { "M15", TimeFrame.M15 },

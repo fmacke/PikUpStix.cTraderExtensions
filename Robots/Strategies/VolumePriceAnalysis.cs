@@ -51,6 +51,11 @@ namespace Robots.Strategies
             return PositionInstructions;
         }
 
+        public void GetParameters(Dictionary<string, string> parameters)
+        {
+            SetTestParameters();
+        }
+
         private void SetTestParameters()
         {
             foreach (var param in TestParameters)

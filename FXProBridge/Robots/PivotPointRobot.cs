@@ -75,11 +75,14 @@ namespace FXProBridge.Robots
                 Symbol.Ask,
                 PositionConvert.ConvertPosition(Positions),
                 BarConvert.ConvertBars(Bars),
+                BarConvert.ConvertBars(MarketData.GetBars(cAlgo.API.TimeFrame.Hour)),
                 SymbolName,
                 SymbolName,
                 Account.Equity,
                 Symbol.PipSize, Symbol.LotSize,
-                exchangeRate, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.H1);
+                exchangeRate, new ConfirmingSignals(new List<ISignal>()),
+                Domain.Enums.TimeFrame.D1,
+                Domain.Enums.TimeFrame.H1);
 
             var signals = new List<ISignal>();
             if(EnableMA)

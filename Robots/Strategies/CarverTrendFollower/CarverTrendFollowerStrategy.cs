@@ -44,6 +44,25 @@ namespace Robots.Strategies.CarverTrendFollower
             return _positionInstructions;
         }
 
+        public void GetParameters(Dictionary<string, string> parameters)
+        {
+            TestParameters.Clear();
+            if (parameters == null)
+            {
+                LogMessages.Add("Input parameters dictionary is null. Using hardcoded default values.");
+                TestParameters.Add(new Test_Parameter() { Name = "RiskPerTrade[Double]", Value = "0.02" });
+                TestParameters.Add(new Test_Parameter() { Name = "StopLossAmount[Double]", Value = "0.01" });
+            }
+            else
+            {
+                foreach (var paramEntry in parameters)
+                {
+                    TestParameters.Add(new Test_Parameter() { Name = paramEntry.Key, Value = paramEntry.Value });
+                }
+                LogMessages.Add($"Parameters loaded from input dictionary. Total entries: {TestParameters.Count}");
+            }
+        }
+
         private void CreateNewPositions(WeightedProposedPositions weightedPositions, IMarketInfo market)
         {
             // Add new positions

@@ -29,7 +29,7 @@ namespace TradeSimulator.Simulate
         }
         protected internal override void OnTick()
         {
-            //Debug.WriteLine($"TradeSimulate OnTick() {CurrentMarketInfo.CursorDate}");
+            Debug.WriteLine($"TradeSimulate OnTick() {CurrentMarketInfo.CursorDate}");
             List<IMarketInfo> marketInfos = GetMarketInfo();
             new ExpiryHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutExpiredPositions();
             new StopLossHandler(CurrentMarketInfo.CursorDate, ref Positions, marketInfos).CloseOutStops();
@@ -37,7 +37,7 @@ namespace TradeSimulator.Simulate
         }
         protected internal override void OnBar()
         {
-            //Debug.WriteLine($"TradeSimulate OnBar() {CurrentMarketInfo.CursorDate}");
+            Debug.WriteLine($"TradeSimulate OnBar() {CurrentMarketInfo.CursorDate}");
             List<IMarketInfo> marketInfos = GetMarketInfo();
             CurrentMarketInfo.CurrentCapital = Positions.Where(p => p.Status == PositionStatus.CLOSED).Sum(p => p.Margin) + InitialCapital;
 

@@ -19,6 +19,7 @@ namespace Application.Business.Market
         double ExchangeRate { get; }
         int InstrumentId { get; set; }
         List<HistoricalData> Bars { get; set; }
+        List<HistoricalData> Ticks { get; set; }
         List<Position> Positions { get; set; }
         ConfirmingSignals Signals { get; }
         TimeFrame TickTimeFrame { get; }

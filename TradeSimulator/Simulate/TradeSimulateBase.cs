@@ -8,23 +8,25 @@ namespace TradeSimulator.Simulate
     public abstract class TradeSimulateBase
     {
         public TestResultsCapture ResultsCapture { get; set; }
-        private List<HistoricalData> TestSet { get;  set; }
+        private List<HistoricalData> Bars { get;  set; }
+        private List<HistoricalData> Ticks { get; set; }
         public double InitialCapital { get; private set; }
         public IMarketInfo CurrentMarketInfo { get; set; }
 
         public TradeSimulateBase(double initialcapital, IMarketInfo baseMarketInfo)
         {
             CurrentMarketInfo = baseMarketInfo;
-            TestSet = CurrentMarketInfo.Bars.OrderBy(bar => bar.Date).ToList();
+            Bars = CurrentMarketInfo.Bars.OrderBy(bar => bar.Date).ToList();
+            Ticks = CurrentMarketInfo.Ticks.OrderBy(bar => bar.Date).ToList();
             CurrentMarketInfo.Bars = new List<HistoricalData>();
-            CurrentMarketInfo.CursorDate = TestSet.First().Date;
+            CurrentMarketInfo.CursorDate = Bars.First().Date;
             CurrentMarketInfo.CurrentCapital = initialcapital;
             InitialCapital = initialcapital;
         }
         public void Run()
         {
             OnStart();
-            for (int x=0; x<TestSet.Count; x++)
+            for (int x=0; x< Ticks.Count; x++)
             {
                 var lastDateTime = CurrentMarketInfo.CursorDate;
                 LoadCurrentMarketData(x);
@@ -96,13 +98,13 @@ namespace TradeSimulator.Simulate
         }
         private void LoadCurrentMarketData(int x)
         {
-            CurrentMarketInfo.Bars.Add(TestSet[x]);
-            CurrentMarketInfo.CursorDate = TestSet[x].Date;
-            CurrentMarketInfo.CurrentBar = TestSet[x];
-            CurrentMarketInfo.Ask = TestSet[x].OpenPrice;
-            CurrentMarketInfo.Bid = TestSet[x].OpenPrice;
+            CurrentMarketInfo.Bars.Add(Ticks[x]);
+            CurrentMarketInfo.CursorDate = Ticks[x].Date;
+            CurrentMarketInfo.CurrentBar = Ticks[x];
+            CurrentMarketInfo.Ask = Ticks[x].OpenPrice;
+            CurrentMarketInfo.Bid = Ticks[x].OpenPrice;
             if (x > 0)
-                CurrentMarketInfo.LastBar = TestSet[x - 1];
+                CurrentMarketInfo.LastBar = Ticks[x - 1];
         }
         protected internal virtual void OnTick()
         {

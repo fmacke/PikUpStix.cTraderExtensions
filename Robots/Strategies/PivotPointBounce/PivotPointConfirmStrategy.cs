@@ -40,6 +40,25 @@ namespace Robots.Strategies.PivotPointBounce
             }
             return _positionInstructions;
         }
+        public void GetParameters(Dictionary<string, string> parameters)
+        {
+            TestParameters = new List<Test_Parameter>();
+            if (parameters == null)
+            {
+                LogMessages.Add("Input parameters dictionary is null. Using hardcoded default values.");
+                TestParameters.Add(new Test_Parameter() { Name = "MaximumRisk[Double]", Value = MaximumRisk.ToString() });
+                TestParameters.Add(new Test_Parameter() { Name = "ThresholdForTrade[Double]", Value = thresholdForTrade.ToString() });
+                TestParameters.Add(new Test_Parameter() { Name = "ConfirmingSignalsForecastTreshhold[Double]", Value = confirmingSignalsForecastTreshhold.ToString() });
+            }
+            else
+            {
+                foreach (var paramEntry in parameters)
+                {
+                    TestParameters.Add(new Test_Parameter() { Name = paramEntry.Key, Value = paramEntry.Value });
+                }
+                LogMessages.Add($"Parameters loaded from input dictionary. Total entries: {TestParameters.Count}");
+            }
+        }
         private void CalculateNewInstructions(IMarketInfo marketInfo, List<IMarketInfo> marketInfos)
         {
             PivotPoints = GetPivotPointData(marketInfo.TickTimeFrame, marketInfos);

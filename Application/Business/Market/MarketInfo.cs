@@ -11,6 +11,7 @@ namespace Application.Business.Market
         public List<Position> Positions { get; set; }
         public int InstrumentId { get; set; }
         public List<HistoricalData> Bars { get; set; }
+        public List<HistoricalData> Ticks { get; set; }
         public string SymbolName { get; private set; }
         public double CurrentCapital { get; set; }
         public string Currency { get; private set; }
@@ -24,14 +25,16 @@ namespace Application.Business.Market
         public HistoricalData LastBar { get; set; }
 
         public MarketInfo(DateTime cursorDate, double bid, double ask, List<Position> positions,
-            List<HistoricalData> bars, string symbolName, string currency, double accountBalance,
-            double pipSize, double lotSize, double exchangeRate, ConfirmingSignals signals, TimeFrame timeFrame)
+            List<HistoricalData> bars, List<HistoricalData> ticks, string symbolName, string currency, double accountBalance,
+            double pipSize, double lotSize, double exchangeRate, ConfirmingSignals signals, TimeFrame barTimeFrame, 
+            TimeFrame tickTimeFrame)
         {
             CursorDate = cursorDate;
             Bid = bid;
             Ask = ask;
             Positions = positions;
             Bars = bars;
+            Ticks = ticks;
             SymbolName = symbolName;
             Currency = currency;
             CurrentCapital = accountBalance;
@@ -39,8 +42,8 @@ namespace Application.Business.Market
             PipSize = pipSize;
             LotSize = lotSize;
             Signals = signals;
-            TickTimeFrame = timeFrame;
-            BarTimeFrame = GetBarTimeFrame(timeFrame);
+            BarTimeFrame = GetBarTimeFrame(barTimeFrame);
+            TickTimeFrame = GetBarTimeFrame(tickTimeFrame);
             if (bars != null && bars.Count > 0)
             {
                 CurrentBar = bars.LastOrDefault();

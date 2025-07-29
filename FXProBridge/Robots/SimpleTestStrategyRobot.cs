@@ -16,11 +16,14 @@ namespace FXProBridge.Robots
                 Symbol.Ask,
                 PositionConvert.ConvertPosition(Positions),
                 bars,
+                BarConvert.ConvertBars(MarketData.GetBars(cAlgo.API.TimeFrame.Hour)),
                 SymbolName,
                 SymbolName,
                 Account.Equity,
                 Symbol.PipSize, Symbol.LotSize,
-                1, new ConfirmingSignals(new List<ISignal>()), Domain.Enums.TimeFrame.H1);
+                1, new ConfirmingSignals(new List<ISignal>())
+                , Domain.Enums.TimeFrame.D1
+                , Domain.Enums.TimeFrame.H1);
 
             var strat = new SimpleTestStrategy();
             ManagePositions(strat.CalculateChanges(new List<IMarketInfo> { marketInfo }));

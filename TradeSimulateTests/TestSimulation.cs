@@ -71,14 +71,16 @@ namespace TradeSimulateTests
                 0,
                 new List<Position>(),
                 new List<HistoricalData>(),
+                new List<HistoricalData>(),
                 "EURUSD",
                 "USD",
                 10000,
-                0.0001,
+                0.0001, 
                 100000,
                 1,
                 new ConfirmingSignals(new List<ISignal>()),
-                Domain.Enums.TimeFrame.H1
+                Domain.Enums.TimeFrame.H1,
+                Domain.Enums.TimeFrame.M1
             );
             var data = new List<HistoricalData>();
             int expander = 1;

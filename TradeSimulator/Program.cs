@@ -12,7 +12,8 @@ using TradeSimulator.Simulate;
 internal class Program
 {
     public static IStrategy Strategy { get; set; } = new SimpleTestStrategy();  // set IStrategy here
-    public static int InstrumentId { get; set; } = 3; // the tick instrument id to be used for testing
+    public static int BarInstrumentId { get; set; } = 3; // the onBar instrument id to be used for testing
+    public static int TickInstrumentId { get; set; } = 4; // the onTick instrument id to be used for testing
     public static IMarketInfo TestInfo { get; set; }
     public static bool SaveTestResult { get; set; } = true;
     private static DateTime startTestingFrom = new DateTime(2024, 01, 01);
@@ -20,7 +21,7 @@ internal class Program
 
     private static void Main(string[] args)
     {
-        GetMarketData(InstrumentId);
+        GetMarketData(BarInstrumentId, TickInstrumentId);
         int[] periods = { 100 };
         double[] volumeWeights = { 0.8 };
         double[] riskPerTrade = { 0.1 };
@@ -35,7 +36,14 @@ internal class Program
                     foreach (var stopLoss in stopLossAmount)
                     {
                         Strategy.TestParameters = new List<Test_Parameter>();
-                        GetVolumePriceAnalysisParameters(period, volumeWeight, risk, stopLoss);
+                        Dictionary<string, string> parameters = new Dictionary<string, string>
+                        {
+                            { "Periods[Int]", period.ToString() },
+                            { "VolumeWeight[Double]", volumeWeight.ToString() },
+                            { "RiskPerTrade[Double]", risk.ToString() },
+                            { "StopLossAmount[Double]", stopLoss.ToString() }
+                        };
+                        Strategy.GetParameters(parameters);
                         var tradeSimulator = new TradeSimulate(TestInfo, Strategy, 10000, SaveTestResult);
                         tradeSimulator.Run();
                     }
@@ -44,40 +52,43 @@ internal class Program
         }
     }
 
-    private static void GetVolumePriceAnalysisParameters(int period, double volumeWeight, double riskPerTrade, double stopLossAmount)
-    {
-        Strategy.TestParameters.Add(new Test_Parameter() { Name = "RiskPerTrade[Double]", Value = riskPerTrade.ToString() });
-        Strategy.TestParameters.Add(new Test_Parameter() { Name = "Periods[Int]", Value = period.ToString() });
-        Strategy.TestParameters.Add(new Test_Parameter() { Name = "PriceWeight[Double]", Value = (1 - volumeWeight).ToString() });
-        Strategy.TestParameters.Add(new Test_Parameter() { Name = "VolumeWeight[Double]", Value = volumeWeight.ToString() });
-        Strategy.TestParameters.Add(new Test_Parameter() { Name = "StopLossAmount[Double]", Value = stopLossAmount.ToString() });
+    
 
-    }
-
-    private static void GetMarketData(int instrumentId)
+    private static void GetMarketData(int barInstrumentId, int tickInstrumentid)
     {
         DataService dataServices = new DataService();
-        var instrument = dataServices.InstrumentCaller.GetInstrument(instrumentId);
-        var config = new MapperConfiguration(cfg => cfg.AddProfile<HistoricalDataProfile>());
-        var mapper = config.CreateMapper();
-        var marketData = mapper.Map<List<HistoricalData>>(
-            instrument.HistoricalDatas.Where(x => x.Date > startTestingFrom && x.Date < endTestingAt).ToList());
+        Application.Features.Instruments.Queries.GetById.GetInstrumentByIdResponse barInstrument;
+        Application.Features.Instruments.Queries.GetById.GetInstrumentByIdResponse tickInstrument;
+        List<HistoricalData> barData  = GetHistoricalData(barInstrumentId, dataServices, out barInstrument);
+        List<HistoricalData> tickData = GetHistoricalData(tickInstrumentid, dataServices, out tickInstrument);
         TestInfo = new MarketInfo(
             new DateTime(),
             0,
             0,
             new List<Position>(),
-            marketData,
-            instrument.InstrumentName,
-            instrument.Currency,
+            barData,
+            tickData,
+            barInstrument.InstrumentName,
+            barInstrument.Currency,
             10000,
-            instrument.MinimumPriceFluctuation, //pip size
-            instrument.ContractUnit,// lot size
+            barInstrument.MinimumPriceFluctuation, //pip size
+            barInstrument.ContractUnit,// lot size
             1,
             new ConfirmingSignals(new List<ISignal>()),
-            ConvertToTimeFrame(instrument.Frequency)
+            ConvertToTimeFrame(barInstrument.Frequency),
+            ConvertToTimeFrame(tickInstrument.Frequency)
         );
-        TestInfo.InstrumentId = instrumentId;
+        TestInfo.InstrumentId = barInstrumentId;
+    }
+
+    private static List<HistoricalData> GetHistoricalData(int barInstrumentId, DataService dataServices, out Application.Features.Instruments.Queries.GetById.GetInstrumentByIdResponse instrument)
+    {
+        instrument = dataServices.InstrumentCaller.GetInstrument(barInstrumentId);
+        var config = new MapperConfiguration(cfg => cfg.AddProfile<HistoricalDataProfile>());
+        var mapper = config.CreateMapper();
+        var marketData = mapper.Map<List<HistoricalData>>(
+            instrument.HistoricalDatas.Where(x => x.Date > startTestingFrom && x.Date < endTestingAt).ToList());
+        return marketData;
     }
 
     private static TimeFrame ConvertToTimeFrame(string frequency)
