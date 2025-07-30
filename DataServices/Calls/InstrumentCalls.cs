@@ -8,6 +8,7 @@ using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace DataServices.Calls
 {
@@ -56,19 +57,27 @@ namespace DataServices.Calls
                 AddInstrument(addInstrumentCommand);
             }
         }
-        private void AddAnyNewDataToDb(Instrument existingInstrumentData, Instrument instrument)
+        private void AddAnyNewDataToDb(Instrument existingInstrumentData, Instrument newInstrumentData)
         {
+            DateTime? latestExistingDate = existingInstrumentData.HistoricalDatas
+                                                .OrderByDescending(x => x.Date)
+                                                .Select(x => (DateTime?)x.Date) // Cast to nullable DateTime
+                                                .FirstOrDefault();
+
             var rangeToAdd = new CreateHistoricalDataRangeCommand();
-            foreach (var bar in instrument.HistoricalDatas)
+
+            if (latestExistingDate.HasValue)
             {
-                if (!existingInstrumentData.HistoricalDatas.Any(x => x.Date.Year == bar.Date.Year
-                    && x.Date.Month == bar.Date.Month
-                    && x.Date.Day == bar.Date.Day
-                    && x.Date.Hour == bar.Date.Hour
-                    && x.Date.Minute == bar.Date.Minute
-                    && x.Date.Second == bar.Date.Second))
+                // 2. Filter new data: Only consider bars that are strictly newer than the latest existing bar.
+                // Using a strict greater than (>) to avoid adding duplicates if dates are identical but other data differs
+                // (e.g., if you only store minutes, but get seconds in new data, you might want to adjust precision here).
+                // For exact matches, consider comparing up to the precision you care about (e.g., .Ticks)
+                var newDataToProcess = newInstrumentData.HistoricalDatas
+                                            .Where(bar => bar.Date > latestExistingDate.Value)
+                                            .OrderBy(bar => bar.Date); // Order by date to add them chronologically
+
+                foreach (var bar in newDataToProcess)
                 {
-                    // Add this new data to db
                     rangeToAdd.Add(new CreateHistoricalDataCommand()
                     {
                         Date = bar.Date,
@@ -83,7 +92,36 @@ namespace DataServices.Calls
                     });
                 }
             }
-            new HistoricalDataCalls(serviceProvider).AddHistoricalDataRange(rangeToAdd);
+            else
+            {
+                // If there's no existing data, add all new data.
+                // This assumes newInstrumentData.HistoricalDatas is sorted or will be added in order.
+                foreach (var bar in newInstrumentData.HistoricalDatas.OrderBy(x => x.Date))
+                {
+                    rangeToAdd.Add(new CreateHistoricalDataCommand()
+                    {
+                        Date = bar.Date,
+                        OpenPrice = bar.OpenPrice,
+                        ClosePrice = bar.ClosePrice,
+                        LowPrice = bar.LowPrice,
+                        HighPrice = bar.HighPrice,
+                        Volume = bar.Volume,
+                        Settle = bar.Settle,
+                        OpenInterest = bar.OpenInterest,
+                        InstrumentId = existingInstrumentData.Id
+                    });
+                }
+            }
+
+            // 3. Add the filtered range to the database
+            if (rangeToAdd.Any()) // Only call if there's data to add
+            {
+                new HistoricalDataCalls(serviceProvider).AddHistoricalDataRange(rangeToAdd);
+            }
+            else
+            {
+                Console.WriteLine("No new data found to add.");
+            }
         }
     }
     public interface IInstrumentService

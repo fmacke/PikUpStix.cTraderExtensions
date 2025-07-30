@@ -40,7 +40,7 @@ namespace Robots.Strategies.PivotPointBounce
             }
             return _positionInstructions;
         }
-        public void GetParameters(Dictionary<string, string> parameters)
+        public void LoadDefaultParameters(Dictionary<string, string> parameters)
         {
             TestParameters = new List<Test_Parameter>();
             if (parameters == null)

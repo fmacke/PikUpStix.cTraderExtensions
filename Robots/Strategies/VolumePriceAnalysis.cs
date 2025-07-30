@@ -11,6 +11,140 @@ using Application.Business.Indicator;
 
 namespace Robots.Strategies
 {
+    public class HighProbabilityEntryStrategy : IStrategy
+    {
+        public List<string> LogMessages { get; set; } = new List<string>();
+        public List<IPositionInstruction> PositionInstructions { get; private set; } = new List<IPositionInstruction>();
+        public IValidationService ValidationService { get; set; } = new ValidationService();
+        public List<Test_Parameter> TestParameters { get; set; }
+
+        private  int _fastEmaPeriod;
+        private  int _slowEmaPeriod;
+        private  int _rsiPeriod;
+        private  decimal _rsiOversoldThreshold;
+        private  decimal _rsiOverboughtThreshold;
+
+        public List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos)
+        {
+            foreach (var marketInfo in marketInfos)
+            {
+                if (marketInfo?.Bars == null || marketInfo.Bars.Count == 0)
+                {
+                    LogMessages.Add($"No historical data available for {marketInfo.SymbolName}");
+                    continue;
+                }
+                var signal = GenerateAnalogueSignal(marketInfo.Bars);
+                if (signal != TradeSignal.Hold)
+                {
+                    PositionInstructions.Add(new OpenInstruction(
+                        PositionCreator.CreatePosition(signal, marketInfo.Ask, _fastEmaPeriod, _slowEmaPeriod, _rsiPeriod, marketInfo, ValidationService),
+                        ValidationService));
+                }
+            }
+            
+            
+            return PositionInstructions;
+        }
+        public decimal GenerateAnalogueSignal(List<HistoricalData> historicalBars)
+        {
+            if (historicalBars == null || historicalBars.Count < Math.Max(_slowEmaPeriod, _rsiPeriod + 1))
+            {
+                // Not enough data to calculate indicators
+                // Console.WriteLine("Not enough historical data to generate a signal."); // Commented out for cleaner output
+                return 0.0m; // Neutral signal
+            }
+
+            // Extract closing prices
+            List<decimal> closePrices = historicalBars.Select(b => b.Close).ToList();
+
+            // Calculate EMAs
+            List<decimal> fastEmas = CalculateEMA(closePrices, _fastEmaPeriod);
+            List<decimal> slowEmas = CalculateEMA(closePrices, _slowEmaPeriod);
+
+            // Calculate RSIs
+            List<decimal> rsiValues = CalculateRSI(closePrices, _rsiPeriod);
+
+            // Ensure we have enough calculated indicator values for the most recent bar
+            if (fastEmas.Count == 0 || slowEmas.Count == 0 || rsiValues.Count == 0)
+            {
+                // Console.WriteLine("Error calculating indicators. Not enough data for required periods."); // Commented out for cleaner output
+                return 0.0m; // Neutral signal
+            }
+
+            decimal currentPrice = historicalBars.Last().Close;
+            decimal currentFastEma = fastEmas.Last();
+            decimal currentSlowEma = slowEmas.Last();
+            decimal currentRsi = rsiValues.Last();
+
+            // To check for RSI cross, we need the previous RSI value
+            decimal previousRsi = (rsiValues.Count > 1) ? rsiValues[rsiValues.Count - 2] : currentRsi;
+
+
+            decimal signalStrength = 0.0m; // Initialize signal strength at neutral
+
+            // --- Evaluate Long Conditions ---
+            // 1. Price above Slow EMA (Trend confirmation)
+            if (currentPrice > currentSlowEma)
+            {
+                signalStrength += PriceAboveSlowEmaWeight;
+            }
+
+            // 2. Fast EMA above Slow EMA (Trend strength/alignment)
+            if (currentFastEma > currentSlowEma)
+            {
+                signalStrength += FastEmaAboveSlowEmaWeight;
+            }
+
+            // 3. RSI confirms momentum shifting from oversold to normal (Entry timing)
+            if (previousRsi <= _rsiOversoldThreshold && currentRsi > _rsiOversoldThreshold)
+            {
+                signalStrength += RsiCrossUpWeight;
+            }
+
+            // --- Evaluate Short Conditions ---
+            // 1. Price below Slow EMA (Trend confirmation)
+            if (currentPrice < currentSlowEma)
+            {
+                signalStrength -= PriceBelowSlowEmaWeight;
+            }
+
+            // 2. Fast EMA below Slow EMA (Trend strength/alignment)
+            if (currentFastEma < currentSlowEma)
+            {
+                signalStrength -= FastEmaBelowSlowEmaWeight;
+            }
+
+            // 3. RSI confirms momentum shifting from overbought to normal (Entry timing)
+            if (previousRsi >= _rsiOverboughtThreshold && currentRsi < _rsiOverboughtThreshold)
+            {
+                signalStrength -= RsiCrossDownWeight;
+            }
+
+            // Normalize the signal strength to be between -1 and +1
+            // The maximum possible positive score is PriceAboveSlowEmaWeight + FastEmaAboveSlowEmaWeight + RsiCrossUpWeight
+            // The maximum possible negative score is -(PriceBelowSlowEmaWeight + FastEmaBelowSlowEmaWeight + RsiCrossDownWeight)
+            // In this case, max positive is 0.3 + 0.3 + 0.4 = 1.0
+            // And max negative is -(0.3 + 0.3 + 0.4) = -1.0
+            // So, no explicit normalization step is needed if weights sum to 1.0 for each direction.
+            // If you add more conditions, you might need a division by the max possible sum of weights.
+
+            Console.WriteLine($"Analogue Signal: {signalStrength:F2} (Price: {currentPrice:F5}, FastEMA: {currentFastEma:F5}, SlowEMA: {currentSlowEma:F5}, RSI: {currentRsi:F2})");
+            return signalStrength;
+        }
+        public void LoadDefaultParameters(Dictionary<string, string> parameters)
+        {
+            _fastEmaPeriod = 50;
+            _slowEmaPeriod = 200;
+            _rsiPeriod = 14;
+            _rsiOversoldThreshold = 30;
+            _rsiOverboughtThreshold = 70;
+            TestParameters.Add(new Test_Parameter() { Name = "fastEmaPeriod[int]", Value = _fastEmaPeriod.ToString() });
+            TestParameters.Add(new Test_Parameter() { Name = "slowEmaPeriod[int]", Value = _slowEmaPeriod.ToString() });
+            TestParameters.Add(new Test_Parameter() { Name = "rsiPeriod[int]", Value = _rsiPeriod.ToString() });
+            TestParameters.Add(new Test_Parameter() { Name = "rsiOversoldThreshold[decimal]", Value = _rsiOversoldThreshold.ToString() });
+            TestParameters.Add(new Test_Parameter() { Name = "rsiOverboughtThreshold[decimal]", Value = _rsiOverboughtThreshold.ToString() });
+        }
+    }
     public class VolumePriceAnalysis : IStrategy
     {
         public List<string> LogMessages { get; set; } = new List<string>();
@@ -51,7 +185,7 @@ namespace Robots.Strategies
             return PositionInstructions;
         }
 
-        public void GetParameters(Dictionary<string, string> parameters)
+        public void LoadDefaultParameters(Dictionary<string, string> parameters)
         {
             SetTestParameters();
         }

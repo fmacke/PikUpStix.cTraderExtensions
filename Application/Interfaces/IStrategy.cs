@@ -11,6 +11,6 @@ namespace Application.Interfaces
         List<Test_Parameter> TestParameters { get; set; }
         List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos);
         public IValidationService ValidationService { get; }
-        public void GetParameters(Dictionary<string, string> parameters);
+        public void LoadDefaultParameters(Dictionary<string, string> parameters);
     }
 }

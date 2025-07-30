@@ -40,7 +40,45 @@ namespace DataImports.ForexSb
                     Sort = "Ascending",
                     PriceQuotation = "CHECK",
                 });
+                MoveImportedFile(file);
             }
+            
+        }
+
+        private void MoveImportedFile(string file)
+        {
+            // 1. Generate the dynamic subfolder name (YYMMDD)
+            string newFolderName = DateTime.Now.ToString("yyMMdd");
+
+            // 2. Construct the full path for the new subfolder
+            string newSubfolderPath = Path.Combine(_folderPath, "Imported/" + newFolderName);
+
+            // 3. Create the new subfolder if it doesn't exist
+            if (!Directory.Exists(newSubfolderPath))
+            {
+                Directory.CreateDirectory(newSubfolderPath);
+                Console.WriteLine($"Created new subfolder: {newSubfolderPath}");
+            }
+            else
+            {
+                Console.WriteLine($"Subfolder already exists: {newSubfolderPath}");
+            }
+
+            // 4. Move each CSV file to the new subfolder
+            string fileName = Path.GetFileName(file);
+            string destinationFilePath = Path.Combine(newSubfolderPath, fileName);
+
+            try
+            {
+                File.Move(file, destinationFilePath);
+                Console.WriteLine($"Moved: {fileName} to {newSubfolderPath}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error moving {fileName}: {ex.Message}");
+            }
+
+            Console.WriteLine("File movement complete.");
         }
 
         private string GetFrequency(string filePath)

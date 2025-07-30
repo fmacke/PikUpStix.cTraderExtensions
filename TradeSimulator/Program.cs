@@ -43,7 +43,7 @@ internal class Program
                             { "RiskPerTrade[Double]", risk.ToString() },
                             { "StopLossAmount[Double]", stopLoss.ToString() }
                         };
-                        Strategy.GetParameters(parameters);
+                        Strategy.LoadDefaultParameters(parameters);
                         var tradeSimulator = new TradeSimulate(TestInfo, Strategy, 10000, SaveTestResult);
                         tradeSimulator.Run();
                     }

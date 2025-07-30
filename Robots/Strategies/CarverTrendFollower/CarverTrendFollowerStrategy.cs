@@ -44,7 +44,7 @@ namespace Robots.Strategies.CarverTrendFollower
             return _positionInstructions;
         }
 
-        public void GetParameters(Dictionary<string, string> parameters)
+        public void LoadDefaultParameters(Dictionary<string, string> parameters)
         {
             TestParameters.Clear();
             if (parameters == null)

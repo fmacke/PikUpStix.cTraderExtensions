@@ -37,7 +37,7 @@ namespace Robots.Strategies
             return _positionInstructions;
         }
 
-        public void GetParameters(Dictionary<string, string> parameters)
+        public void LoadDefaultParameters(Dictionary<string, string> parameters)
         {
             TestParameters.Clear();
 
@@ -62,7 +62,7 @@ namespace Robots.Strategies
                 if(!ConfirmParametersValid(parameters.Select(p => new Test_Parameter { Name = p.Key, Value = p.Value }).ToList()))
                 {
                     Console.WriteLine("Invalid parameters provided. Using default values.");
-                    GetParameters(null); // Recurse with null to use defaults
+                    LoadDefaultParameters(null); // Recurse with null to use defaults
                     return;
                 }
                 // Iterate through the provided dictionary's key-value pairs.
