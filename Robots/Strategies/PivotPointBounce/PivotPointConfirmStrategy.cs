@@ -9,22 +9,21 @@ using Application.Business.Positioning.Instructions;
 
 namespace Robots.Strategies.PivotPointBounce
 {
-    public class PivotPointConfirmStrategy : IStrategy
+    public class PivotPointConfirmStrategy : BaseStrategy
     {
-        public List<string> LogMessages { get; set; } = new List<string>();
         public double StrategySignal { get; private set; }
         public PivotPoints PivotPoints { get; private set; }
         public  double MaximumRisk = 0.02;
         public double thresholdForTrade = 0.5;
         public double confirmingSignalsForecastTreshhold = 0.5;
-        public IValidationService ValidationService { get; } = new ValidationService();
+
+
         public List<Test_Parameter> TestParameters{ get; set;  }
 
-        private List<IPositionInstruction> _positionInstructions = new List<IPositionInstruction>();
 
         public PivotPointConfirmStrategy(List<Test_Parameter> test_Parameters)
         {
-            TestParameters = test_Parameters;
+            base.TestParameters = test_Parameters;
         }
         public List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos)
         {           
@@ -85,7 +84,7 @@ namespace Robots.Strategies.PivotPointBounce
                         Created = marketInfo.CursorDate,
                         ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 0, 0)
                     };
-                    _positionInstructions.Add(new OpenInstruction(position, ValidationService));
+                    _positionInstructions.Add(new OpenInstruction(position, GetValidationService()));
                 }
             }
             else

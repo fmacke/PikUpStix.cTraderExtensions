@@ -13,7 +13,17 @@ namespace Robots.Strategies
         public List<string> LogMessages { get; set; } = new List<string>();
         public List<Test_Parameter> TestParameters { get; set; } = new List<Test_Parameter>();
         private List<IPositionInstruction> _positionInstructions = new List<IPositionInstruction>();
-        public IValidationService ValidationService { get; set;  } = new ValidationService();
+        private IValidationService validationService = new ValidationService();
+
+        public IValidationService GetValidationService()
+        {
+            return validationService;
+        }
+
+        public void SetValidationService(IValidationService value)
+        {
+            validationService = value;
+        }
 
         public List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos)
         {
@@ -36,7 +46,7 @@ namespace Robots.Strategies
                         Created = marketInfo.CursorDate,
                         //ExpirationDate = new DateTime(marketInfo.CursorDate.Year, marketInfo.CursorDate.Month, marketInfo.CursorDate.Day, 23, 59, 0)
                     };
-                    _positionInstructions.Add(new OpenInstruction(position, ValidationService));
+                    _positionInstructions.Add(new OpenInstruction(position, GetValidationService()));
                 }
             }
             return _positionInstructions;

@@ -8,12 +8,18 @@ using Domain.Enums;
 
 namespace Robots.Strategies
 {
-    public class SimpleTestStrategy : IStrategy
+    public class SimpleTestStrategy : BaseStrategy
     {
-        public List<string> LogMessages { get; set; } = new List<string>();
-        public List<Test_Parameter> TestParameters { get; set; } = new List<Test_Parameter>();
-        private List<IPositionInstruction> _positionInstructions = new List<IPositionInstruction>();
-        public IValidationService ValidationService { get; set; } = new ValidationService();
+        public IValidationService GetValidationService()
+        {
+            return ValidationService;
+        }
+
+        public void SetValidationService(IValidationService value)
+        {
+            ValidationService = value;
+        }
+
         public List<string> RequiredParameters = new List<string>
             {
                 "RiskPerTrade[Double]",
@@ -24,17 +30,17 @@ namespace Robots.Strategies
 
         public List<IPositionInstruction> CalculateChanges(List<IMarketInfo> marketInfos)
         {
-            _positionInstructions.Clear();
+            PositionInstructions.Clear();
             foreach (var marketInfo in marketInfos)
             {
                 if (!marketInfo.Positions.Where(x => x.Status == PositionStatus.OPEN).Any())
                 {
                     Position position = PositionCreator.CreatePosition(PositionType.BUY, 1, 0.02, 0.01, 0.02, marketInfo, null);
-                    _positionInstructions.Add(new OpenInstruction(position, ValidationService));
+                    PositionInstructions.Add(new OpenInstruction(position, GetValidationService()));
                     LogMessages.Add($"Buy signal for {marketInfo.SymbolName} at price {marketInfo.Ask}");
                 }
             }
-            return _positionInstructions;
+            return PositionInstructions;
         }
 
         public void LoadDefaultParameters(Dictionary<string, string> parameters)
